@@ -15,6 +15,7 @@ export default function NotFound() {
     <article>
       <H1>
         <FormattedMessage {...messages.header} />
+        <p>tìm trang khác đê, không có trang này dồi</p>
       </H1>
     </article>
   );
