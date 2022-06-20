@@ -23,10 +23,10 @@ import { Grid, Box, TextField, Button, Tab, Tabs, TextareaAutosize, FormGroup, F
 import { makeStyles, Container, Typography } from '@material-ui/core';
 import BackGround from '../../images/dhfpt.png';
 import { NavLink } from 'react-router-dom';
-import { textAlign } from '@mui/system';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { getUser } from '../../utils/common';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -137,9 +137,13 @@ export function SellerRegister() {
     setStartTime(newValue)
   }
 
+
   const handleChangeEndTime = (newValue) => {
     setEndTime(newValue)
   }
+
+  const user = getUser();
+  console.log(user)
 
 
   return (
@@ -319,6 +323,8 @@ export function SellerRegister() {
                         label="Tên đầy đủ của người đại diện"
                         placeholder="Tên đầy đủ của người đại diện"
                         multiline
+                        value={user.username}
+                        disabled
                       />
                     </Box>
                   </Grid>
@@ -340,7 +346,7 @@ export function SellerRegister() {
                       />
                     </Box>
                   </Grid>
-                  <Grid item sm={12 }xs={12} >
+                  <Grid item sm={12} xs={12} >
                     <Box
                       component="form"
                       sx={{
@@ -351,10 +357,12 @@ export function SellerRegister() {
                     >
                       <TextField
                         required
+                        value={user.phone}
                         id="outlined-textarea"
                         label="Số điện thoại"
                         placeholder="Số điện thoại"
-                        multiline
+                        disabled
+
                       />
                     </Box>
                   </Grid>
@@ -538,7 +546,7 @@ export function SellerRegister() {
                           autoComplete="off"
                         >
                           <div>
-                            <p>Ảnh bìa quán *</p>
+                            <p>Chứng nhận thực phẩm sạch *</p>
                           </div>
                           <div className={classes.upload}>
                             <input type="file" name="back" placeholder="upload an image" />

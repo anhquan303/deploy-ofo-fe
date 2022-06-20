@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -22,6 +22,8 @@ import { makeStyles, Container, Typography } from '@material-ui/core';
 import BackGround from '../../images/dhfpt.png';
 import Logo from '../../images/Happy_Delivery_Man_logo_cartoon_art_illustration.jpg';
 import { Grid, Box, FormGroup, TextField, FormControlLabel, Checkbox, Button } from '@mui/material';
+import { signUp } from './actions';
+import Snackbar from '@mui/material/Snackbar';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -83,11 +85,103 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export function UserRegister() {
+export function UserRegister(props) {
+  const { dispatch } = props;
   useInjectReducer({ key: 'userRegister', reducer });
   useInjectSaga({ key: 'userRegister', saga });
 
   const classes = useStyles();
+  const initialValues = { userName: "", password: "", firstName: "", lastName: "", phone: "", email: "", passwordVerify: "", address: "" };
+  const [formValues, setFormValues] = useState(initialValues);
+  const [formErrors, setFormErrors] = useState({});
+  const [accept, setAccept] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [vertical, setVertical] = useState("top");
+  const [horizontal, setHorizontal] = useState("right");
+  const [open, setOpen] = useState(false);
+
+  //set value for input
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  }
+
+  const validate = (values) => {
+    const errors = {};
+    const regexPhone = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+    const regexEmail = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
+    if (!values.userName) {
+      errors.userName = "username is required!";
+    }
+    if (!values.password) {
+      errors.password = "password is required!";
+    }
+    if (!values.firstName) {
+      errors.firstName = "firstName is required!";
+    }
+    // if (!values.lastName) {
+    //   errors.lastName = "lastName is required!";
+    // }
+    if (!values.phone) {
+      errors.phone = "phone is required!";
+    }
+    if (!values.email) {
+      errors.email = "email is required!";
+    }
+    if (!values.passwordVerify) {
+      errors.passwordVerify = "passwordVerify is required!";
+    }
+    if (values.passwordVerify != values.password) {
+      errors.passwordVerify1 = "password does not match";
+    }
+    if (!values.address) {
+      errors.address = "address is required!";
+    }
+    if (regexEmail.test(values.email) == false) {
+      errors.email1 = "ex: abc@smt.com";
+    }
+    if (regexPhone.test(values.phone) == false) {
+      errors.phone1 = "match 10 digits";
+    }
+
+    return errors;
+  }
+
+
+  //check validate
+  const handleSignup = (e) => {
+    e.preventDefault();
+    setFormErrors(validate(formValues));
+    setIsSubmit(true);
+  }
+
+  //signup
+  useEffect(() => {
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+      console.log('zo')
+      const data = {
+        userName: formValues.userName,
+        password: formValues.password,
+        phone: formValues.phone
+      }
+      dispatch(signUp(data))
+      setOpen(true);
+    }
+
+  }, [formErrors]);
+
+  //close toast
+  const handleCloseToast = () => {
+    setOpen(false);
+  }
+
+  //redirect to login page
+  useEffect(() => {
+    if (props.userRegister.message.includes('SUCCESS')) {
+      props.history.push("/login");
+    }
+  }, [props.userRegister.message]);
+
 
   return (
     <div className={classes.body}>
@@ -112,10 +206,14 @@ export function UserRegister() {
                   autoComplete="off"
                 >
                   <TextField
-                    id="outlined-textarea"
+                    id="outlined-textarea1"
                     label="Họ và tên"
                     placeholder="Họ và tên"
                     multiline
+                    name="firstName"
+                    onChange={handleChange}
+                    helperText={formErrors.firstName && formValues.firstName.length == "" ? formErrors.firstName : null}
+                    error={formErrors.firstName != null && formValues.firstName.length == ""}
                   />
                 </Box>
                 <Box
@@ -127,10 +225,14 @@ export function UserRegister() {
                   autoComplete="off"
                 >
                   <TextField
-                    id="outlined-textarea"
+                    id="outlined-textarea2"
                     label="Email"
                     placeholder="Email"
                     multiline
+                    name="email"
+                    onChange={handleChange}
+                    helperText={formErrors.email && formValues.email.length == "" ? formErrors.email : formErrors.email1 ? formErrors.email1 : null}
+                    error={formErrors.email != null && formValues.email.length == "" ? true : formErrors.email1 != null ? true : false}
                   />
                 </Box>
                 <Box
@@ -142,10 +244,14 @@ export function UserRegister() {
                   autoComplete="off"
                 >
                   <TextField
-                    id="outlined-textarea"
+                    id="outlined-textarea3"
                     label="Tên tài khoản"
                     placeholder="Tên tài khoản"
                     multiline
+                    name="userName"
+                    onChange={handleChange}
+                    helperText={formErrors.userName && formValues.userName.length == "" ? formErrors.userName : null}
+                    error={formErrors.userName != null && formValues.userName.length == ""}
                   />
                 </Box>
                 <Box
@@ -161,6 +267,10 @@ export function UserRegister() {
                     label="Xác nhận mật khẩu"
                     type="password"
                     autoComplete="current-password"
+                    name="passwordVerify"
+                    onChange={handleChange}
+                    helperText={formErrors.passwordVerify && formValues.passwordVerify.length == "" ? formErrors.passwordVerify : formErrors.passwordVerify1 ? formErrors.passwordVerify1 : null}
+                    error={formErrors.passwordVerify != null && formValues.passwordVerify.length == "" ? true : formErrors.passwordVerify1 != null ? true : false}
                   />
                 </Box>
 
@@ -175,10 +285,14 @@ export function UserRegister() {
                   autoComplete="off"
                 >
                   <TextField
-                    id="outlined-textarea"
+                    id="outlined-textarea4"
                     label="Số điện thoại"
                     placeholder="Số điện thoại"
                     multiline
+                    name="phone"
+                    onChange={handleChange}
+                    helperText={formErrors.phone != null && formValues.phone.length == "" ? formErrors.phone : formErrors.phone1 != null ? formErrors.phone1 : null}
+                    error={formErrors.phone != null && formValues.phone.length == "" ? true : formErrors.phone1 != null ? true : false}
                   />
                 </Box>
                 <Box
@@ -190,10 +304,14 @@ export function UserRegister() {
                   autoComplete="off"
                 >
                   <TextField
-                    id="outlined-textarea"
+                    id="outlined-textarea5"
                     label="Địa chỉ"
                     placeholder="Địa chỉ"
                     multiline
+                    name="address"
+                    onChange={handleChange}
+                    helperText={formErrors.address && formValues.address.length == "" ? formErrors.address : null}
+                    error={formErrors.address != null && formValues.address.length == ""}
                   />
                 </Box>
                 <Box
@@ -205,10 +323,14 @@ export function UserRegister() {
                   autoComplete="off"
                 >
                   <TextField
-                    id="outlined-password-input"
+                    id="outlined-password-input2"
                     label="mật khẩu"
                     type="password"
                     autoComplete="current-password"
+                    name="password"
+                    onChange={handleChange}
+                    helperText={formErrors.password && formValues.password.length == "" ? formErrors.password : null}
+                    error={formErrors.password != null && formValues.password.length == ""}
                   />
                 </Box>
                 <Box
@@ -220,10 +342,11 @@ export function UserRegister() {
                   autoComplete="off"
                 >
                   <TextField
-                    id="outlined-textarea"
+                    id="outlined-textarea7"
                     label="Captcha"
                     placeholder="Captcha"
                     multiline
+                    name="captcha"
                   />
                 </Box>
               </Grid>
@@ -231,13 +354,20 @@ export function UserRegister() {
           </div>
           <label >
             <FormGroup style={{ marginLeft: "10px" }}>
-              <FormControlLabel className="" control={<Checkbox defaultChecked />} label="Tôi đồng ý với điều khoản dịch vụ và chính sách bảo mật" />
+              <FormControlLabel className="" control={<Checkbox onChange={() => setAccept(!accept)} />} label="Tôi đồng ý với điều khoản dịch vụ và chính sách bảo mật" />
             </FormGroup>
           </label>
-          <Button type="submit" className={classes.btnSubmit} variant="contained" component="span">
+          <Button disabled={accept == false} type="submit" className={classes.btnSubmit} variant="contained" component="span" onClick={handleSignup}>
             ĐĂNG KÝ
           </Button>
         </form>
+        <Snackbar
+          anchorOrigin={{ vertical, horizontal }}
+          open={open}
+          onClose={handleCloseToast}
+          message={props.userRegister.message}
+          autoHideDuration={5000}
+        />
       </div>
     </div>
   );

@@ -5,11 +5,12 @@ import * as types from './constants';
 
 export function* getAllStoree({ payload }) {
   try {
-    const res = yield call(apiFetchData, ['api/users?page=2']);
-    if(res.status == 200){
+    const res = yield call(apiFetchData, ['api/user/alluser']);
+    if (res.status == 200) {
+      console.log('store', res.data.data)
       yield put(getAllStoreSuccess(res.data.data))
-      console.log(res.data.data)
-    }else{
+
+    } else {
       yield put(getAllStoreFailed("error"))
     }
   } catch (error) {
