@@ -1,5 +1,6 @@
 import axios from "axios";
-const baseApiUrl = 'https://reqres.in/';
+const baseApiUrl = 'http://localhost:3990/';
+// const baseApiUrl = 'https://reqres.in//';
 
 const baseInstance = axios.create({
   baseURL: baseApiUrl,
@@ -7,7 +8,7 @@ const baseInstance = axios.create({
 
 baseInstance.interceptors.request.use(
   (config) => {
-    let token = localStorage.getItem("authtoken");
+    let token = sessionStorage.getItem("token");
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }

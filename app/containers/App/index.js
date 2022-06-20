@@ -9,7 +9,7 @@
 import React, { useCallback } from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
-import { Switch, Route, useLocation } from 'react-router-dom';
+import { Switch, Route, useLocation, useParams } from 'react-router-dom';
 
 import HomePage from 'containers/HomePage/Loadable';
 import FeaturePage from 'containers/FeaturePage/Loadable';
@@ -20,6 +20,8 @@ import Dashboard from '../../containers/Dashboard';
 import DashboardStore from '../../containers/DashboardStore';
 import DetailStore from '../../containers/DetailStore';
 import SellerRegister from '../../containers/SellerRegister';
+import DashboardRegister from '../../containers/DashboardRegister';
+import DashboardCustomer from '../../containers/DashboardCustomer';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
 
@@ -28,7 +30,29 @@ import GlobalStyle from '../../global-styles';
 import SideBar from '../../components/SideBar';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import { makeStyles } from '@material-ui/core';
 
+const useStyles = makeStyles((theme) => ({
+
+  down: {
+    [theme.breakpoints.up("xs")]: {
+      width: "100%",
+      marginTop: "100px",
+      marginLeft: "30px",
+    },
+    [theme.breakpoints.between("sm", "md")]: {
+      width: "100%",
+      marginTop: "100px",
+      marginLeft: "250px",
+    },
+    [theme.breakpoints.between("lg", "xl")]: {
+      marginTop: "100px",
+      width: "100%",
+      marginLeft: "250px",
+    },
+  }
+
+}));
 
 const AppWrapper = styled.div`
   margin: 0 auto;
@@ -41,7 +65,8 @@ export default function App() {
   const location = useLocation();
   console.log(location.pathname)
 
-
+  // let { storeId } = useParams();
+  const classes = useStyles();
   return (
     <AppWrapper>
       <Helmet
@@ -52,25 +77,30 @@ export default function App() {
       </Helmet>
       {/* <Header /> */}
 
-      {location.pathname != "/login" && location.pathname != "/userRegister" && location.pathname != "/sellerRegister" ?
+      {location.pathname != "/login" && location.pathname != "/userRegister" && location.pathname != "/sellerRegister" && location.pathname != "/" ?
         <Grid container spacing={2}>
-          <Grid item sm={2} xs={2}>
+          <Grid item sm={12} xs={12} md={2}>
             <SideBar />
           </Grid>
-          <Grid item sm={10} xs={10}>
-            <Switch>
-              <Route exact path="/" component={HomePage} />
-              <Route path="/features" component={FeaturePage} />
-              <Route path="/login" component={Login} />
-              <Route path="/userRegister" component={UserRegister} />
-              <Route path="/sellerRegister" component={SellerRegister} />
-              <Route path="/dashboard" component={Dashboard} />
-              <Route path="/store" component={DashboardStore} />
-              <Route path="/detailStore" component={DetailStore} />
-              <Route path="" component={NotFoundPage} />
+          <div className={classes.down}>
+            <Grid item sm={12} xs={12} md={12} >
+              {/* <DashboardHeader /> */}
+              <Switch>
+                <Route exact path="/" component={HomePage} />
+                <Route path="/features" component={FeaturePage} />
+                <Route path="/login" component={Login} />
+                <Route path="/userRegister" component={UserRegister} />
+                <Route path="/sellerRegister" component={SellerRegister} />
+                <Route path="/dashboard" component={Dashboard} />
+                <Route path="/register" component={DashboardRegister} />
+                <Route path="/customer" component={DashboardCustomer} />
+                <Route exact path="/store" component={DashboardStore} />
+                <Route path="/store/:id" component={DetailStore} />
+                <Route path="" component={NotFoundPage} />
 
-            </Switch>
-          </Grid>
+              </Switch>
+            </Grid>
+          </div>
         </Grid>
         :
         <Grid container spacing={1}>
@@ -82,7 +112,8 @@ export default function App() {
               <Route path="/userRegister" component={UserRegister} />
               <Route path="/sellerRegister" component={SellerRegister} />
               <Route path="/dashboard" component={Dashboard} />
-              <Route path="/detailStore" component={DetailStore} />
+              <Route path="/register" component={DashboardRegister} />
+              <Route path="/store/:id" component={DetailStore} />
               <Route path="" component={NotFoundPage} />
 
             </Switch>

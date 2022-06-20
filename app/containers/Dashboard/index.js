@@ -31,38 +31,9 @@ import { getData } from './actions';
 import CustomTable from '../../components/CustomTable';
 import Avatar from '@mui/material/Avatar';
 import Avatar1 from '../../images/quan.jpg';
+import DashboardHeader from '../../components/DashboardHeader';
+import { getUser } from '../../utils/common';
 
-
-const useStyles = makeStyles((theme) => ({
-  hello: {
-    [theme.breakpoints.down("sm")]: {
-      display: "none",
-    }
-  },
-  firstText: {
-    color: "#7e7e7e",
-    fontWeight: "700",
-    fontSize: "18px"
-  },
-  secondText: {
-    color: "#000",
-    fontWeight: "700",
-    fontSize: "18px"
-  },
-  secondLine: {
-    color: "#1168EB",
-    fontWeight: "700",
-    fontSize: "18px",
-    float: "right"
-  },
-  avatar: {
-    padding: "30px 0",
-    [theme.breakpoints.down("sm")]: {
-      padding: "25px 0",
-    }
-  }
-
-}));
 
 export function Dashboard(props) {
   const { dispatch, userList } = props;
@@ -75,33 +46,90 @@ export function Dashboard(props) {
     dispatch(getData());
   }, [])
 
-  const classes = useStyles();
+  const actione = [
+    {
+      id: "1",
+      name: "Quan ngon 24",
+      owner: "Long le",
+      totalOrder: "654",
+      status: "Approved",
+      contact: "132123132",
+    },
+    {
+      id: "1",
+      name: "Quan ",
+      owner: "Longe",
+      totalOrder: "64",
+      status: "Approed",
+      contact: "13213132",
+    },
+    {
+      id: "1",
+      name: "Quan non 24",
+      owner: "Longle",
+      totalOrder: "654",
+      status: "Approved",
+      contact: "132123132",
+    },
+    {
+      id: "1",
+      name: "Quan ngon 24",
+      owner: "Long le",
+      totalOrder: "654",
+      status: "Approved",
+      contact: "132123132",
+    },
+    {
+      id: "1",
+      name: "Quan ngon 24",
+      owner: "Long le",
+      totalOrder: "654",
+      status: "Approved",
+      contact: "132123132",
+    },
+    {
+      id: "1",
+      name: "Quan ngon 24",
+      owner: "Long le",
+      totalOrder: "654",
+      status: "Approved",
+      contact: "132123132",
+    }
+  ];
+
+  // const header = ["Name", "Owner", "Total Orders", "Status", "Contact"];
+
+  const newList = actione.map((item) => {
+    return {
+      name: item.name,
+      owner: item.owner,
+      totalOrder: item.totalOrder,
+      status: item.status,
+      contact: item.contact
+    }
+  })
+
+  const columns = [
+    { title: "ID", field: "id" },
+    { title: "Name", field: "name" },
+    { title: "Owner", field: "owner" },
+    { title: "Total Orders", field: "totalOrder" },
+    { title: "Status", field: "status" },
+    { title: "Contact", field: "contact" },
+  ]
+
+  console.log(newList)
+
+  const user = getUser();
+  if (user) {
+    if (user.authorities[0].authority == 'USER') {
+      props.history.push('/')
+    }
+  }
+
   return (
     <div style={{ paddingRight: "15px" }}>
-      <Grid container spacing={3}>
-        <Grid item sm={10} xs={10}>
-          <h1>Dashboard</h1>
-        </Grid>
-        <Grid item sm={2} xs={2}>
-          <Grid container spacing={3}>
-            <Grid item sm={6} xs={12} className={classes.hello}>
-              <div style={{ padding: "30px 0" }}>
-                <div style={{ margin: "0" }} >
-                  <span className={classes.firstText}>Hello,</span> <span className={classes.secondText}>Quan</span>
-                </div>
-                <div style={{ margin: "0" }}>
-                  <span className={classes.secondLine}>Admin</span>
-                </div>
-              </div>
-            </Grid>
-            <Grid item sm={6} xs={12} >
-              <div className={classes.avatar}>
-                <Avatar alt="Quan Nguyen" src={Avatar1} />
-              </div>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
+      {/* <DashboardHeader text="Dashboard" /> */}
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={3}>
           <Grid item sm={4} xs={12}>
@@ -159,8 +187,8 @@ export function Dashboard(props) {
             </div>
           </Grid>
           <Grid item sm={12} xs={12}>
-            <p>Table</p>
-            {/* <CustomTable /> */}
+            <h3>Recent Action</h3>
+            <CustomTable data={actione} itemPerPage={5} totalItem={actione.length} detailPage="dashboard" columns={columns} />
           </Grid>
         </Grid>
 
