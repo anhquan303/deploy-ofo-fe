@@ -52,10 +52,10 @@ export function DashboardStore(props) {
 
   const columns = [
     { title: "ID", field: "id" },
-    { title: "Email", field: "email" },
-    { title: "First Name", field: "first_name" },
-    { title: "Last Name", field: "last_name" },
-    { title: "Avatar", field: "avatar" },
+    { title: "Owner", field: "user.username" },
+    { title: "Name", field: "name" },
+    { title: "Slogan", field: "slogan" },
+    { title: "Status", field: "status" },
   ]
   return (
     <>

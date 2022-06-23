@@ -19,8 +19,8 @@ import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
 import Logo from '../../images/Happy_Delivery_Man_logo_cartoon_art_illustration.jpg';
-import { Grid, Box, TextField, Button, Tab, Tabs, TextareaAutosize, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
-import { makeStyles, Container, Typography } from '@material-ui/core';
+import { Box, TextField, Tab, Tabs, TextareaAutosize, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
+import { makeStyles, Container, Typography, Grid, Button } from '@material-ui/core';
 import BackGround from '../../images/dhfpt.png';
 import { NavLink } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -79,9 +79,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#ff9900",
     marginTop: "10px",
     "&:hover": {
-      backgroundColor: "orange",
+      backgroundColor: "#FFA500",
       fontWeight: "bold",
       color: "#000",
+      boxShadow: "2rem 2rem 3rem rgba(132, 139, 200, 0.18)",
     }
   },
   btnBack: {
@@ -93,8 +94,10 @@ const useStyles = makeStyles((theme) => ({
     color: "#000",
     marginTop: "10px",
     "&:hover": {
-      backgroundColor: "orange",
-      fontWeight: "bold"
+      //backgroundColor: "#FFA500",
+      fontWeight: "bold",
+      color: "#FFA500",
+      boxShadow: "2rem 2rem 3rem rgba(132, 139, 200, 0.18)",
     }
   },
   topLogo: {
@@ -114,7 +117,7 @@ export function SellerRegister() {
   useInjectReducer({ key: 'sellerRegister', reducer });
   useInjectSaga({ key: 'sellerRegister', saga });
 
-  const classes = useStyles();
+
   const [registerType, setRegisterType] = useState("1");
 
   const [value, setValue] = useState(0);
@@ -145,6 +148,7 @@ export function SellerRegister() {
   const user = getUser();
   console.log(user)
 
+  const classes = useStyles();
 
   return (
     <div className={classes.body}>

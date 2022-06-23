@@ -21,12 +21,16 @@ import messages from './messages';
 import { useParams } from 'react-router-dom';
 import DashboardHeader from '../../components/DashboardHeader';
 import ShopImage from '../../images/kinh-nghiem-mo-quan-an-nho-2.jpg';
-import { makeStyles } from '@material-ui/core';
-import { Grid, Box, Button, TextField, Paper } from '@mui/material';
+
+import { Box, TextField } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { makeStyles, Grid, Button } from '@material-ui/core';
+
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+// import { makeStyles } from '@material-ui/core/styles';
+
 
 const useStyles = makeStyles((theme) => ({
   information_image: {
@@ -39,9 +43,18 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     backgroundImage: `url(${ShopImage})`,
     backgroundSize: "cover",
-    [theme.breakpoints.down("sm")]: {
-      height: "200px"
-    }
+    // [theme.breakpoints.down("sm")]: {
+    //   height: "200px"
+    // },
+    // [theme.breakpoints.between("xl", "lg")]: {
+    //   height: "650px"
+    // },
+    // [theme.breakpoints.down("lg")]: {
+    //   height: "400px"
+    // },
+    // [theme.breakpoints.down("md")]: {
+    //   height: "300px"
+    // },
   },
   information_one: {
     background: "#fff",
@@ -58,36 +71,43 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     color: "#2AC267",
   },
-  btnSubmit: {
+  btnChangeStatus: {
+    // "& .MuiButton-root": {
+    //   borderRadius: "90px",
+    //   color: "#000",
+    // },
     position: "relative",
     width: "100%",
     borderRadius: "10px",
     backgroundColor: "#ff9900",
+    color: "#fff",
     margin: "0 auto",
     "&:hover": {
-      backgroundColor: "orange",
+      backgroundColor: "#FFA500",
       fontWeight: "bold",
       color: "#000",
+      boxShadow: "2rem 2rem 3rem rgba(132, 139, 200, 0.18)",
     }
   },
   btnSearch: {
     position: "relative",
     width: "100%",
     borderRadius: "10px",
+    border: "none",
     backgroundColor: "#ff9900",
-    marginTop: "10px",
+    color: "#fff",
+    marginTop: "6px",
     marginLeft: "10px",
+    padding: "10px",
+    transition: "0.5s",
     "&:hover": {
-      backgroundColor: "orange",
+      backgroundColor: "#FFA500",
       fontWeight: "bold",
       color: "#000",
-    },
+      boxShadow: "2rem 2rem 3rem rgba(132, 139, 200, 0.18)",
+    }
   },
   verify: {
-    // height: "100%",
-    // display: "flex",
-    // alignContent: "center",
-    // flexWrap: "wrap",
     textAlign: "center",
     marginTop: "1.5rem",
     [theme.breakpoints.down("sm")]: {
@@ -110,17 +130,26 @@ const useStyles = makeStyles((theme) => ({
   intro: {
     [theme.breakpoints.down("sm")]: {
       textAlign: "center"
-    }
+    },
+    // [theme.breakpoints.down("xl", "lg")]: {
+    //   fontSize: "800"
+    // }
   },
   one: {
     [theme.breakpoints.down("sm")]: {
+      order: "1"
+    },
+    [theme.breakpoints.down("md")]: {
+      order: "0"
+    },
+    [theme.breakpoints.down("xs")]: {
       order: "1"
     }
   },
   two: {
     [theme.breakpoints.down("sm")]: {
       order: "2"
-    }
+    },
   },
   three: {
     [theme.breakpoints.down("sm")]: {
@@ -130,31 +159,90 @@ const useStyles = makeStyles((theme) => ({
   zero: {
     [theme.breakpoints.down("sm")]: {
       order: "0"
+    },
+    [theme.breakpoints.down("sm")]: {
+      order: "1"
+    },
+    [theme.breakpoints.down("xs")]: {
+      order: "0"
     }
   },
   divCheckIcon: {
-    width: "60%",
-    height: "60%",
-    marginTop: "2.8rem",
-    marginLeft: "3rem",
-    [theme.breakpoints.down("sm")]: {
-      width: "65%",
-      height: "65%",
-      margin: "0 auto"
-    }
+    width: "100px",
+    height: "100px",
+    margin: "0 auto"
+    // marginTop: "2.8rem",
+    // marginLeft: "3rem",
+    // [theme.breakpoints.down("sm")]: {
+    //   width: "100%",
+    //   height: "100%",
+    //   margin: "0 auto"
+    // },
+    // [theme.breakpoints.between("md", "lg")]: {
+    //   width: "100%",
+    //   height: "100%",
+    //   margin: "0 auto"
+    // },
+    // [theme.breakpoints.between("xl", "lg")]: {
+    //   width: "100px",
+    //   height: "100px",
+    //   margin: "0 auto"
+    // },
   },
-  checkIcon: {
-    width: "100%",
-    height: "100%",
-    color: "#5890FF",
-    justifyContent: "center",
-    [theme.breakpoints.down("sm")]: {
-      margin: "0 auto"
-    }
+  // verifyIcon: {
+  //   width: "100px",
+  //   height: "100px"
+  //   //color: "#5890FF",
+  //   // justifyContent: "center",
+  //   // [theme.breakpoints.down("sm")]: {
+  //   //   margin: "0 auto"
+  //   // },
+  //   // [theme.breakpoints.between("md", "lg")]: {
+  //   //   width: "100%",
+  //   //   height: "100%",
+  //   // },
+  //   // [theme.breakpoints.between("lg", "xl")]: {
+
+  //   // },
+  // },
+  text: {
+    [theme.breakpoints.between("xl", "md")]: {
+      fontSize: "40px",
+      fontWeight: "700",
+      fontFamily: "sans-serif",
+      fontStyle: "normal"
+    },
+    [theme.breakpoints.between("lg", "xl")]: {
+      fontSize: "60px",
+      fontWeight: "700",
+      fontFamily: "sans-serif",
+      fontStyle: "normal"
+    },
+    [theme.breakpoints.down("lg")]: {
+      fontSize: "30px",
+      fontWeight: "700",
+      fontFamily: "sans-serif",
+      fontStyle: "normal"
+    },
+    [theme.breakpoints.down("lg")]: {
+      fontSize: "30px",
+      fontWeight: "700",
+      fontFamily: "sans-serif",
+      fontStyle: "normal"
+    },
+    [theme.breakpoints.down("md")]: {
+      fontSize: "20px",
+      fontWeight: "700",
+      fontFamily: "sans-serif",
+      fontStyle: "normal"
+    },
   }
 
 
+
 }));
+
+
 
 export function DetailStore(props) {
   useInjectReducer({ key: 'detailStore', reducer });
@@ -163,52 +251,53 @@ export function DetailStore(props) {
 
   let param = useParams();
   console.log('param ', props.location.state.item)
-  const classes = useStyles();
+
 
   const [value, setValue] = useState(new Date());
-
+  const classes = useStyles();
 
   return (
     <div style={{ paddingRight: "15px" }}>
-      <DashboardHeader text="Bún Bò Huế" />
+      {/* <DashboardHeader text="Bún Bò Huế" /> */}
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={3}>
-          <Grid item sm={6} xs={12} >
+          <Grid item md={6} sm={12} xs={12} >
             <div className={classes.information_image}>
 
             </div>
           </Grid>
-          <Grid item sm={6} xs={12}>
+          <Grid item md={6} sm={12} xs={12}>
             <div className={classes.information_one}>
               <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={2}>
                   <Grid item sm={8} xs={12} className={classes.one}>
 
                     <div className={classes.intro}>
-                      <h1>Bún Bò Huế</h1>
-                      <h1>Thôn 8, Thạch Thất</h1>
-                      <h2>3535453435</h2>
+                      <p className={classes.text}>{props.location.state.item.name}</p>
+                      <p className={classes.text}>Thôn 8, Thạch Thất</p>
+                      <p className={classes.text}>3535453435</p>
                     </div>
 
                   </Grid>
                   <Grid item sm={4} xs={12} className={classes.zero}>
-
-                    <div className={classes.divCheckIcon}>
-                      <span ><CheckCircleIcon className={classes.checkIcon} /></span>
+                    <div className={classes.divCheckIcon} >
+                      {/* <div style={{ backgroundColor: "red", width: "100px", height: "100px" }}> */}
+                      {/* <CheckCircleIcon className={classes.verifyIcon} /> */}
+                      <CheckCircleIcon style={{ width: "100%", height: "100%", color: "#5890FF" }} />
                     </div>
 
                   </Grid>
-                  <Grid item sm={8} xs={12} className={classes.two}>
+                  <Grid item md={5} sm={8} xs={12} className={classes.two}>
 
                     <div className={classes.approved}>
-                      <p>Approved</p>
+                      <p>{props.location.state.item.status}</p>
                     </div>
 
                   </Grid>
-                  <Grid item sm={4} xs={12} className={classes.three}>
+                  <Grid item md={7} sm={4} xs={12} className={classes.three}>
 
                     <div className={classes.verify}>
-                      <Button className={classes.btnSubmit} variant="contained" component="span" style={{ width: "80%" }}>
+                      <Button variant="contained" component="span" className={classes.btnChangeStatus}>
                         Change Status
                       </Button>
                     </div>
@@ -227,13 +316,13 @@ export function DetailStore(props) {
           <Grid container spacing={2}>
             <Grid item sm={6} xs={12}>
               <div style={{ textAlign: "center" }}>
-                <span><h2>Owner: Long Le</h2></span>
+                <span><h2>Owner: {props.location.state.item.user.username}</h2></span>
                 <span><h2>Register at: 04/08/2022</h2></span>
               </div>
             </Grid>
             <Grid item sm={6} xs={12}>
               <div style={{ textAlign: "center" }}>
-                <span><h2>Cell Phone: 541351351</h2></span>
+                <span><h2>Cell Phone: {props.location.state.item.user.phoneNumber}</h2></span>
                 <span><h2>Approved at: 04/08/2022</h2></span>
               </div>
             </Grid>
@@ -243,13 +332,13 @@ export function DetailStore(props) {
 
       <div style={{ marginTop: "20px" }}>
         <Grid container spacing={2}>
-          <Grid item sm={4} xs={12}>
+          <Grid item md={3} sm={4} xs={12}>
             <span><h2>Order</h2></span>
           </Grid>
-          <Grid item sm={8} xs={12}  >
+          <Grid item md={9} sm={8} xs={12}  >
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <Grid container spacing={2}>
-                <Grid item sm={3} xs={12}>
+                <Grid item md={4} sm={3} xs={12}>
 
                   <Box
                     component="form"
@@ -269,7 +358,7 @@ export function DetailStore(props) {
                     />
                   </Box>
                 </Grid>
-                <Grid item sm={3} xs={12}>
+                <Grid item md={4} sm={3} xs={12}>
                   <Box
                     component="form"
                     sx={{
@@ -288,8 +377,8 @@ export function DetailStore(props) {
                     />
                   </Box>
                 </Grid>
-                <Grid item sm={2} xs={12}>
-                  <Button className={classes.btnSearch} variant="contained" component="span" style={{ width: "100%" }}>
+                <Grid item md={4} sm={6} xs={12}>
+                  <Button className={classes.btnSearch} variant="contained" component="span" >
                     Search
                   </Button>
                 </Grid>
@@ -300,7 +389,7 @@ export function DetailStore(props) {
         </Grid>
       </div>
 
-    </div>
+    </div >
   );
 }
 

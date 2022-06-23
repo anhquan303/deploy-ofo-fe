@@ -207,7 +207,7 @@ export function Login(props) {
             />
           </div>
           <br />
-          <div className="backHome"><a href="#" className="aBackHome">Trở về trang chủ</a></div>
+          <div className="backHome"><a href="/" className="aBackHome">Trở về trang chủ</a></div>
           <br />
           <div><span>Quên mật khẩu ?</span><a href="#" className="forget">Lấy lại mật khẩu</a></div>
           <div className="account"><span>Chưa có tài khoản ?</span><a href="/userRegister" className="forget">Đăng ký ngay</a></div>

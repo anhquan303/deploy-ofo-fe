@@ -32,8 +32,8 @@ import { changeUsername } from './actions';
 import { makeSelectUsername } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
-import { Box, Grid, Typography, AppBar, Toolbar, Select, MenuItem, FormControl, Button } from '@mui/material';
-import { makeStyles } from '@material-ui/core';
+import { Box, AppBar, Toolbar, Select, MenuItem, FormControl } from '@mui/material';
+import { makeStyles, Container, Typography, Grid, Button } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
 import FastfoodIcon from '@mui/icons-material/Fastfood';
 import { getUser, removeUserSession } from '../../utils/common';
@@ -53,12 +53,21 @@ export function HomePage(props) {
     props.history.push("/")
   }
 
+  const handleSellerRegister = () => {
+    if (user) {
+      props.history.push("/sellerRegister")
+    } else {
+      props.history.push("/login")
+    }
+  }
+
   return (
     <div>
       <AppBar sx={{ background: "#fff" }} position='static'>
         <Toolbar>
 
-          <Button href="/sellerRegister">Become a seller in No Ne </Button>
+          <Button onClick={handleSellerRegister}>Become a seller in No Ne </Button>
+          {user ? <Button href='/myStore'>My Store </Button> : null}
           <Box sx={{ marginLeft: 'auto' }} >
             {user == null ?
               <>
