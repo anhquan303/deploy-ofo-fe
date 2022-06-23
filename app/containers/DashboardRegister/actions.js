@@ -13,6 +13,27 @@ export function defaultAction() {
   };
 }
 
+export function fetchListRegister(payload) {
+  return {
+    type: types.FETCH_LIST_REGISTER,
+    payload
+  };
+}
+
+export function fetchListRegisterSuccess(payload) {
+  return {
+    type: types.FETCH_LIST_REGISTER_SUCCESS,
+    payload
+  };
+}
+
+export function fetchListRegisterFailed(payload) {
+  return {
+    type: types.FETCH_LIST_REGISTER_FAILED,
+    payload
+  };
+}
+
 
 
 

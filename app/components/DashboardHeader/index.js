@@ -85,7 +85,7 @@ function DashboardHeader({ text, user }) {
   const classes = useStyles();
   // const location = useLocation();
 
-  console.log(user)
+  console.log('user', user)
 
   return (
     <Grid container spacing={3}>
@@ -117,7 +117,7 @@ function DashboardHeader({ text, user }) {
         <div className={classes.avatar}>
           <div style={{ marginRight: "14px" }} >
             <div><span className={classes.firstText}>Hello,</span> <span className={classes.secondText}>{user.username}</span></div>
-            <div><span className={classes.secondLine}>Admin</span></div>
+            <div><span className={classes.secondLine}>{user.authorities[0].authority}</span></div>
           </div>
           <div><Avatar alt="Quan Nguyen" src={Avatar1} /></div>
         </div>

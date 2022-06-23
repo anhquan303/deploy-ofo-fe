@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -22,6 +22,7 @@ import { makeStyles } from '@material-ui/core';
 import CustomTable from '../../components/CustomTable';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import { fetchListRegister } from './actions';
 
 const useStyles = makeStyles((theme) => ({
   information_image: {
@@ -39,31 +40,36 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export function DashboardRegister() {
+export function DashboardRegister(props) {
+  const { dispatch } = props;
   useInjectReducer({ key: 'dashboardRegister', reducer });
   useInjectSaga({ key: 'dashboardRegister', saga });
 
   const classes = useStyles();
 
   const newRegister = [
-    { stt: 1, storeName: "Bun Bo", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
-    { stt: 2, storeName: "Bun Bo Hue", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
-    { stt: 3, storeName: "Bun Bo My", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
-    { stt: 4, storeName: "Bun Bo Kobe", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
-    { stt: 5, storeName: "Bun Bo Phap", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
-    { stt: 6, storeName: "Bun Bo Anh", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
-    { stt: 7, storeName: "Bun Bo Bi", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
-    { stt: 8, storeName: "Bun Bo Nga", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" }
+    { id: 1, storeName: "Bun Bo", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
+    { id: 2, storeName: "Bun Bo Hue", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
+    { id: 3, storeName: "Bun Bo My", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
+    { id: 4, storeName: "Bun Bo Kobe", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
+    { id: 5, storeName: "Bun Bo Phap", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
+    { id: 6, storeName: "Bun Bo Anh", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
+    { id: 7, storeName: "Bun Bo Bi", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
+    { id: 8, storeName: "Bun Bo Nga", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" }
   ];
 
   const columns = [
-    { title: "STT", field: "stt" },
-    { title: "Store Name", field: "storeName" },
-    { title: "Email", field: "email" },
-    { title: "Phone", field: "phone" },
-    { title: "Address", field: "address" },
-    { title: "Register At", field: "registerAt" },
+    { title: "ID", field: "id" },
+    { title: "Store Name", field: "name" },
+    { title: "Owner", field: `[user.username]` },
+    { title: "Phone", field: "phoneNumber" },
+    { title: "Status", field: "status" },
   ];
+
+  useEffect(() => {
+    dispatch(fetchListRegister());
+  }, []);
+
 
   return (
     <div style={{ paddingRight: "15px" }}>
@@ -76,7 +82,7 @@ export function DashboardRegister() {
             </div>
           </Grid>
           <Grid item sm={12} xs={12}>
-            <CustomTable data={newRegister} itemPerPage={5} totalItem={newRegister.length} detailPage="dashboard" columns={columns} />
+            <CustomTable data={props.dashboardRegister.registerList} itemPerPage={5} totalItem={props.dashboardRegister.registerList.length} detailPage="register" columns={columns} />
           </Grid>
         </Grid>
 
