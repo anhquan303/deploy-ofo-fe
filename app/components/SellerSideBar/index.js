@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const drawerWidth = 220
+const drawerWidth = 245
 
 
 function SellerSideBar(props) {
@@ -126,37 +126,39 @@ function SellerSideBar(props) {
 
   const classes = useStyles();
 
+  const history = useHistory();
+
   const drawer = (
     <Container className={classes.container}>
-      <div className={classes.topLogo} >
+      <div onClick={() => history.push("/")} className={classes.topLogo} >
         <img src={Logo} alt="logo" className={classes.logo} />
         <Typography className={classes.textLogo}>No <span className={classes.span}>Nê</span></Typography>
       </div>
-      <NavLink to="/dashboard" className={classes.link} onClick={handleDrawerToggle}>
+      <NavLink to="/managerOrder" className={classes.link} onClick={handleDrawerToggle}>
         <div className={classes.item}>
           <DashboardRoundedIcon className={classes.icon} />
           <Typography className={classes.text}>Manager Order</Typography>
         </div>
       </NavLink>
-      <NavLink to="/customer" className={classes.link} onClick={handleDrawerToggle}>
+      <NavLink to="/managerProduct" className={classes.link} onClick={handleDrawerToggle}>
         <div className={classes.item}>
           <PersonIcon className={classes.icon} />
           <Typography className={classes.text}>Manager Product</Typography>
         </div>
       </NavLink>
-      <NavLink to="/account" className={classes.link} onClick={handleDrawerToggle}>
+      <NavLink to="/turnover" className={classes.link} onClick={handleDrawerToggle}>
         <div className={classes.item}>
           <AccountBoxIcon className={classes.icon} />
           <Typography className={classes.text}>Turnover</Typography>
         </div>
       </NavLink>
-      <NavLink to="/store" className={classes.link} onClick={handleDrawerToggle}>
+      <NavLink to="/storeSetting" className={classes.link} onClick={handleDrawerToggle}>
         <div className={classes.item}>
           <StoreIcon className={classes.icon} />
           <Typography className={classes.text}>Store Setting</Typography>
         </div>
       </NavLink >
-      <NavLink to="/order" className={classes.link} onClick={handleDrawerToggle}>
+      <NavLink to="/myReport" className={classes.link} onClick={handleDrawerToggle}>
         <div className={classes.item}>
           <LocalGroceryStoreIcon className={classes.icon} />
           <Typography className={classes.text}>My Report</Typography>
@@ -189,7 +191,7 @@ function SellerSideBar(props) {
             <MenuIcon />
             {/* <span><p>Hello, Quan </p></span> */}
           </IconButton>
-          {path == "/myStore" ? <DashboardHeader text="MY STORE" user={user} /> : null}
+          {path == "/myStore" ? <DashboardHeader text="MY STORE" user={user} /> : path == "/managerProduct" || path == "/managerProduct/addProduct"? <DashboardHeader text="MY STORE" user={user} /> : null}
 
         </Toolbar>
       </AppBar>
