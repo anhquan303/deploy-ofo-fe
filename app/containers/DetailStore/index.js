@@ -52,9 +52,9 @@ const useStyles = makeStyles((theme) => ({
     // [theme.breakpoints.down("lg")]: {
     //   height: "400px"
     // },
-    // [theme.breakpoints.down("md")]: {
-    //   height: "300px"
-    // },
+    [theme.breakpoints.down("md")]: {
+      height: "300px"
+    },
   },
   information_one: {
     background: "#fff",

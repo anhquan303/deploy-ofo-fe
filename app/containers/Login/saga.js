@@ -18,17 +18,15 @@ export function* login({ payload }) {
 
 
     const res = yield call(apiLogin, ['auth/login'], data);
-    console.log(res)
+    console.log('res login ', res)
+    // if (res.data.success == true) {
     if (res.status == 200) {
       console.log(res.data.accessToken)
       console.log(res.data.user)
       setUserSession(res.data.accessToken, res.data.user)
-      console.log('done')
       yield put(loginSuccess("Login success"))
-      
-      
     } else {
-      yield put(loginFailed("Login failed"))
+      yield put(loginFailed(res.data.msg))
     }
 
 

@@ -9,7 +9,7 @@ export const apiFetchData = (data) => {
     });
 }
 
-export const apiLogin = (data, payload) => {
+export const apiAddProduct = (data, payload) => {
     return new Promise((resolve, reject) => {
         return apiBase
             .post(`${data[0]}`, payload)

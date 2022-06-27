@@ -10,7 +10,13 @@ export function* signUp({ payload }) {
     const data = {
       username: payload.userName,
       password: payload.password,
-      phone: payload.phone
+      phone: payload.phone,
+      firstName: payload.firstName,
+      lastName: payload.firstName,
+      email: payload.email,
+      location: [{
+        name: payload.location
+      }]
     }
     const res = yield call(apiSignup, ['auth/adduser'], data);
     console.log(res)

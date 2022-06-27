@@ -40,7 +40,7 @@ export function Dashboard(props) {
   useInjectReducer({ key: 'dashboard', reducer });
   useInjectSaga({ key: 'dashboard', saga });
 
-  console.log(props.dashboard.userList)
+  const action = false;
 
   useEffect(() => {
     dispatch(getData());
@@ -118,8 +118,6 @@ export function Dashboard(props) {
     { title: "Contact", field: "contact" },
   ]
 
-  console.log(newList)
-
   const user = getUser();
   if (user) {
     if (user.authorities[0].authority == 'USER') {
@@ -188,7 +186,7 @@ export function Dashboard(props) {
           </Grid>
           <Grid item sm={12} xs={12}>
             <h3>Recent Action</h3>
-            <CustomTable data={actione} itemPerPage={5} totalItem={actione.length} detailPage="dashboard" columns={columns} />
+            <CustomTable data={actione} itemPerPage={5} totalItem={actione.length} detailPage="dashboard" columns={columns} action={action} />
           </Grid>
         </Grid>
 

@@ -26,6 +26,7 @@ import DetailRegister from '../../containers/DetailRegister';
 import SellerHomePage from '../../containers/SellerHomePage';
 import SellerManagerProduct from '../../containers/SellerManagerProduct';
 import SellerAddProduct from '../../containers/SellerAddProduct';
+import SellerActionProduct from '../../containers/SellerActionProduct';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
 
@@ -74,6 +75,9 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
       marginLeft: "270px",
     },
+  },
+  down2: {
+    width: "100%"
   }
 
 }));
@@ -99,16 +103,16 @@ export default function App() {
     <StylesProvider injectFirst>
       <AppWrapper>
         <Helmet
-          titleTemplate="%s - React.js Boilerplate"
-          defaultTitle="React.js Boilerplate"
+          titleTemplate="%s - No Ne"
+          defaultTitle="No Ne"
         >
           <meta name="description" content="A React.js Boilerplate application" />
         </Helmet>
         {/* <Header /> */}
 
-        {location.pathname != "/login" && location.pathname != "/userRegister" && location.pathname != "/sellerRegister" && location.pathname != "/" && location.pathname != "/myStore"
-          && location.pathname != "/managerProduct" && location.pathname != "/managerProduct/:addProduct" && user.authorities[0].authority == 'ADMIN' ?
-          // {user.authorities[0].authority == 'ADMIN' ?
+        {/* {location.pathname != "/login" && location.pathname != "/userRegister" && location.pathname != "/sellerRegister" && location.pathname != "/" && location.pathname != "/myStore"
+          && location.pathname != "/managerProduct" && location.pathname != "/managerProduct/addProduct" && user.authorities[0].authority == 'ADMIN' ? */}
+        {user != null && user.authorities[0].authority == 'ADMIN' ?
           <Grid container spacing={2}>
             <Grid item sm={12} xs={12} md={2}>
               <SideBar />
@@ -118,8 +122,8 @@ export default function App() {
                 {/* <DashboardHeader /> */}
                 <Switch>
                   {/* <Route exact path="/" component={HomePage} /> */}
-                  <Route path="/features" component={FeaturePage} />
-                  <Route path="/login" component={Login} />
+                  {/* <Route path="/features" component={FeaturePage} />
+                  <Route path="/login" component={Login} /> */}
                   <Route path="/userRegister" component={UserRegister} />
                   <Route path="/sellerRegister" component={SellerRegister} />
                   <Route path="/dashboard" component={Dashboard} />
@@ -134,46 +138,58 @@ export default function App() {
               </Grid>
             </div>
           </Grid>
-          : location.pathname == "/myStore" || location.pathname == "/managerProduct" || location.pathname == "/managerProduct/addProduct" && user.authorities[0].authority == 'USER'?
-          // : user.authorities[0].authority == 'USER' ?
+          // : location.pathname == "/myStore" || location.pathname == "/managerProduct" || location.pathname == "/managerProduct/addProduct" && user.authorities[0].authority == 'USER' ?
+          :
+          user != null && user.authorities[0].authority == 'USER' && location.pathname == "/" ?
             <Grid container spacing={1}>
-              <Grid item sm={12} xs={12} md={2}>
-                <SellerSideBar />
-              </Grid>
-              <div className={classes.down1}>
-                <Grid item sm={12} xs={12} md={12}>
-                  <Switch>
-                    <Route exact path="/" component={HomePage} />
-                    <Route path="/myStore" component={SellerHomePage} />
-                    <Route exact path="/managerProduct" component={SellerManagerProduct} />
-                    <Route path="/managerProduct/:addProduct" component={SellerAddProduct} />
-                    {/* <Route path="/login" component={Login} />
-                    <Route path="/userRegister" component={UserRegister} />
-                    <Route path="/sellerRegister" component={SellerRegister} /> */}
-                    <Route path="" component={NotFoundPage} />
-                  </Switch>
-                </Grid>
-              </div>
-            </Grid>
-            :
-            <Grid container spacing={1}>
-              <Grid item xs={12}>
+              <Grid item sm={12} xs={12} md={12}>
                 <Switch>
                   <Route exact path="/" component={HomePage} />
-                  {/* <Route path="/features" component={FeaturePage} /> */}
-                  <Route path="/login" component={Login} />
-                  <Route path="/userRegister" component={UserRegister} />
-                  <Route path="/sellerRegister" component={SellerRegister} />
-                  {/* <Route path="/dashboard" component={Dashboard} />
+                  <Route path="" component={NotFoundPage} />
+                </Switch>
+              </Grid>
+            </Grid>
+            //
+
+            : user != null && user.authorities[0].authority == 'USER' ?
+              <Grid container spacing={1}>
+                <Grid item sm={12} xs={12} md={2}>
+                  <SellerSideBar />
+                </Grid>
+                <div className={classes.down1}>
+                  <Grid item sm={12} xs={12} md={12}>
+                    <Switch>
+                      {/* <Route exact path="/" component={HomePage} /> */}
+                      <Route path="/myStore" component={SellerHomePage} />
+                      <Route exact path="/managerProduct" component={SellerManagerProduct} />
+                      <Route path="/managerProduct/addProduct" component={SellerAddProduct} />
+                      <Route path="/managerProduct/:id" component={SellerActionProduct} />
+                      <Route path="/sellerRegister" component={SellerRegister} />
+                      <Route path="" component={NotFoundPage} />
+                    </Switch>
+                  </Grid>
+                </div>
+              </Grid>
+              :
+              <Grid container spacing={1}>
+                <Grid item xs={12}>
+                  <Switch>
+                    <Route exact path="/" component={HomePage} />
+                    {/* <Route path="/features" component={FeaturePage} /> */}
+                    <Route path="/login" component={Login} />
+                    <Route path="/userRegister" component={UserRegister} />
+                    <Route path="/sellerRegister" component={SellerRegister} />
+                    {/* <Route path="/managerProduct/:id" component={SellerActionProduct} /> */}
+                    {/* <Route path="/dashboard" component={Dashboard} />
                   <Route path="/register" component={DashboardRegister} />
                   <Route path="/register/:id" component={DetailRegister} />
                   <Route path="/customer" component={DashboardCustomer} />
                   <Route exact path="/store" component={DashboardStore} />
                   <Route path="/store/:id" component={DetailStore} /> */}
-                  <Route path="" component={NotFoundPage} />
-                </Switch>
+                    <Route path="" component={NotFoundPage} />
+                  </Switch>
+                </Grid>
               </Grid>
-            </Grid>
         }
 
 
