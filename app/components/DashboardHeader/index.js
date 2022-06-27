@@ -89,10 +89,10 @@ function DashboardHeader({ text, user }) {
 
   return (
     <Grid container spacing={3}>
-      <Grid item sm={7} xs={6}>
+      <Grid item sm={7} xs={7}>
         <p className={classes.text}>{text}</p>
       </Grid>
-      <Grid item sm={5} xs={6}>
+      <Grid item sm={5} xs={5}>
         {/* <Grid container spacing={3}>
           <Grid item sm={6} xs={12} className={classes.hello}>
             <div style={{ marginTop: "5px" }}>

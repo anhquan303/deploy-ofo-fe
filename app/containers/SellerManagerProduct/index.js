@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -27,6 +27,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { makeStyles, Button } from '@material-ui/core';
+import { fetchListFood, searchFood } from './actions';
 
 const useStyles = makeStyles((theme) => ({
   information_image: {
@@ -69,29 +70,52 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function SellerManagerProduct(props) {
+  const { dispatch } = props;
   useInjectReducer({ key: 'sellerManagerProduct', reducer });
   useInjectSaga({ key: 'sellerManagerProduct', saga });
 
-  const food = [
-    { id: 1, name: "Banh My 2 trung", price: "15.000 VND", quantity: "2", type: "banh mi", status: "Active" },
-    { id: 2, name: "Bun dau", price: "15.000 VND", quantity: "2", type: "bun", status: "Active" },
-    { id: 3, name: "Pizza", price: "15.000 VND", quantity: "2", type: "do an nhanh", status: "Active" },
+  const [nameSearch, setNameSearch] = useState("");
+  const [priceFrom, setPriceFrom] = useState("");
+  const [priceTo, setPriceTo] = useState("");
+  const action = false;
 
-  ];
 
   const columns = [
     { title: "ID", field: "id" },
     { title: "Food Name", field: "name" },
     { title: "Price", field: "price" },
-    { title: "Quantity", field: "quantity" },
+    { title: "Creat At", field: "createdAt" },
     { title: "Type", field: "type" },
     { title: "Status", field: "status" },
   ];
 
   const classes = useStyles();
-  const [priceFrom, setPriceForm] = useState();
 
   const [type, setType] = useState();
+
+  useEffect(() => {
+    dispatch(fetchListFood());
+  }, []);
+
+  //set Type
+  const handleChangeType = (e) => {
+    setType(e.target.value);
+  };
+
+  const searchFood1 = () => {
+    const data = {
+      name: nameSearch,
+      startPrice: priceFrom,
+      endPrice: priceTo
+    }
+    dispatch(searchFood(data));
+  }
+
+  const reset = () => {
+    setNameSearch("");
+    setPriceFrom("");
+    setPriceTo("");
+  }
 
   return (
     <div style={{ paddingRight: "15px" }}>
@@ -109,11 +133,12 @@ export function SellerManagerProduct(props) {
                   autoComplete="off"
                 >
                   <TextField
-
                     id="outlined-textarea"
                     label="Tên món ăn"
                     placeholder="Tên món ăn"
                     multiline
+                    value={nameSearch}
+                    onChange={(e) => setNameSearch(e.target.value)}
                   />
                 </Box>
               </div>
@@ -122,17 +147,20 @@ export function SellerManagerProduct(props) {
               <div className={classes.center}>
                 <Box sx={{ minWidth: 120 }}>
                   <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">Age</InputLabel>
+                    <InputLabel id="demo-simple-select-label">Type</InputLabel>
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
                       value={type}
-                      label="Age"
-                    // onChange={(e) => setType(e.target.value)}
+                      label="Type"
+                      onChange={handleChangeType}
                     >
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
+                      <MenuItem value='ComNong'>Cơm Nóng</MenuItem>
+                      <MenuItem value='ComRang'>Cơm Rang</MenuItem>
+                      <MenuItem value='ComTam'>Cơm Tấm</MenuItem>
+                      <MenuItem value='NemNuong'>Nem Nướng</MenuItem>
+                      <MenuItem value='Pho'>Phở</MenuItem>
+                      <MenuItem value='Banhmi'>Bánh Mì</MenuItem>
                     </Select>
                   </FormControl>
                 </Box>
@@ -177,6 +205,8 @@ export function SellerManagerProduct(props) {
                         label="Giá từ"
                         placeholder="Giá từ"
                         multiline
+                        value={priceFrom}
+                        onChange={(e) => setPriceFrom(e.target.value)}
                       />
 
                     </Grid>
@@ -186,6 +216,8 @@ export function SellerManagerProduct(props) {
                         label="đến"
                         placeholder="đến"
                         multiline
+                        value={priceTo}
+                        onChange={(e) => setPriceTo(e.target.value)}
                       />
 
                     </Grid>
@@ -198,14 +230,14 @@ export function SellerManagerProduct(props) {
             <Grid container spacing={0} >
               <Grid item md={6} sm={6} xs={12}>
                 <div className={classes.center}>
-                  <Button className={classes.btn} variant="contained" component="span" style={{ width: "fit-content" }}>
+                  <Button className={classes.btn} variant="contained" component="span" style={{ width: "fit-content" }} onClick={reset}>
                     Đặt lại
                   </Button>
                 </div>
               </Grid>
               <Grid item md={6} sm={6} xs={12}>
                 <div className={classes.center}>
-                  <Button className={classes.btn} variant="contained" component="span" style={{ width: "fit-content" }}>
+                  <Button className={classes.btn} variant="contained" component="span" style={{ width: "fit-content" }} onClick={searchFood1}>
                     Tìm kiếm
                   </Button>
                 </div>
@@ -220,7 +252,7 @@ export function SellerManagerProduct(props) {
           Thêm sản phẩm
         </Button>
       </div>
-      <CustomTable data={food} itemPerPage={5} totalItem={food.length} detailPage="food" columns={columns} />
+      <CustomTable data={props.sellerManagerProduct.foodList} itemPerPage={5} totalItem={props.sellerManagerProduct.foodList.length} detailPage="managerProduct" columns={columns} action={action} />
     </div >
   );
 }

@@ -191,8 +191,10 @@ function SellerSideBar(props) {
             <MenuIcon />
             {/* <span><p>Hello, Quan </p></span> */}
           </IconButton>
-          {path == "/myStore" ? <DashboardHeader text="MY STORE" user={user} /> : path == "/managerProduct" || path == "/managerProduct/addProduct"? <DashboardHeader text="MY STORE" user={user} /> : null}
+          {/* {path == "/myStore" ? <DashboardHeader text="MY STORE" user={user} /> :
+            path == "/managerProduct" || path == "/managerProduct/:addProduct" ? <DashboardHeader text="MY STORE" user={user} /> : path == "/managerProduct/:id" ? <DashboardHeader text="PRODUCT" user={user} /> : null} */}
 
+          {user != null && user.authorities[0].authority == 'USER' && path != "/" ? <DashboardHeader text="MY STORE" user={user} /> : null}
         </Toolbar>
       </AppBar>
       <Box

@@ -56,14 +56,12 @@ const useStyles = makeStyles(() => ({
 
 }));
 
-function CustomTable({ data, itemPerPage, totalItem, detailPage, columns }) {
+function CustomTable({ data, itemPerPage, totalItem, detailPage, columns, action }) {
   const classes = useStyles();
   const [currentPage, setCurrentPage] = useState(1);
   const indexOfLastItem = currentPage * itemPerPage;
   const indexOfFirstItem = indexOfLastItem - itemPerPage;
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
-
-  console.log(totalItem)
 
   var length = Math.ceil(totalItem / itemPerPage);
   const pageNumber = [];
@@ -84,8 +82,6 @@ function CustomTable({ data, itemPerPage, totalItem, detailPage, columns }) {
   }
 
   const handleChangPage = (event, page) => {
-    console.log('page', page)
-    console.log('e', event)
     setCurrentPage(page)
   }
 
@@ -97,6 +93,7 @@ function CustomTable({ data, itemPerPage, totalItem, detailPage, columns }) {
       {columns.map((columnsItem, index) => {
         return <td key={index}>{item[`${columnsItem.field}`]}</td>
       })}
+      {action == true ? <td><button>Delete</button></td> : null}
     </tr>
 
   )
@@ -106,36 +103,20 @@ function CustomTable({ data, itemPerPage, totalItem, detailPage, columns }) {
       <table className={classes.table}>
         <thead>
           <tr>
-            {/* {header.map((item) =>
-              <th scope="col" key={item} className={classes.th}>{item}</th>
-            )} */}
-            {/* {columns.map((item, index) =>
-              <th key={index} className={classes.th}>{item.title}</th>)} */}
             {columns.map((item, index) => <TableHeadItem item={item} key={index} />)}
+            {action == true ? <th>Action</th> : null}
           </tr>
 
         </thead>
         <tbody>
-
-          {/* {Object.values(currentItems).map((obj, index) => (
-            <tr key={index} onClick={() => handleClick(obj)} className={classes.tr}>
-              {Object.values(obj).map((value, index2) => (
-                <td key={index2}>{value}</td>
-              ))}
-            </tr>
-          ))} */}
           {currentItems.map((item, index) => <TableRowItem item={item} columns={columns} key={index} />)}
         </tbody>
       </table>
       <nav className={classes.pagination}>
         <Stack spacing={2}>
           <Pagination count={length} onChange={handleChangPage} />
-          {/* <Pagination count={10} color="primary" />
-                    <Pagination count={10} color="secondary" />
-                    <Pagination count={10} disabled /> */}
         </Stack>
       </nav>
-      {/* <Route path="/store/:id" component={DetailStore} /> */}
     </div >
   );
 }

@@ -1,6 +1,6 @@
 /**
  *
- * SellerAddProduct
+ * SellerActionProduct
  *
  */
 
@@ -14,18 +14,20 @@ import { compose } from 'redux';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
-import makeSelectSellerAddProduct from './selectors';
+import makeSelectSellerActionProduct from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
+import { useParams } from 'react-router-dom';
 import { Box, TextField } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { makeStyles, Grid, Button } from '@material-ui/core';
-import { addProduct } from './actions';
 import Snackbar from '@mui/material/Snackbar';
+import { deleteProduct, updateProduct } from './actions';
+
 
 const useStyles = makeStyles((theme) => ({
   upload: {
@@ -68,27 +70,27 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: "5px",
     }
   },
-
-
 }));
 
-export function SellerAddProduct(props) {
+
+export function SellerActionProduct(props) {
   const { dispatch } = props;
-  useInjectReducer({ key: 'sellerAddProduct', reducer });
-  useInjectSaga({ key: 'sellerAddProduct', saga });
+  useInjectReducer({ key: 'sellerActionProduct', reducer });
+  useInjectSaga({ key: 'sellerActionProduct', saga });
+
+  let param = useParams();
+  console.log('param ', props.location.state.item)
+
   const classes = useStyles();
-
-
   const [type, setType] = useState("");
   const [storeId, setStoreId] = useState("1");
-  const initialValues = { name: "", price: "", description: "", image: "" };
+  const initialValues = { name: props.location.state.item.name, price: props.location.state.item.price, description: props.location.state.item.description, image: "" };
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [open, setOpen] = useState(false);
   const [vertical, setVertical] = useState("top");
   const [horizontal, setHorizontal] = useState("right");
   const [isSubmit, setIsSubmit] = useState(false);
-
 
 
   //set value for input
@@ -133,11 +135,11 @@ export function SellerAddProduct(props) {
     return errors;
   }
 
-
-  //add Product
+  //update Product
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       const data = {
+        id: props.location.state.item.id,
         name: formValues.name,
         price: formValues.price,
         type: type,
@@ -145,22 +147,29 @@ export function SellerAddProduct(props) {
         image: "A",
         storeId: storeId
       }
-      dispatch(addProduct(data));
+      dispatch(updateProduct(data));
       setOpen(true);
     }
 
   }, [formErrors])
 
+  const deleteProduct1 = () => {
+    const data = {
+      id: props.location.state.item.id
+    }
+    dispatch(deleteProduct(data));
+  }
+
   useEffect(() => {
-    if (props.sellerAddProduct.message === "ADD SUCCESSFUL") {
+    if (props.sellerActionProduct.message == "DELETE SUCCESSFUL" || props.sellerActionProduct.message == "UPDATE SUCCESSFUL") {
       props.history.push("/managerProduct")
     }
-  }, [props.sellerAddProduct.message])
+  }, [props.sellerActionProduct.message])
 
   return (
     <div style={{ paddingRight: "15px" }}>
       <div style={{ textAlign: "center" }}>
-        <p>Thêm sản phảm mới</p>
+        <p>Thay đổi sản phảm</p>
         <div className={classes.inside}>
           <form>
             <Grid container spacing={0} >
@@ -258,7 +267,7 @@ export function SellerAddProduct(props) {
                     />
                   </Box>
                 </Grid>
-                
+
               </Grid>
               <Grid item sm={12} xs={12} >
                 <Box
@@ -278,14 +287,19 @@ export function SellerAddProduct(props) {
                 </Box>
               </Grid>
               <Grid container spacing={1} >
-                <Grid item sm={6} xs={12} >
+                <Grid item sm={12} xs={12} lg={4}>
                   <Button onClick={() => props.history.push("/managerProduct")} className={classes.btn} variant="contained" component="span" >
                     Trở về
                   </Button>
                 </Grid>
-                <Grid item sm={6} xs={12} >
+                <Grid item sm={12} xs={12} lg={4}>
+                  <Button className={classes.btn} variant="contained" component="span" onClick={deleteProduct1}>
+                    Xóa sản phẩm
+                  </Button>
+                </Grid>
+                <Grid item sm={12} xs={12} lg={4}>
                   <Button className={classes.btn} variant="contained" component="span" onClick={HandleSubmit}>
-                    Thêm sản phẩm
+                    Thay đổi sản phẩm
                   </Button>
                 </Grid>
               </Grid>
@@ -295,7 +309,7 @@ export function SellerAddProduct(props) {
             anchorOrigin={{ vertical, horizontal }}
             open={open}
             onClose={handleCloseToast}
-            message={props.sellerAddProduct.message}
+            message={props.sellerActionProduct.message}
             autoHideDuration={5000}
           />
         </div>
@@ -304,12 +318,12 @@ export function SellerAddProduct(props) {
   );
 }
 
-SellerAddProduct.propTypes = {
+SellerActionProduct.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
-  sellerAddProduct: makeSelectSellerAddProduct(),
+  sellerActionProduct: makeSelectSellerActionProduct(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -326,4 +340,4 @@ const withConnect = connect(
 export default compose(
   withConnect,
   memo,
-)(SellerAddProduct);
+)(SellerActionProduct);

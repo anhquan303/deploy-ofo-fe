@@ -46,18 +46,7 @@ export function DashboardRegister(props) {
   useInjectSaga({ key: 'dashboardRegister', saga });
 
   const classes = useStyles();
-
-  const newRegister = [
-    { id: 1, storeName: "Bun Bo", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
-    { id: 2, storeName: "Bun Bo Hue", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
-    { id: 3, storeName: "Bun Bo My", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
-    { id: 4, storeName: "Bun Bo Kobe", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
-    { id: 5, storeName: "Bun Bo Phap", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
-    { id: 6, storeName: "Bun Bo Anh", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
-    { id: 7, storeName: "Bun Bo Bi", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" },
-    { id: 8, storeName: "Bun Bo Nga", email: "abc@gmail.com", phone: "5656465", address: "thach that", registerAt: "04/08/2022" }
-  ];
-
+  const action = false;
   const columns = [
     { title: "ID", field: "id" },
     { title: "Store Name", field: "name" },
@@ -78,11 +67,11 @@ export function DashboardRegister(props) {
         <Grid container spacing={0}>
           <Grid item sm={12} xs={12}>
             <div className={classes.information_image}>
-              <h2>New Register: 18</h2>
+              <h2>New Register: {props.dashboardRegister.registerList.length}</h2>
             </div>
           </Grid>
           <Grid item sm={12} xs={12}>
-            <CustomTable data={props.dashboardRegister.registerList} itemPerPage={5} totalItem={props.dashboardRegister.registerList.length} detailPage="register" columns={columns} />
+            <CustomTable data={props.dashboardRegister.registerList} itemPerPage={5} totalItem={props.dashboardRegister.registerList.length} detailPage="register" columns={columns} action={action} />
           </Grid>
         </Grid>
 

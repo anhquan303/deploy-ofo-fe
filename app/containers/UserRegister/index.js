@@ -18,15 +18,15 @@ import makeSelectUserRegister from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
-import { makeStyles, Container, Typography } from '@material-ui/core';
+
 import BackGround from '../../images/dhfpt.png';
 import Logo from '../../images/Happy_Delivery_Man_logo_cartoon_art_illustration.jpg';
-import { Grid, Box, FormGroup, TextField, FormControlLabel, Checkbox, Button } from '@mui/material';
+import { Grid, Box, FormGroup, TextField, FormControlLabel, Checkbox } from '@mui/material';
 import { signUp } from './actions';
 import Snackbar from '@mui/material/Snackbar';
+import { makeStyles, Container, Typography, Button } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
-
   body: {
     display: "flex",
     justifyContent: "center",
@@ -158,11 +158,14 @@ export function UserRegister(props) {
   //signup
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
-      console.log('zo')
       const data = {
         userName: formValues.userName,
         password: formValues.password,
-        phone: formValues.phone
+        phone: formValues.phone,
+        firstName: formValues.firstName,
+        lastName: formValues.firstName,
+        email: formValues.email,
+        location: formValues.address,
       }
       dispatch(signUp(data))
       setOpen(true);

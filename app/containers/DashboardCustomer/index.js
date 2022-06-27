@@ -47,6 +47,7 @@ export function DashboardCustomer(props) {
 
 
   const classes = useStyles();
+  const action = false;
 
   const columns = [
     { title: "STT", field: "id" },
@@ -72,7 +73,7 @@ export function DashboardCustomer(props) {
           </Grid>
           <Grid item sm={12} xs={12}>
 
-            {props.dashboardCustomer.userList ? <CustomTable data={props.dashboardCustomer.userList} itemPerPage={3} totalItem={props.dashboardCustomer.userList.length} detailPage="customer" columns={columns} /> : <></>}
+            {props.dashboardCustomer.userList ? <CustomTable data={props.dashboardCustomer.userList} itemPerPage={3} totalItem={props.dashboardCustomer.userList.length} detailPage="customer" columns={columns} action={action} /> : <></>}
           </Grid>
         </Grid>
 

@@ -30,30 +30,36 @@ export function DashboardStore(props) {
   useInjectReducer({ key: 'dashboardStore', reducer });
   useInjectSaga({ key: 'dashboardStore', saga });
 
-  console.log('list', props.dashboardStore.listStore)
+  const [searched, setSearched] = useState("");
+  const [data, setData] = useState(props.dashboardStore.listStore);
+  const action = false;
+
+
   useEffect(() => {
     dispatch(getAllStore());
   }, [])
 
-  const header = ["1", "2", "3", "4", "5"]
-  const [searched, setSearched] = useState("");
+
+  useEffect(() => {
+    setData(props.dashboardStore.listStore);
+  }, [props.dashboardStore.listStore])
 
   const requestSearch = (searchedVal) => {
-    // const filteredRows = originalRows.filter((row) => {
-    //   return row.name.toLowerCase().includes(searchedVal.toLowerCase());
-    // });
-    // setRows(filteredRows);
+    const filteredRows = props.dashboardStore.listStore.filter((row) => {
+      return row.name.toLowerCase().includes(searchedVal.toLowerCase());
+    });
+    setData(filteredRows);
   };
 
   const cancelSearch = () => {
-    // setSearched("");
-    // requestSearch(searched);
+    setSearched("");
+    requestSearch(searched);
   };
 
   const columns = [
     { title: "ID", field: "id" },
-    { title: "Owner", field: "user.username" },
     { title: "Name", field: "name" },
+    { title: "Owner", field: "user.username" },
     { title: "Slogan", field: "slogan" },
     { title: "Status", field: "status" },
   ]
@@ -81,7 +87,7 @@ export function DashboardStore(props) {
               />
             </Grid>
             <Grid item sm={12} xs={12}>
-              {props.dashboardStore.listStore ? <CustomTable data={props.dashboardStore.listStore} itemPerPage={3} totalItem={props.dashboardStore.listStore.length} detailPage="store" columns={columns} /> : <></>}
+              {data ? <CustomTable data={data} itemPerPage={3} totalItem={props.dashboardStore.listStore.length} detailPage="store" columns={columns} action={action} /> : <></>}
             </Grid>
           </Grid>
 
