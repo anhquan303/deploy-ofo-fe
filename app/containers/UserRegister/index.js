@@ -25,6 +25,12 @@ import { Grid, Box, FormGroup, TextField, FormControlLabel, Checkbox } from '@mu
 import { signUp } from './actions';
 import Snackbar from '@mui/material/Snackbar';
 import { makeStyles, Container, Typography, Button } from '@material-ui/core';
+import {
+  loadCaptchaEnginge,
+  LoadCanvasTemplate,
+  LoadCanvasTemplateNoReload,
+  validateCaptcha
+} from "react-simple-captcha";
 
 const useStyles = makeStyles((theme) => ({
   body: {
@@ -91,7 +97,7 @@ export function UserRegister(props) {
   useInjectSaga({ key: 'userRegister', saga });
 
   const classes = useStyles();
-  const initialValues = { userName: "", password: "", firstName: "", lastName: "", phone: "", email: "", passwordVerify: "", address: "" };
+  const initialValues = { userName: "", password: "", firstName: "", lastName: "", phone: "", email: "", passwordVerify: "", captcha: "" };
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [accept, setAccept] = useState(false);
@@ -134,15 +140,22 @@ export function UserRegister(props) {
     if (values.passwordVerify != values.password) {
       errors.passwordVerify1 = "password does not match";
     }
-    if (!values.address) {
-      errors.address = "address is required!";
-    }
+    // if (!values.address) {
+    //   errors.address = "address is required!";
+    // }
     if (regexEmail.test(values.email) == false) {
       errors.email1 = "ex: abc@smt.com";
     }
     if (regexPhone.test(values.phone) == false) {
       errors.phone1 = "match 10 digits";
     }
+    if (!values.captcha) {
+      errors.captcha = "captcha is required!";
+    }
+    if (validateCaptcha(values.captcha) == false) {
+      errors.captcha1 = "captcha does not match!";
+    }
+
 
     return errors;
   }
@@ -185,6 +198,10 @@ export function UserRegister(props) {
     }
   }, [props.userRegister.message]);
 
+  useEffect(() => {
+    loadCaptchaEnginge(8);
+  }, []);
+
 
   return (
     <div className={classes.body}>
@@ -219,6 +236,8 @@ export function UserRegister(props) {
                     error={formErrors.firstName != null && formValues.firstName.length == ""}
                   />
                 </Box>
+              </Grid>
+              <Grid item sm={6} xs={12}>
                 <Box
                   component="form"
                   sx={{
@@ -238,47 +257,11 @@ export function UserRegister(props) {
                     error={formErrors.email != null && formValues.email.length == "" ? true : formErrors.email1 != null ? true : false}
                   />
                 </Box>
-                <Box
-                  component="form"
-                  sx={{
-                    '& .MuiTextField-root': { m: 1, width: '100%' },
-                  }}
-                  noValidate
-                  autoComplete="off"
-                >
-                  <TextField
-                    id="outlined-textarea3"
-                    label="Tên tài khoản"
-                    placeholder="Tên tài khoản"
-                    multiline
-                    name="userName"
-                    onChange={handleChange}
-                    helperText={formErrors.userName && formValues.userName.length == "" ? formErrors.userName : null}
-                    error={formErrors.userName != null && formValues.userName.length == ""}
-                  />
-                </Box>
-                <Box
-                  component="form"
-                  sx={{
-                    '& .MuiTextField-root': { m: 1, width: '100%' },
-                  }}
-                  noValidate
-                  autoComplete="off"
-                >
-                  <TextField
-                    id="outlined-password-input"
-                    label="Xác nhận mật khẩu"
-                    type="password"
-                    autoComplete="current-password"
-                    name="passwordVerify"
-                    onChange={handleChange}
-                    helperText={formErrors.passwordVerify && formValues.passwordVerify.length == "" ? formErrors.passwordVerify : formErrors.passwordVerify1 ? formErrors.passwordVerify1 : null}
-                    error={formErrors.passwordVerify != null && formValues.passwordVerify.length == "" ? true : formErrors.passwordVerify1 != null ? true : false}
-                  />
-                </Box>
-
               </Grid>
+            </Grid>
+            <Grid container spacing={2}>
               <Grid item sm={6} xs={12}>
+
                 <Box
                   component="form"
                   sx={{
@@ -298,7 +281,107 @@ export function UserRegister(props) {
                     error={formErrors.phone != null && formValues.phone.length == "" ? true : formErrors.phone1 != null ? true : false}
                   />
                 </Box>
+              </Grid>
+              <Grid item sm={6} xs={12}>
+
                 <Box
+                  component="form"
+                  sx={{
+                    '& .MuiTextField-root': { m: 1, width: '100%' },
+                  }}
+                  noValidate
+                  autoComplete="off"
+                >
+                  <TextField
+                    id="outlined-textarea3"
+                    label="Tên tài khoản"
+                    placeholder="Tên tài khoản"
+                    multiline
+                    name="userName"
+                    onChange={handleChange}
+                    helperText={formErrors.userName && formValues.userName.length == "" ? formErrors.userName : null}
+                    error={formErrors.userName != null && formValues.userName.length == ""}
+                  />
+                </Box>
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={2}>
+              <Grid item sm={6} xs={12}>
+                <Box
+                  component="form"
+                  sx={{
+                    '& .MuiTextField-root': { m: 1, width: '100%' },
+                  }}
+                  noValidate
+                  autoComplete="off"
+                >
+                  <TextField
+                    id="outlined-password-input2"
+                    label="Mật khẩu"
+                    type="password"
+                    autoComplete="current-password"
+                    name="password"
+                    onChange={handleChange}
+                    helperText={formErrors.password && formValues.password.length == "" ? formErrors.password : null}
+                    error={formErrors.password != null && formValues.password.length == ""}
+                  />
+                </Box>
+              </Grid>
+              <Grid item sm={6} xs={12}>
+                <Box
+                  component="form"
+                  sx={{
+                    '& .MuiTextField-root': { m: 1, width: '100%' },
+                  }}
+                  noValidate
+                  autoComplete="off"
+                >
+                  <TextField
+                    id="outlined-password-input"
+                    label="Xác nhận mật khẩu"
+                    type="password"
+                    autoComplete="current-password"
+                    name="passwordVerify"
+                    onChange={handleChange}
+                    helperText={formErrors.passwordVerify && formValues.passwordVerify.length == "" ? formErrors.passwordVerify : formErrors.passwordVerify1 ? formErrors.passwordVerify1 : null}
+                    error={formErrors.passwordVerify != null && formValues.passwordVerify.length == "" ? true : formErrors.passwordVerify1 != null ? true : false}
+                  />
+                </Box>
+              </Grid>
+            </Grid>
+
+
+            <Grid container spacing={2}>
+              <Grid item sm={6} xs={12}>
+                <LoadCanvasTemplate />
+              </Grid>
+              <Grid item sm={6} xs={12}>
+
+                <Box
+                  component="form"
+                  sx={{
+                    '& .MuiTextField-root': { m: 1, width: '100%' },
+                  }}
+                  noValidate
+                  autoComplete="off"
+                >
+                  <TextField
+                    id="outlined-textarea7"
+                    label="Captcha"
+                    placeholder="Captcha"
+                    multiline
+                    name="captcha"
+                    onChange={handleChange}
+                    helperText={formErrors.captcha && formValues.captcha.length == "" ? formErrors.captcha : formErrors.captcha1 ? formErrors.captcha1 : null}
+                    error={formErrors.captcha != null && formValues.captcha.length == "" ? true : formErrors.captcha1 != null ? true : false}
+                  />
+                </Box>
+              </Grid>
+            </Grid>
+
+
+            {/* <Box
                   component="form"
                   sx={{
                     '& .MuiTextField-root': { m: 1, width: '100%' },
@@ -316,44 +399,8 @@ export function UserRegister(props) {
                     helperText={formErrors.address && formValues.address.length == "" ? formErrors.address : null}
                     error={formErrors.address != null && formValues.address.length == ""}
                   />
-                </Box>
-                <Box
-                  component="form"
-                  sx={{
-                    '& .MuiTextField-root': { m: 1, width: '100%' },
-                  }}
-                  noValidate
-                  autoComplete="off"
-                >
-                  <TextField
-                    id="outlined-password-input2"
-                    label="mật khẩu"
-                    type="password"
-                    autoComplete="current-password"
-                    name="password"
-                    onChange={handleChange}
-                    helperText={formErrors.password && formValues.password.length == "" ? formErrors.password : null}
-                    error={formErrors.password != null && formValues.password.length == ""}
-                  />
-                </Box>
-                <Box
-                  component="form"
-                  sx={{
-                    '& .MuiTextField-root': { m: 1, width: '100%' },
-                  }}
-                  noValidate
-                  autoComplete="off"
-                >
-                  <TextField
-                    id="outlined-textarea7"
-                    label="Captcha"
-                    placeholder="Captcha"
-                    multiline
-                    name="captcha"
-                  />
-                </Box>
-              </Grid>
-            </Grid>
+                </Box> */}
+
           </div>
           <label >
             <FormGroup style={{ marginLeft: "10px" }}>

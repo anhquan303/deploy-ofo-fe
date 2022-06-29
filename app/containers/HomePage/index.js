@@ -8,7 +8,7 @@ import React, { useEffect, memo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
@@ -28,7 +28,7 @@ import Input from './Input';
 import Section from './Section';
 import messages from './messages';
 import { loadRepos } from '../App/actions';
-import { changeUsername } from './actions';
+import { logOut } from './actions';
 import { makeSelectUsername } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
@@ -46,9 +46,13 @@ export function HomePage(props) {
   useInjectSaga({ key, saga });
 
   const [language, setLanguage] = useState("English");
+  console.log(props)
+  //const dispatch = useDispatch();
 
   const user = getUser();
-  const handleLogout = () => {
+  const handleLogout = (e) => {
+    e.preventDefault();
+    //dispatch(logOut());
     removeUserSession();
     props.history.push("/")
   }
@@ -76,10 +80,6 @@ export function HomePage(props) {
               </>
               : <Button onClick={handleLogout}>Logout </Button>}
           </Box>
-
-
-
-
         </Toolbar>
       </AppBar>
     </div >

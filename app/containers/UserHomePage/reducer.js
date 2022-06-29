@@ -1,6 +1,6 @@
 /*
  *
- * SellerRegister reducer
+ * UserHomePage reducer
  *
  */
 import produce from 'immer';
@@ -13,23 +13,23 @@ export const initialState = {
 };
 
 /* eslint-disable default-case, no-param-reassign */
-const sellerRegisterReducer = (state = initialState, action) =>
+const userHomePageReducer = (state = initialState, action) =>
   produce(state, (draft) => {
     switch (action.type) {
       case DEFAULT_ACTION:
         break;
-      case types.SELLER_SIGNUP:
+      case types.LOG_OUT:
         draft.loading = true;
         break;
-      case types.SELLER_SIGNUP_SUCCESS:
+      case types.LOG_OUT_SUCCESS:
         draft.loading = false;
         draft.message = action.payload;
         break;
-      case types.SELLER_SIGNUP_FAILED:
+      case types.LOG_OUT_FAILED:
         draft.loading = false;
         draft.message = action.payload;
         break;
     }
   });
 
-export default sellerRegisterReducer;
+export default userHomePageReducer;

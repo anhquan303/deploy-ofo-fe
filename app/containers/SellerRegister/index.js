@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -23,10 +23,15 @@ import { Box, TextField, Tab, Tabs, TextareaAutosize, FormGroup, FormControlLabe
 import { makeStyles, Container, Typography, Grid, Button } from '@material-ui/core';
 import BackGround from '../../images/dhfpt.png';
 import { NavLink } from 'react-router-dom';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+// import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { getUser } from '../../utils/common';
+import TimePicker from 'react-time-picker';
+import moment from 'moment'
+import { sellerSignUp } from './actions';
+import Modal from '@mui/material/Modal';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -109,46 +114,264 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#D9D9D9",
     padding: "20px",
     borderRadius: "10px"
+  },
+  modal: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 650,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+    backgroundColor: "#fff",
+    textAlign: "center",
+    borderRadius: "20px"
+  },
+  btnAccept: {
+    position: "relative",
+    width: "100%",
+    borderRadius: "10px",
+    backgroundColor: "#ff9900",
+    margin: "10px 0",
+    "&:hover": {
+      backgroundColor: "#FFA500",
+      fontWeight: "bold",
+      color: "#000",
+      boxShadow: "2rem 2rem 3rem rgba(132, 139, 200, 0.18)",
+    }
   }
 
 }));
 
-export function SellerRegister() {
+export function SellerRegister(props) {
+  const { dispatch } = props;
   useInjectReducer({ key: 'sellerRegister', reducer });
   useInjectSaga({ key: 'sellerRegister', saga });
 
 
-  const [registerType, setRegisterType] = useState("1");
 
+  const user = getUser();
+  const [identityCardBack, setIdentityCardBack] = useState("");
+  const [identityCardFront, setIdentityCardFront] = useState("");
+  const [menu, setMenu] = useState("");
+  const [certificate, setCertificate] = useState("");
+  const [avatar, setAvatar] = useState("");
   const [value, setValue] = useState(0);
+  const [startTime, setStartTime] = useState(moment().format('hh:mm'));
+  const [endTime, setEndTime] = useState(moment().format('hh:mm'));
+
+
+  const initialValues = {
+    name: "", description: "", slogan: "", avatar: "", images: [], email: "", phone: "",
+    isInCampus: "", owner_name: user.username, village: "", town: "", district: ""
+  };
+  const [formValues, setFormValues] = useState(initialValues);
+  const [formErrors, setFormErrors] = useState({});
+  const [accept, setAccept] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [vertical, setVertical] = useState("top");
+  const [horizontal, setHorizontal] = useState("right");
+  const [open, setOpen] = useState(false);
+  const [next, setNext] = useState(false);
+  const classes = useStyles();
 
   const handleChangeTab = (event, newValue) => {
+    event.preventDefault();
     setValue(newValue);
   };
 
+
+  //can cuoc cong dan mat truoc
   const handleUploadFile = async e => {
     const file = e.target.files;
     console.log(file)
     const data = new FormData();
     data.append(file, file[0])
+    setIdentityCardFront(file[0].name);
   }
 
-  const [startTime, setStartTime] = useState();
-  const [endTime, setEndTime] = useState();
+  //can cuoc cong dan mat sau
+  const handleUploadFile1 = async e => {
+    const file = e.target.files;
+    console.log(file)
+    const data = new FormData();
+    data.append(file, file[0])
+    setIdentityCardBack(file[0].name);
+  }
+
+  //anh dai dien cua quan an
+  const handleUploadAvatar = async e => {
+    const file = e.target.files;
+    console.log(file)
+    const data = new FormData();
+    data.append(file, file[0])
+    setAvatar(file[0].name)
+  }
+
+
+  //chung nhan thuc pham sach
+  const handleUploadCerti = async e => {
+    const file = e.target.files;
+    console.log(file)
+    const data = new FormData();
+    data.append(file, file[0])
+    setCertificate(file[0].name)
+  }
+
+
+  //menu
+  const handleUploadMenu = async e => {
+    const file = e.target.files;
+    console.log(file)
+    const data = new FormData();
+    data.append(file, file[0])
+    setMenu(file[0].name)
+  }
+
+
 
   const handleChangeStartTime = (newValue) => {
-    setStartTime(newValue)
+    setStartTime(moment(newValue, "HH:mm").format("hh:mm"))
   }
-
 
   const handleChangeEndTime = (newValue) => {
-    setEndTime(newValue)
+    setEndTime(moment(newValue, "HH:mm").format("hh:mm"))
+    //console.log(moment(newValue, "HH:mm").format("hh:mm"))
   }
 
-  const user = getUser();
-  console.log(user)
+  //set value for input
+  const handleChange = (e) => {
+    e.preventDefault();
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  }
 
-  const classes = useStyles();
+  //save for first tab
+  const FirstSubmit = (e) => {
+    e.preventDefault();
+    setFormErrors(validate(formValues));
+    setNext(true);
+    // if (Object.keys(formErrors).length === 0) {
+    //   setValue(1);
+    // }
+  }
+
+  //save for second tab
+  const SecondSubmit = (e) => {
+    e.preventDefault();
+    setFormErrors(validate2());
+    setNext(true);
+  }
+
+  //validate for first tab
+  const validate = (values) => {
+    const errors = {};
+    const regexPhone = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+    const regexEmail = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
+    if (!values.name) {
+      errors.name = "name is required!";
+    }
+    if (!values.phone) {
+      errors.phone = "phone is required!";
+    }
+    if (regexPhone.test(values.phone) == false) {
+      errors.phone1 = "match 10 digits";
+    }
+    if (!values.email) {
+      errors.email = "email is required!";
+    }
+    if (regexEmail.test(values.email) == false) {
+      errors.email1 = "ex: abc@gmail.com";
+    }
+    // if (!values.slogan) {
+    //   errors.slogan = "slogan is required!";
+    // }
+    if (!values.village) {
+      errors.village = "village is required!";
+    }
+    if (!values.town) {
+      errors.town = "town is required!";
+    }
+    if (!values.district) {
+      errors.district = "district is required!";
+    }
+    return errors;
+  }
+
+  //validate for second tab
+  const validate2 = (values) => {
+    const errors = {};
+    if (!identityCardBack) {
+      errors.identity_card_back = "identity_card_back is required!";
+    }
+    if (!identityCardFront) {
+      errors.identity_card_front = "identity_card_front is required!";
+    }
+    return errors;
+  }
+
+  // const validate3 = (values) => {
+  //   const errors = {};
+  //   if (!values.description) {
+  //     errors.description = "description is required!";
+  //   }
+  //   return errors;
+  // }
+
+  //next tab
+  useEffect(() => {
+    if (Object.keys(formErrors).length === 0 && next && isSubmit == false) {
+      setNext(false);
+      setValue(value + 1);
+    }
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+      const data = {
+        name: formValues.name,
+        description: formValues.description,
+        slogan: "ok",
+        phone: formValues.phone,
+        email: formValues.email,
+        open_time: startTime,
+        close_time: endTime,
+        image: {
+          avatar: avatar,
+          images: [
+            "path1", "path2", "path3"
+          ]
+        },
+        certificate: {
+          identity_card_back: identityCardBack,
+          identity_card_front: identityCardFront,
+          food_quality_certificate: certificate
+        },
+        isInCampus: false,
+        owner_name: formValues.owner_name,
+        location: `[other_location]|${formValues.village}|${formValues.town}|${formValues.district}`
+      }
+      dispatch(sellerSignUp(data));
+      setOpen(true)
+    }
+  }, [formErrors]);
+
+  console.log(props.sellerRegister.message)
+
+
+  //submit 3 pages
+  const SubmitAll = (e) => {
+    e.preventDefault();
+    setFormErrors(validate(formValues));
+    setFormErrors(validate2());
+    setIsSubmit(true);
+
+  }
+
+  const closeModal = () => {
+    setOpen(false);
+    props.history.push('/')
+  }
+
 
   return (
     <div className={classes.body}>
@@ -208,6 +431,11 @@ export function SellerRegister() {
                         label="Tên quán"
                         placeholder="Tên quán"
                         multiline
+                        name="name"
+                        value={formValues.name}
+                        onChange={handleChange}
+                        helperText={formErrors.name && formValues.name.length == "" ? formErrors.name : null}
+                        error={formErrors.name != null && formValues.name.length == ""}
                       />
                     </Box>
                   </Grid>
@@ -223,9 +451,14 @@ export function SellerRegister() {
                       <TextField
                         required
                         id="outlined-textarea"
-                        label="Địa chỉ"
-                        placeholder="Địa chỉ"
+                        label="Email"
+                        placeholder="Email"
                         multiline
+                        value={formValues.email}
+                        name="email"
+                        onChange={handleChange}
+                        helperText={formErrors.email && formValues.email.length == "" ? formErrors.email : formErrors.email1 ? formErrors.email1 : null}
+                        error={formErrors.email != null && formValues.email.length == "" ? true : formErrors.email1 != null ? true : false}
                       />
                     </Box>
                   </Grid>
@@ -245,6 +478,11 @@ export function SellerRegister() {
                       label="Số điện thoại liên hệ"
                       placeholder="Số điện thoại liên hệ"
                       multiline
+                      name="phone"
+                      value={formValues.phone}
+                      onChange={handleChange}
+                      helperText={formErrors.phone != null && formValues.phone.length == "" ? formErrors.phone : formErrors.phone1 != null ? formErrors.phone1 : null}
+                      error={formErrors.phone != null && formValues.phone.length == "" ? true : formErrors.phone1 != null ? true : false}
                     />
                   </Box>
                 </Grid>
@@ -259,9 +497,14 @@ export function SellerRegister() {
                   >
                     <TextField
                       id="outlined-textarea"
-                      label="Thành phố"
-                      placeholder="Thành phố"
+                      label="Huyện"
+                      placeholder="Huyện"
                       multiline
+                      onChange={handleChange}
+                      name="district"
+                      value={formValues.district}
+                      helperText={formErrors.district && formValues.district.length == "" ? formErrors.district : null}
+                      error={formErrors.district != null && formValues.district.length == ""}
                     />
                   </Box>
                 </Grid>
@@ -276,9 +519,14 @@ export function SellerRegister() {
                   >
                     <TextField
                       id="outlined-textarea"
-                      label="Quận"
-                      placeholder="Quận"
+                      label="Xã"
+                      placeholder="Xã"
                       multiline
+                      onChange={handleChange}
+                      name="town"
+                      value={formValues.town}
+                      helperText={formErrors.town && formValues.town.length == "" ? formErrors.town : null}
+                      error={formErrors.town != null && formValues.town.length == ""}
                     />
                   </Box>
                 </Grid>
@@ -293,15 +541,20 @@ export function SellerRegister() {
                   >
                     <TextField
                       id="outlined-textarea"
-                      label="Số nhà và đường phố"
-                      placeholder="Số nhà và đường phố"
+                      label="Thôn"
+                      placeholder="Thôn"
                       multiline
+                      onChange={handleChange}
+                      name="village"
+                      value={formValues.village}
+                      helperText={formErrors.village && formValues.village.length == "" ? formErrors.village : null}
+                      error={formErrors.village != null && formValues.village.length == ""}
                     />
                   </Box>
                 </Grid>
               </div>
               <div style={{ textAlign: "center", marginTop: "20px" }}>
-                <Button className={classes.btnSubmit} variant="contained" component="span" style={{ width: "50%" }}>
+                <Button className={classes.btnSubmit} variant="contained" component="span" style={{ width: "50%" }} onClick={FirstSubmit}>
                   Lưu và tiếp tục
                 </Button>
               </div>
@@ -342,11 +595,14 @@ export function SellerRegister() {
                       autoComplete="off"
                     >
                       <TextField
+                        disabled
                         required
                         id="outlined-textarea"
                         label="Email"
                         placeholder="Email"
                         multiline
+                        //name="email1"
+                        value={user.email}
                       />
                     </Box>
                   </Grid>
@@ -380,10 +636,12 @@ export function SellerRegister() {
                       autoComplete="off"
                     >
                       <TextField
+                        disabled
                         id="outlined-textarea"
                         label="Số nhà và đường phố"
                         placeholder="Số nhà và đường phố"
                         multiline
+                        name="address1"
                       />
                     </Box>
                   </Grid>
@@ -401,7 +659,7 @@ export function SellerRegister() {
                           <p>Ảnh chụp mặt trước CCCD *</p>
                         </div>
                         <div className={classes.upload}>
-                          <input type="file" name="front" placeholder="upload an image" onChange={handleUploadFile} />
+                          <input type="file" name="identity_card_front" placeholder="upload an image" onChange={handleUploadFile} />
                         </div>
                       </Box>
                     </Grid>
@@ -418,7 +676,7 @@ export function SellerRegister() {
                           <p>Ảnh chụp mặt sau CCCD *</p>
                         </div>
                         <div className={classes.upload}>
-                          <input type="file" name="back" placeholder="upload an image" />
+                          <input type="file" name="identity_card_back" placeholder="upload an image" onChange={handleUploadFile1} />
                         </div>
                       </Box>
                     </Grid>
@@ -435,7 +693,7 @@ export function SellerRegister() {
                         noValidate
                         autoComplete="off"
                       >
-                        <Button style={{ width: "50%" }} className={classes.btnBack} variant="contained" component="span">
+                        <Button style={{ width: "50%" }} className={classes.btnBack} variant="contained" component="span" onClick={() => setValue(0)}>
                           Quay lại
                         </Button>
                       </Box>
@@ -449,7 +707,7 @@ export function SellerRegister() {
                         noValidate
                         autoComplete="off"
                       >
-                        <Button style={{ width: "50%" }} className={classes.btnSubmit} variant="contained" component="span" >
+                        <Button style={{ width: "50%" }} className={classes.btnSubmit} variant="contained" component="span" onClick={SecondSubmit}>
                           Lưu và tiếp tục
                         </Button>
                       </Box>
@@ -471,14 +729,16 @@ export function SellerRegister() {
                         noValidate
                         autoComplete="off"
                       >
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
                           <TimePicker
                             label="Thời gian mở cửa"
                             value={startTime}
                             onChange={handleChangeStartTime}
                             renderInput={(params) => <TextField {...params} />}
                           />
-                        </LocalizationProvider>
+                        </LocalizationProvider> */}
+                        <p style={{ fontFamily: "san-serif", fontSize: "20px" }}>Thời gian mở cửa</p>
+                        <TimePicker onChange={handleChangeStartTime} value={startTime} />
                       </Box>
                     </Grid>
                     <Grid item sm={6} xs={12} >
@@ -490,14 +750,16 @@ export function SellerRegister() {
                         noValidate
                         autoComplete="off"
                       >
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
                           <TimePicker
                             label="Thời gian đóng cửa"
                             value={endTime}
                             onChange={handleChangeEndTime}
                             renderInput={(params) => <TextField {...params} />}
                           />
-                        </LocalizationProvider>
+                        </LocalizationProvider> */}
+                        <p style={{ fontFamily: "san-serif", fontSize: "20px" }}>Thời gian đóng cửa</p>
+                        <TimePicker onChange={handleChangeEndTime} value={endTime} />
                       </Box>
                     </Grid>
                   </Grid>
@@ -516,6 +778,9 @@ export function SellerRegister() {
                           minRows={3}
                           placeholder="Miêu tả về quán"
                           style={{ width: "100%" }}
+                          name="description"
+                          value={formValues.description}
+                          onChange={handleChange}
                         />
                       </Box>
                     </Grid>
@@ -536,7 +801,7 @@ export function SellerRegister() {
                             <p>Ảnh đại diện quán *</p>
                           </div>
                           <div className={classes.upload}>
-                            <input type="file" name="front" placeholder="upload an image" onChange={handleUploadFile} />
+                            <input type="file" name="front" placeholder="upload an image" onChange={handleUploadAvatar} />
                           </div>
                         </Box>
                       </Grid>
@@ -553,7 +818,7 @@ export function SellerRegister() {
                             <p>Chứng nhận thực phẩm sạch *</p>
                           </div>
                           <div className={classes.upload}>
-                            <input type="file" name="back" placeholder="upload an image" />
+                            <input type="file" name="back" placeholder="upload an image" onChange={handleUploadCerti} />
                           </div>
                         </Box>
                       </Grid>
@@ -570,7 +835,7 @@ export function SellerRegister() {
                             <p>Menu *</p>
                           </div>
                           <div className={classes.upload}>
-                            <input type="file" name="menu" placeholder="upload an image" />
+                            <input type="file" name="menu" placeholder="upload an image" onChange={handleUploadMenu} />
                           </div>
                         </Box>
                       </Grid>
@@ -591,7 +856,7 @@ export function SellerRegister() {
                       >
                         <label style={{ textAlign: "center", width: "100%" }}>
                           <FormGroup style={{ margin: "0 auto", width: "65%" }}>
-                            <FormControlLabel control={<Checkbox defaultChecked />} label="Tôi đồng ý với điều khoản dịch vụ và chính sách bảo mật" />
+                            <FormControlLabel control={<Checkbox onChange={() => setAccept(!accept)} />} label="Tôi đồng ý với điều khoản dịch vụ và chính sách bảo mật" />
                           </FormGroup>
                         </label>
                       </Box>
@@ -605,7 +870,7 @@ export function SellerRegister() {
                         noValidate
                         autoComplete="off"
                       >
-                        <Button type="submit" className={classes.btnSubmit} style={{ width: "50%" }} variant="contained" component="span">
+                        <Button type="submit" disabled={accept == false} className={classes.btnSubmit} style={{ width: "50%" }} variant="contained" component="span" onClick={SubmitAll}>
                           ĐĂNG KÝ
                         </Button>
                       </Box>
@@ -614,7 +879,24 @@ export function SellerRegister() {
                 </div>
               </>}
         </form>
-
+        <Modal
+          open={open}
+          // onClose={() => setOpen(false)}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box className={classes.modal}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              <CheckCircleIcon style={{ width: "20%", height: "20%", color: "#32C670" }} />
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              <p style={{ fontFamily: "sans-serif", fontSize: "40px" }}>{props.sellerRegister.message}</p>
+            </Typography>
+            <Button className={classes.btnAccept} style={{ width: "50%" }} variant="contained" component="span" onClick={closeModal}>
+              XÁC NHẬN
+            </Button>
+          </Box>
+        </Modal>
       </div>
     </div>
   );
