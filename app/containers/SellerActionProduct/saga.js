@@ -25,7 +25,7 @@ export function* updateProduct({ payload }) {
       type: payload.type,
       description: payload.description,
       image: payload.image,
-      status: ""
+      status: "Active"
     }
     const res = yield call(apiUpdateProduct, [`api/foods/${payload.id}/update`], data);
     console.log('here', res)

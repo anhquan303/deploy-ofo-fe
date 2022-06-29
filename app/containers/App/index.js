@@ -27,6 +27,7 @@ import SellerHomePage from '../../containers/SellerHomePage';
 import SellerManagerProduct from '../../containers/SellerManagerProduct';
 import SellerAddProduct from '../../containers/SellerAddProduct';
 import SellerActionProduct from '../../containers/SellerActionProduct';
+import UserHomePage from '../../containers/UserHomePage';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
 
@@ -144,14 +145,14 @@ export default function App() {
             <Grid container spacing={1}>
               <Grid item sm={12} xs={12} md={12}>
                 <Switch>
-                  <Route exact path="/" component={HomePage} />
+                  <Route exact path="/" component={UserHomePage} />
                   <Route path="" component={NotFoundPage} />
                 </Switch>
               </Grid>
             </Grid>
             //
 
-            : user != null && user.authorities[0].authority == 'USER' ?
+            : user != null && user.authorities[0].authority == 'USER' && location.pathname != "/sellerRegister" ?
               <Grid container spacing={1}>
                 <Grid item sm={12} xs={12} md={2}>
                   <SellerSideBar />
@@ -164,7 +165,7 @@ export default function App() {
                       <Route exact path="/managerProduct" component={SellerManagerProduct} />
                       <Route path="/managerProduct/addProduct" component={SellerAddProduct} />
                       <Route path="/managerProduct/:id" component={SellerActionProduct} />
-                      <Route path="/sellerRegister" component={SellerRegister} />
+                      {/* <Route path="/sellerRegister" component={SellerRegister} /> */}
                       <Route path="" component={NotFoundPage} />
                     </Switch>
                   </Grid>
@@ -174,7 +175,7 @@ export default function App() {
               <Grid container spacing={1}>
                 <Grid item xs={12}>
                   <Switch>
-                    <Route exact path="/" component={HomePage} />
+                    <Route exact path="/" component={UserHomePage} />
                     {/* <Route path="/features" component={FeaturePage} /> */}
                     <Route path="/login" component={Login} />
                     <Route path="/userRegister" component={UserRegister} />

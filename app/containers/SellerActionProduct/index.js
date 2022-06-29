@@ -27,6 +27,11 @@ import FormControl from '@mui/material/FormControl';
 import { makeStyles, Grid, Button } from '@material-ui/core';
 import Snackbar from '@mui/material/Snackbar';
 import { deleteProduct, updateProduct } from './actions';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -82,7 +87,7 @@ export function SellerActionProduct(props) {
   console.log('param ', props.location.state.item)
 
   const classes = useStyles();
-  const [type, setType] = useState("");
+  const [type, setType] = useState(props.location.state.item.type);
   const [storeId, setStoreId] = useState("1");
   const initialValues = { name: props.location.state.item.name, price: props.location.state.item.price, description: props.location.state.item.description, image: "" };
   const [formValues, setFormValues] = useState(initialValues);
@@ -91,6 +96,7 @@ export function SellerActionProduct(props) {
   const [vertical, setVertical] = useState("top");
   const [horizontal, setHorizontal] = useState("right");
   const [isSubmit, setIsSubmit] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
 
   //set value for input
@@ -293,7 +299,7 @@ export function SellerActionProduct(props) {
                   </Button>
                 </Grid>
                 <Grid item sm={12} xs={12} lg={4}>
-                  <Button className={classes.btn} variant="contained" component="span" onClick={deleteProduct1}>
+                  <Button className={classes.btn} variant="contained" component="span" onClick={() => setOpenDialog(true)}>
                     Xóa sản phẩm
                   </Button>
                 </Grid>
@@ -312,6 +318,27 @@ export function SellerActionProduct(props) {
             message={props.sellerActionProduct.message}
             autoHideDuration={5000}
           />
+          <Dialog
+            open={openDialog}
+            onClose={() => setOpenDialog(false)}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Bạn có chắc chắn xóa sản phẩm này?"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Sản phẩm này sẽ bị xóa vĩnh viễn nếu bạn nhấn "Xác nhận"
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setOpenDialog(false)}>Trở lại</Button>
+              <Button onClick={deleteProduct1} autoFocus>
+                Xác nhận
+              </Button>
+            </DialogActions>
+          </Dialog>
         </div>
       </div>
     </div>
