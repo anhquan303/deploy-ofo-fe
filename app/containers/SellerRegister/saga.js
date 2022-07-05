@@ -10,7 +10,6 @@ export function* sellerSignUp({ payload }) {
       name: payload.name,
     }
     const res = yield call(apiSignup, ['api/store/register'], payload)
-    console.log(res)
     if (res.status == 200) {
       yield put(sellerSignUpSuccess("Bạn đã đăng ký thành công, vui lòng chờ để dược duyệt, kết quả sẽ được trả về email"))
     } else {

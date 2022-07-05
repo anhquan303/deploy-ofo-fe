@@ -9,11 +9,8 @@ import * as types from './constants';
 export function* getData({ payload }) {
   try {
     const res = yield call(apiFetchData, ['api/users?page=2']);
-
-    console.log('res', res)
     if(res.status == 200){
       yield put(getDataSuccess(res.data.data));
-      console.log('success')
     }else{
       yield put(getDataFailed("error"));
     }

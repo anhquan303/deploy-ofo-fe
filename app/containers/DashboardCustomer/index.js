@@ -60,7 +60,6 @@ export function DashboardCustomer(props) {
     dispatch(fetchListUser());
   }, []);
 
-  console.log(props.dashboardCustomer.userList)
 
   return (
     <div style={{ paddingRight: "15px" }}>

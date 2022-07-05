@@ -6,7 +6,6 @@ import * as types from './constants';
 export function* fetchListRegister({ payload }) {
   try {
     const res = yield call(apiFetchData, ['api/store/getbystatus?status=pending']);
-    console.log(res)
     if (res.status == 200) {
       yield put(fetchListRegisterSuccess(res.data));
     } else {

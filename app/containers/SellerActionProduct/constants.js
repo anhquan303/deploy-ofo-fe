@@ -14,3 +14,7 @@ export const UPDATE_PRODUCT = 'app/SellerActionProduct/UPDATE_PRODUCT';
 export const UPDATE_PRODUCT_SUCCESS = 'app/SellerActionProduct/UPDATE_PRODUCT_SUCCESS';
 export const UPDATE_PRODUCT_FAILED = 'app/SellerActionProduct/UPDATE_PRODUCT_FAILED';
 
+export const RESET = 'app/SellerActionProduct/RESET';
+
+
+
