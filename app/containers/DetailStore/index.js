@@ -250,7 +250,6 @@ export function DetailStore(props) {
 
 
   let param = useParams();
-  console.log('param ', props.location.state.item)
 
 
   const [value, setValue] = useState(new Date());

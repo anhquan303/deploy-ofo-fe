@@ -5,7 +5,6 @@ import * as types from './constants';
 export function* logOut({ payload }) {
   try {
     const res = yield call(apiSignup, ['auth/logout']);
-    console.log(res)
   } catch (error) {
     yield put(logOutFailed(error.message));
   }

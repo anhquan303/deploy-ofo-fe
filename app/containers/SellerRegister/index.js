@@ -159,8 +159,8 @@ export function SellerRegister(props) {
   const [certificate, setCertificate] = useState("");
   const [avatar, setAvatar] = useState("");
   const [value, setValue] = useState(0);
-  const [startTime, setStartTime] = useState(moment().format('hh:mm'));
-  const [endTime, setEndTime] = useState(moment().format('hh:mm'));
+  const [startTime, setStartTime] = useState(moment().format('hh:mm:ss'));
+  const [endTime, setEndTime] = useState(moment().format('hh:mm:ss'));
 
 
   const initialValues = {
@@ -233,11 +233,11 @@ export function SellerRegister(props) {
 
 
   const handleChangeStartTime = (newValue) => {
-    setStartTime(moment(newValue, "HH:mm").format("hh:mm"))
+    setStartTime(moment(newValue, "HH:mm:ss").format("hh:mm:ss"))
   }
 
   const handleChangeEndTime = (newValue) => {
-    setEndTime(moment(newValue, "HH:mm").format("hh:mm"))
+    setEndTime(moment(newValue, "HH:mm:ss").format("hh:mm:ss"))
     //console.log(moment(newValue, "HH:mm").format("hh:mm"))
   }
 
@@ -295,7 +295,7 @@ export function SellerRegister(props) {
       errors.town = "town is required!";
     }
     if (!values.district) {
-      errors.district = "district is required!";
+      errors.district = "address is required!";
     }
     return errors;
   }
@@ -354,8 +354,6 @@ export function SellerRegister(props) {
       setOpen(true)
     }
   }, [formErrors]);
-
-  console.log(props.sellerRegister.message)
 
 
   //submit 3 pages
@@ -497,8 +495,8 @@ export function SellerRegister(props) {
                   >
                     <TextField
                       id="outlined-textarea"
-                      label="Huyện"
-                      placeholder="Huyện"
+                      label="Địa chỉ"
+                      placeholder="Địa chỉ"
                       multiline
                       onChange={handleChange}
                       name="district"

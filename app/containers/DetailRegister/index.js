@@ -206,7 +206,6 @@ export function DetailRegister(props) {
   useInjectReducer({ key: 'detailRegister', reducer });
   useInjectSaga({ key: 'detailRegister', saga });
 
-  console.log('param ', props.location.state.item)
 
   const classes = useStyles();
   return (

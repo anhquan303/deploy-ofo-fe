@@ -19,7 +19,6 @@ export function* signUp({ payload }) {
       }]
     }
     const res = yield call(apiSignup, ['auth/adduser'], data);
-    console.log(res)
     if (res.status == 200) {
       yield put(signUpSuccess(res.data.msg))
     } else {

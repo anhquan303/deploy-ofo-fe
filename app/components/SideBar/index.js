@@ -203,7 +203,6 @@ function SideBar(props) {
   const location = useLocation();
   const path = location.pathname;
 
-  console.log(path)
 
   const user = getUser();
 

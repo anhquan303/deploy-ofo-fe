@@ -16,7 +16,6 @@ export function* addProduct({ payload }) {
 
     }
     const res = yield call(apiAddProduct, ['api/foods'], data);
-    console.log('addProduct', res)
     if (res.status == 200) {
       yield put(addProductSuccess("ADD SUCCESSFUL"));
     } else {

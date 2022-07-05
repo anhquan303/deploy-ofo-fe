@@ -28,7 +28,6 @@ export function* updateProduct({ payload }) {
       status: "Active"
     }
     const res = yield call(apiUpdateProduct, [`api/foods/${payload.id}/update`], data);
-    console.log('here', res)
     if (res.status == 200) {
       yield put(updateProductSuccess("UPDATE SUCCESSFUL"));
     } else {

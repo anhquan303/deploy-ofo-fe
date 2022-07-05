@@ -110,7 +110,7 @@ export function Login(props) {
 
   const responseGoogle = (response) => {
     //setToken(response.tokenObj.id_token);
-    console.log('google', response.tokenObj.id_token)
+    //console.log('google', response.tokenObj.id_token)
   }
 
   const classes = useStyles();

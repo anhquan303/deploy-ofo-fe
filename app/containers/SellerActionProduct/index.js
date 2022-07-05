@@ -26,7 +26,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { makeStyles, Grid, Button } from '@material-ui/core';
 import Snackbar from '@mui/material/Snackbar';
-import { deleteProduct, updateProduct } from './actions';
+import { deleteProduct, reset, updateProduct } from './actions';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -84,7 +84,6 @@ export function SellerActionProduct(props) {
   useInjectSaga({ key: 'sellerActionProduct', saga });
 
   let param = useParams();
-  console.log('param ', props.location.state.item)
 
   const classes = useStyles();
   const [type, setType] = useState(props.location.state.item.type);
@@ -169,6 +168,7 @@ export function SellerActionProduct(props) {
   useEffect(() => {
     if (props.sellerActionProduct.message == "DELETE SUCCESSFUL" || props.sellerActionProduct.message == "UPDATE SUCCESSFUL") {
       props.history.push("/managerProduct")
+      dispatch(reset());
     }
   }, [props.sellerActionProduct.message])
 
