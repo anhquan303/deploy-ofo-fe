@@ -77,7 +77,7 @@ export function Headerr(props) {
   const [searched, setSearched] = useState("");
   const user = getUser();
 
-  console.log(props)
+  // console.log(props)
   const handleLogout = () => {
     dispatch(logOut());
     removeUserSession();
@@ -107,6 +107,12 @@ export function Headerr(props) {
     requestSearch(searched);
   };
 
+  useEffect(() => {
+    if (user == null) {
+      history.push("/")
+    }
+  }, [user])
+
 
   return (
     <div style={{ backgroundColor: "#FF9900" }}>
@@ -115,7 +121,7 @@ export function Headerr(props) {
           <Grid item xs>
             <div style={{ textAlign: "center" }}>
               {user && user.authorities[0].authority == 'USER' || user == null ? <Button onClick={handleSellerRegister}>Become a seller in No Ne </Button> : null}
-              {user && user.authorities[0].authority == 'SELLER' ? <Button href='/myStore'>My Store </Button> : null}
+              {user && user.authorities[0].authority == 'SELLER' ? <Button href='/my-store/manager-order'>My Store </Button> : null}
             </div>
           </Grid>
 
@@ -135,7 +141,7 @@ export function Headerr(props) {
                     <img src={Avatar1} alt="logo" style={{ width: "30px", height: "30px", borderRadius: "50px" }} />
                     <span style={{ marginLeft: "10px" }}>{user.firstname} {user.lastname}</span>
                     <div className={classes.action}>
-                      <Button href="/userSetting">Tài khoản của tôi</Button><br />
+                      <Button href="/user/setting">Tài khoản của tôi</Button><br />
                       <Button onClick={handleLogout}>Đăng xuất </Button><br />
                     </div>
                   </div>

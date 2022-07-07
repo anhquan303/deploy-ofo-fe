@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -20,10 +20,12 @@ import saga from './saga';
 import messages from './messages';
 import { Box, TextField } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { Menu, MenuItem } from '@mui/material';
 import { makeStyles, Grid, Button } from '@material-ui/core';
 import ShopImage from '../../images/kinh-nghiem-mo-quan-an-nho-2.jpg';
-import Menu from '../../images/menu.jpg';
+import Menu1 from '../../images/menu.jpg';
 import Certi from '../../images/mau-an-toan-thuc-pham.jpg';
+import { approvedStore, declinedStore, reset } from './actions';
 
 const useStyles = makeStyles((theme) => ({
   information_image: {
@@ -63,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1.5em",
     textAlign: "center",
     color: "#DAF33D",
+    textTransform: "uppercase"
   },
   btnChangeStatus: {
     // "& .MuiButton-root": {
@@ -203,11 +206,50 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function DetailRegister(props) {
+  const { dispatch } = props;
   useInjectReducer({ key: 'detailRegister', reducer });
   useInjectSaga({ key: 'detailRegister', saga });
 
 
   const classes = useStyles();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const approveStore = (e) => {
+    e.preventDefault();
+    setAnchorEl(null);
+    const data = {
+      id: props.location.state.item.id
+    }
+    dispatch(approvedStore(data));
+  }
+
+  const declineStore = (e) => {
+    e.preventDefault();
+
+    const data = {
+      id: props.location.state.item.id
+    }
+    dispatch(declinedStore(data));
+    setAnchorEl(null);
+  }
+
+  console.log(props.detailRegister.status)
+
+  useEffect(() => {
+    if (props.detailRegister.status == "Success") {
+      props.history.push("/register");
+      dispatch(reset());
+    }
+  }, [props.detailRegister.status])
+
   return (
     <div style={{ paddingRight: "15px" }}>
       <Box sx={{ flexGrow: 1 }}>
@@ -239,17 +281,29 @@ export function DetailRegister(props) {
                   <Grid item md={5} sm={8} xs={12} className={classes.two}>
 
                     <div className={classes.pending}>
-                      <p>Pending</p>
+                      <p>{props.location.state.item.status}</p>
                     </div>
 
                   </Grid>
                   <Grid item md={7} sm={4} xs={12} className={classes.three}>
 
                     <div className={classes.verify}>
-                      <Button variant="contained" component="span" className={classes.btnChangeStatus}>
+                      <Button variant="contained" component="span" className={classes.btnChangeStatus} onClick={handleClick}>
                         Change Status
                       </Button>
                     </div>
+                    <Menu
+                      id="basic-menu"
+                      anchorEl={anchorEl}
+                      open={open}
+                      onClose={handleClose}
+                      MenuListProps={{
+                        'aria-labelledby': 'basic-button',
+                      }}
+                    >
+                      <MenuItem onClick={approveStore}>Approve</MenuItem>
+                      <MenuItem onClick={declineStore}>Decline</MenuItem>
+                    </Menu>
 
                   </Grid>
                 </Grid>
@@ -272,17 +326,17 @@ export function DetailRegister(props) {
                 </div>
                 <div style={{ textAlign: "center" }}>
                   <p className={classes.titleText}>Menu</p>
-                  <img src={Menu} alt="menu" className={classes.detailImg} />
+                  <img src={Menu1} alt="menu" className={classes.detailImg} />
                 </div>
               </Grid>
               <Grid item md={4} sm={4} xs={12}>
                 <div style={{ textAlign: "center" }}>
                   <p className={classes.titleText}>Căn cước công dân mặt trước</p>
-                  <img src={Menu} alt="menu" className={classes.detailImg} />
+                  <img src={Menu1} alt="menu" className={classes.detailImg} />
                 </div>
                 <div style={{ textAlign: "center" }}>
                   <p className={classes.titleText}>Căn cước công dân mặt sau</p>
-                  <img src={Menu} alt="menu" className={classes.detailImg} />
+                  <img src={Menu1} alt="menu" className={classes.detailImg} />
                 </div>
               </Grid>
               <Grid item md={4} sm={4} xs={12}>

@@ -76,7 +76,7 @@ export function SellerManagerOrder() {
       <p className={classes.font} style={{ fontWeight: "400", fontSize: "30px" }}>{currentDate}</p>
       <p className={classes.font} style={{ fontWeight: "700", fontSize: "35px" }}>Đơn hàng</p>
       <Grid container spacing={0} >
-        <Grid item xs={12} md={3} style={{ padding: "10px" }}>
+        <Grid item xs={12} md={4} style={{ padding: "10px" }}>
           <div style={{ border: "3px solid #000", borderRadius: "10px", background: "#FFF" }}>
             <Grid container spacing={0}>
               <Grid item xs={12} md={3} style={{ padding: "10px" }} className={classes.center}>
@@ -91,7 +91,7 @@ export function SellerManagerOrder() {
             </Grid>
           </div>
         </Grid>
-        <Grid item xs={12} md={3} style={{ padding: "10px" }}>
+        <Grid item xs={12} md={4} style={{ padding: "10px" }}>
           <div style={{ border: "3px solid #000", borderRadius: "10px", background: "#FFF" }}>
             <Grid container spacing={0}>
               <Grid item xs={12} md={3} style={{ padding: "10px" }} className={classes.center}>
@@ -106,7 +106,7 @@ export function SellerManagerOrder() {
             </Grid>
           </div>
         </Grid>
-        <Grid item xs={12} md={3} style={{ padding: "10px" }}>
+        <Grid item xs={12} md={4} style={{ padding: "10px" }}>
           <div style={{ border: "3px solid #000", borderRadius: "10px", background: "#FFF" }}>
             <Grid container spacing={0}>
               <Grid item xs={12} md={3} style={{ padding: "10px" }} className={classes.center}>
@@ -122,7 +122,7 @@ export function SellerManagerOrder() {
           </div>
         </Grid>
       </Grid>
-      <CustomTable data={order} itemPerPage={5} totalItem={order.length} detailPage="order" columns={columns} action={action} />
+      <CustomTable data={order} itemPerPage={5} totalItem={order.length} detailPage="my-store/manager-order" columns={columns} action={action} />
       {/* <FormattedMessage {...messages.header} /> */}
     </div>
   );

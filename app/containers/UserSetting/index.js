@@ -23,19 +23,14 @@ import {
   Box, Grid, Container, Avatar, Typography, List, FormControlLabel, Radio, RadioGroup,
   ListItemButton, ListItemIcon, ListItemText, Collapse, OutlinedInput, Select, MenuItem
 } from '@mui/material';
-import { makeStyles, Button } from '@material-ui/core';
+import { makeStyles, Button, Fab, CardContent } from '@material-ui/core';
 import Avatar1 from '../../images/quan.jpg';
 
-import PersonIcon from '@mui/icons-material/Person';
-import ArticleIcon from '@mui/icons-material/Article';
-import HomeIcon from '@mui/icons-material/Home';
-import PasswordIcon from '@mui/icons-material/Password';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
+import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 import SaveIcon from '@mui/icons-material/Save';
-import ReceiptIcon from '@mui/icons-material/Receipt';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import { NavLink } from 'react-router-dom';
+import { getUser } from '../../utils/common';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -61,7 +56,43 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: "sans-serif",
     margin: "0"
   },
-
+  input: {
+    display: "none"
+  },
+  text: {
+    flexWrap: "wrap",
+    alignContent: "center",
+    display: "flex",
+    justifyContent: "right",
+    paddingRight: "10px",
+    fontWeight: "bold",
+    [theme.breakpoints.down("sm")]: {
+      justifyContent: "center",
+    }
+  },
+  textField: {
+    [theme.breakpoints.down("sm")]: {
+      textAlign: "center"
+    }
+  },
+  radioButton: {
+    [theme.breakpoints.down("sm")]: {
+      justifyContent: "center"
+    }
+  },
+  dob: {
+    display: "inline-block",
+    [theme.breakpoints.down("sm")]: {
+      textAlign: "center"
+    }
+  },
+  right: {
+    textAlign: "left",
+    paddingRight: "10px",
+    [theme.breakpoints.down("sm")]: {
+      textAlign: "center",
+    }
+  }
 
 }));
 
@@ -70,14 +101,16 @@ export function UserSetting(props) {
   useInjectSaga({ key: 'userSetting', saga });
 
   const classes = useStyles();
+  const user = getUser();
   const [open, setOpen] = useState(true);
-  const [name, setName] = useState("Anh Quan");
+  const [name, setName] = useState(user.firstname + " " + user.lastname);
   const [storeName, setStoreName] = useState("Quán Gốc Sung");
   const [gender, setGender] = useState("");
   const [bday, setBDay] = useState(1);
   const [bmonth, setBMonth] = useState(1);
   const [byear, setBYear] = useState(1);
   const months = [];
+
 
   const handleClick = () => {
     setOpen(!open);
@@ -95,182 +128,157 @@ export function UserSetting(props) {
     months.push(i);
   }
 
+  const handleUploadClick = () => {
+
+  }
+
   return (
     <div>
-      <Headerr />
-      <Container fixed>
-        <Grid container spacing={2} style={{ marginTop: "15px" }}>
-          <Grid item xs={12} md={3} style={{ padding: "10px" }}>
-            <div>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={3} className={classes.center}>
-                  <Avatar alt="avatar store" src={Avatar1} sx={{ width: 56, height: 56 }} />
-                </Grid>
-                <Grid item xs={12} md={9}>
-                  <p >Anh Quan</p>
-                </Grid>
-              </Grid>
-              <hr />
-              <div style={{ marginTop: "15px" }}>
-                <List
-                  sx={{ width: '100%', maxWidth: 360, bgcolor: '#FAFAFA' }}
-                  component="nav"
-                  aria-labelledby="nested-list-subheader"
-                >
-                  <ListItemButton onClick={handleClick}>
-                    <ListItemIcon>
-                      <PersonIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Tài khoản của tôi" />
-                    {open ? <ExpandLess /> : <ExpandMore />}
-                  </ListItemButton>
-                  <Collapse in={open} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                      <ListItemButton sx={{ pl: 4 }}>
-                        <ListItemIcon>
-                          <ArticleIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Hồ sơ" />
-                      </ListItemButton>
-                      <ListItemButton sx={{ pl: 4 }}>
-                        <ListItemIcon>
-                          <HomeIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Địa chỉ" />
-                      </ListItemButton>
-                      <ListItemButton sx={{ pl: 4 }}>
-                        <ListItemIcon>
-                          <PasswordIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Đổi mật khẩu" />
-                      </ListItemButton>
-                    </List>
-                  </Collapse>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <AssignmentIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Lịch sử mua hàng" />
-                  </ListItemButton>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <ReceiptIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Voucher của tôi" />
-                  </ListItemButton>
+      <div>
+        <p className={classes.font} style={{ fontWeight: "500", fontSize: "25px" }}>Hồ sơ của tôi</p>
+        <p className={classes.font} style={{ fontWeight: "lighter", fontSize: "15px" }}>Quản lý thông tin để bảo mật tài khoản</p>
+      </div>
+      <hr />
+      <Grid container spacing={0} style={{ marginTop: "15px" }}>
+        <Grid item xs={12} md={8} style={{ padding: "10px" }}>
+          <Grid container spacing={0}>
+            <Grid item xs={12} md={4}>
+              <div className={classes.center} style={{ justifyContent: "center" }}>
+                <CardContent>
+                  <Grid container justify="center" alignItems="center">
+                    <input
+                      accept="image/*"
+                      className={classes.input}
+                      id="contained-button-file"
+                      multiple
+                      type="file"
+                      onChange={handleUploadClick}
+                    />
+                    <label htmlFor="contained-button-file">
+                      {user ? <Avatar sx={{ width: 150, height: 150, margin: "0 auto" }} component="span" src={Avatar1}>
+                        <AddPhotoAlternateIcon />
+                      </Avatar> :
+                        <Avatar src="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png" />
+                      }
 
-                </List>
+                    </label>
+                  </Grid>
+                </CardContent>
               </div>
+            </Grid>
+            <Grid item xs={12} md={8}>
+              <Grid container spacing={0}>
+                <Grid item xs={12} md={6} className={classes.text} >
+                  <span>Tên đăng nhập</span>
+                </Grid>
+                <Grid item xs={12} md={6} className={classes.text} style={{ fontWeight: "lighter" }}>
+                  <span>{user.username}</span>
+                </Grid>
 
-            </div>
-          </Grid>
-          <Grid item xs={12} md={9} style={{ padding: "10px", backgroundColor: "#fff" }}>
-            <div>
-              <p className={classes.font} style={{ fontWeight: "500", fontSize: "25px" }}>Hồ sơ của tôi</p>
-              <p className={classes.font} style={{ fontWeight: "lighter", fontSize: "15px" }}>Quản lý thông tin để bảo mật tài khoản</p>
-            </div>
-            <hr />
-            <Grid container spacing={0} style={{ marginTop: "15px" }}>
-              <Grid item xs={12} md={8} style={{ padding: "10px" }}>
-                <Grid container spacing={0}>
-                  <Grid item xs={12} md={6} style={{ textAlign: "right", paddingRight: "10px" }}>
-                    <span>Tên đăng nhập</span>
-                  </Grid>
-                  <Grid item xs={12} md={6} >
-                    <span>quananh</span>
-                  </Grid>
-                  <Grid item xs={12} md={6} className={classes.center} style={{ justifyContent: "right", paddingRight: "10px" }}>
+                <Grid container spacing={0} style={{ marginTop: "10px" }}>
+                  <Grid item xs={12} md={6} className={classes.text} >
                     <span >Tên</span>
                   </Grid>
-                  <Grid item xs={12} md={6} >
+                  <Grid item xs={12} md={6} className={classes.textField}>
                     <OutlinedInput placeholder="Please enter text" value={name} onChange={(e) => setName(e.target.value)} />
                   </Grid>
-                  <Grid item xs={12} md={6} style={{ textAlign: "right", paddingRight: "10px" }}>
-                    <span>Email</span>
-                  </Grid>
-                  <Grid item xs={12} md={6} >
-                    <span>abc@gmail.com</span> <span style={{ marginLeft: "15px" }}><a href='#'>thay đổi</a></span>
-                  </Grid>
-                  <Grid item xs={12} md={6} style={{ textAlign: "right", paddingRight: "10px" }}>
-                    <span>Số điện thoại</span>
-                  </Grid>
-                  <Grid item xs={12} md={6} >
-                    <span>0123456798</span> <span style={{ marginLeft: "15px" }}><a href='#'>thay đổi</a></span>
-                  </Grid>
-                  <Grid item xs={12} md={6} className={classes.center} style={{ justifyContent: "right", paddingRight: "10px" }}>
+                </Grid>
+
+                <Grid container spacing={0} style={{ marginTop: "10px" }}>
+                  <Grid item xs={12} md={6} className={classes.text} >
                     <span >Tên shop</span>
                   </Grid>
-                  <Grid item xs={12} md={6} >
+                  <Grid item xs={12} md={6} className={classes.textField}>
                     <OutlinedInput placeholder="Please enter text" value={storeName} onChange={(e) => setStoreName(e.target.value)} />
                   </Grid>
-                  <Grid item xs={12} md={6} className={classes.center} style={{ justifyContent: "right", paddingRight: "10px" }}>
-                    <span >Giới tính</span>
-                  </Grid>
-                  <Grid item xs={12} md={6} >
-                    <RadioGroup
-                      row
-                      aria-labelledby="demo-form-control-label-placement"
-                      value={gender}
-                      onChange={handleChangeGender}
-                    >
-                      <FormControlLabel value="male" control={<Radio />} label="Nam" />
-                      <FormControlLabel value="female" control={<Radio />} label="Nữ" />
-                      <FormControlLabel value="diff" control={<Radio />} label="Khác" />
-                    </RadioGroup>
-                  </Grid>
-                  <Grid item xs={12} md={6} className={classes.center} style={{ justifyContent: "right", paddingRight: "10px" }}>
-                    <span >Ngày tháng năm sinh</span>
-                  </Grid>
-                  <Grid item xs={12} md={6} style={{ display: "inline-block" }}>
-                    <Select
-                      labelId="demo-simple-select-autowidth-label"
-                      id="demo-simple-select-autowidth"
-                      value={bday}
-                      onChange={(e) => setBDay(e.target.value)}
-                      autoWidth
-                      label="ngayf"
-                    >
-                      {days.map((item, index) =>
-                        <MenuItem key={index} value={item} style={{ maxHeight: "50px" }}>{item}</MenuItem>
-                      )}
-                    </Select>
-                    <Select
-                      labelId="demo-simple-select-autowidth-label"
-                      id="demo-simple-select-autowidth"
-                      value={bmonth}
-                      onChange={(e) => setBMonth(e.target.value)}
-                      autoWidth
-                      label="thang"
-                      style={{ margin: "0 10px" }}
-                    >
-                      {months.map((item, index) =>
-                        <MenuItem key={index} value={item} style={{ maxHeight: "50px" }}>{item}</MenuItem>
-                      )}
-                    </Select>
-                    <OutlinedInput placeholder="Please enter text" value={byear} onChange={(e) => setBYear(e.target.value)} style={{ width: "35%" }} />
-                  </Grid>
                 </Grid>
-                <div style={{ textAlign: "center" }}>
-                  <Button className={classes.btn} variant="outlined" startIcon={<SaveIcon />}>
-                    Lưu
-                  </Button>
-                </div>
               </Grid>
-              <Grid item xs={12} md={4} style={{ padding: "10px" }}>
-                <div style={{ textAlign: "center" }}>
-                  <Avatar alt="avatar store" src={Avatar1} sx={{ width: 150, height: 150, margin: "0 auto" }} />
-                  <Button className={classes.btn} variant="outlined" startIcon={<InsertPhotoIcon />}>
-                    Chọn ảnh
-                  </Button>
-                  <p className={classes.font} style={{ fontWeight: "300", fontSize: "15px" }}>Chọn ảnh định dạng <br /> .JPEG, .JPG, .PNG</p>
-                </div>
+            </Grid>
 
+            <Grid container spacing={0} style={{ marginTop: "10px" }}>
+              <Grid item xs={12} md={6} className={classes.text} style={{ justifyContent: "center" }}>
+                <span >Giới tính</span>
+              </Grid>
+              <Grid item xs={12} md={6} >
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-form-control-label-placement"
+                  value={gender}
+                  onChange={handleChangeGender}
+                  className={classes.radioButton}
+                >
+                  <FormControlLabel value="male" control={<Radio />} label="Nam" />
+                  <FormControlLabel value="female" control={<Radio />} label="Nữ" />
+                  <FormControlLabel value="diff" control={<Radio />} label="Khác" />
+                </RadioGroup>
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={0} style={{ marginTop: "10px" }}>
+              <Grid item xs={12} md={6} className={classes.text} style={{ justifyContent: "center" }}>
+                <span >Ngày tháng năm sinh</span>
+              </Grid>
+              <Grid item xs={12} md={6} className={classes.dob}>
+                <Select
+                  labelId="demo-simple-select-autowidth-label"
+                  id="demo-simple-select-autowidth"
+                  value={bday}
+                  onChange={(e) => setBDay(e.target.value)}
+                  autoWidth
+                  label="ngayf"
+                >
+                  {days.map((item, index) =>
+                    <MenuItem key={index} value={item} style={{ maxHeight: "50px" }}>{item}</MenuItem>
+                  )}
+                </Select>
+                <Select
+                  labelId="demo-simple-select-autowidth-label"
+                  id="demo-simple-select-autowidth"
+                  value={bmonth}
+                  onChange={(e) => setBMonth(e.target.value)}
+                  autoWidth
+                  label="thang"
+                  style={{ margin: "0 10px" }}
+                >
+                  {months.map((item, index) =>
+                    <MenuItem key={index} value={item} style={{ maxHeight: "50px" }}>{item}</MenuItem>
+                  )}
+                </Select>
+                <OutlinedInput placeholder="Please enter text" value={byear} onChange={(e) => setBYear(e.target.value)} style={{ width: "35%" }} />
               </Grid>
             </Grid>
           </Grid>
+          <div style={{ textAlign: "center" }}>
+            <Button className={classes.btn} variant="outlined" startIcon={<SaveIcon />}>
+              Lưu
+            </Button>
+          </div>
+
         </Grid>
-        {/* <FormattedMessage {...messages.header} /> */}
-      </Container>
+        <Grid item xs={12} md={4} style={{ padding: "10px" }}>
+          <Grid container spacing={0}>
+            <Grid item xs={3} md={3} className={classes.right}>
+              <span>Email</span>
+            </Grid>
+            <Grid item xs={6} md={6} className={classes.right}>
+              <span>abc@gmail.com</span>
+            </Grid>
+            <Grid item xs={3} md={3} style={{textAlign: "center"}}>
+              <span style={{ marginLeft: "10px", fontSize: "13px" }}><a href='#'>thay đổi</a></span>
+            </Grid>
+            <Grid item xs={3} md={3} className={classes.right}>
+              <span>Số điện thoại</span>
+            </Grid>
+            <Grid item xs={6} md={6} className={classes.right}>
+              <span>0123456798</span>
+            </Grid>
+            <Grid item xs={3} md={3} style={{textAlign: "center"}}>
+              <span style={{ marginLeft: "10px", fontSize: "13px" }}><a href='#'>thay đổi</a></span>
+            </Grid>
+          </Grid>
+        </Grid>
+
+      </Grid>
     </div >
   );
 }

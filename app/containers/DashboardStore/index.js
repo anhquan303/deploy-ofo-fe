@@ -63,6 +63,7 @@ export function DashboardStore(props) {
     { title: "Slogan", field: "slogan" },
     { title: "Status", field: "status" },
   ]
+  console.log(props.dashboardStore.listStore)
   return (
     <>
       {/* <div style={{ marginRight: "10px" }}>
