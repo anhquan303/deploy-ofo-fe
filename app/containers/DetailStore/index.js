@@ -70,6 +70,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1.5em",
     textAlign: "center",
     color: "#2AC267",
+    textTransform: "uppercase"
   },
   btnChangeStatus: {
     // "& .MuiButton-root": {

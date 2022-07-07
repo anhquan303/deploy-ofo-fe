@@ -28,6 +28,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { makeStyles, Button } from '@material-ui/core';
 import { fetchListFood, searchFood } from './actions';
+import { getStore } from '../../utils/common';
 
 const useStyles = makeStyles((theme) => ({
   information_image: {
@@ -78,7 +79,9 @@ export function SellerManagerProduct(props) {
   const [priceFrom, setPriceFrom] = useState("");
   const [priceTo, setPriceTo] = useState("");
   const action = false;
+  const store = getStore();
 
+  console.log(props.sellerManagerProduct.foodList[0].actived)
 
   const columns = [
     { title: "ID", field: "id" },
@@ -86,7 +89,7 @@ export function SellerManagerProduct(props) {
     { title: "Price", field: "price" },
     { title: "Creat At", field: "createdAt" },
     { title: "Type", field: "type" },
-    { title: "Status", field: "status" },
+    { title: "Active", field: "actived" },
   ];
 
   const classes = useStyles();
@@ -94,7 +97,10 @@ export function SellerManagerProduct(props) {
   const [type, setType] = useState();
 
   useEffect(() => {
-    dispatch(fetchListFood());
+    const data = {
+      id: store
+    }
+    dispatch(fetchListFood(data));
   }, []);
 
   //set Type
@@ -248,11 +254,11 @@ export function SellerManagerProduct(props) {
       </div >
 
       <div style={{ marginTop: "20px" }}>
-        <Button onClick={() => props.history.push("/managerProduct/addProduct")} className={classes.btn} variant="contained" component="span" style={{ width: "fit-content", display: "block", marginLeft: "auto" }}>
+        <Button onClick={() => props.history.push("/my-store/manager-product/addProduct")} className={classes.btn} variant="contained" component="span" style={{ width: "fit-content", display: "block", marginLeft: "auto" }}>
           Thêm sản phẩm
         </Button>
       </div>
-      <CustomTable data={props.sellerManagerProduct.foodList} itemPerPage={5} totalItem={props.sellerManagerProduct.foodList.length} detailPage="managerProduct" columns={columns} action={action} />
+      <CustomTable data={props.sellerManagerProduct.foodList} itemPerPage={5} totalItem={props.sellerManagerProduct.foodList.length} detailPage="my-store/manager-product" columns={columns} action={action} />
     </div >
   );
 }

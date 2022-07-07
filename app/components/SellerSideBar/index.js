@@ -134,13 +134,13 @@ function SellerSideBar(props) {
         <img src={Logo} alt="logo" className={classes.logo} />
         <Typography className={classes.textLogo}>No <span className={classes.span}>Nê</span></Typography>
       </div>
-      <NavLink to="/managerOrder" className={classes.link} onClick={handleDrawerToggle}>
+      <NavLink to="/my-store/manager-order" className={classes.link} onClick={handleDrawerToggle}>
         <div className={classes.item}>
           <DashboardRoundedIcon className={classes.icon} />
           <Typography className={classes.text}>Manager Order</Typography>
         </div>
       </NavLink>
-      <NavLink to="/managerProduct" className={classes.link} onClick={handleDrawerToggle}>
+      <NavLink to="/my-store/manager-product" className={classes.link} onClick={handleDrawerToggle}>
         <div className={classes.item}>
           <PersonIcon className={classes.icon} />
           <Typography className={classes.text}>Manager Product</Typography>

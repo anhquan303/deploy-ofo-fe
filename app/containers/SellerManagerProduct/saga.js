@@ -5,7 +5,9 @@ import * as types from './constants';
 
 export function* fetchListFood({ payload }) {
   try {
-    const res = yield call(apiFetchData, ['api/foods']);
+   
+    const res = yield call(apiFetchData, [`api/store/${payload.id}/foods`]);
+    console.log(res)
     if (res.status == 200) {
       yield put(fetchListFoodSuccess(res.data.data));
     } else {

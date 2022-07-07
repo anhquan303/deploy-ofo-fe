@@ -32,7 +32,7 @@ import Logo from '../../images/Happy_Delivery_Man_logo_cartoon_art_illustration.
 import { NavLink, useHistory, useLocation } from 'react-router-dom';
 import { makeStyles, Container, Typography } from '@material-ui/core';
 import { fontWeight } from '@mui/system';
-import { AppBar, IconButton, Toolbar, Drawer, Box } from '@mui/material';
+import { AppBar, IconButton, Toolbar, Drawer, Box, Badge } from '@mui/material';
 import DashboardHeader from '../DashboardHeader';
 import { getUser, removeUserSession } from '../../utils/common';
 
@@ -181,6 +181,9 @@ function SideBar(props) {
       <NavLink to="/register" className={classes.link} onClick={handleDrawerToggle}>
         <div className={classes.item}>
           <FastfoodIcon className={classes.icon} />
+          {/* <Badge badgeContent={99} className={classes.icon}>
+            <FastfoodIcon />
+          </Badge> */}
           <Typography className={classes.text}>Register</Typography>
         </div>
       </NavLink>
@@ -226,8 +229,8 @@ function SideBar(props) {
             <MenuIcon />
             {/* <span><p>Hello, Quan </p></span> */}
           </IconButton>
-          {path == "/store" ? <DashboardHeader text="Store" user={user} /> : <DashboardHeader text="Dashboard" user={user}/>} 
-         
+          {path == "/store" ? <DashboardHeader text="Store" user={user} /> : <DashboardHeader text="Dashboard" user={user} />}
+
         </Toolbar>
       </AppBar>
       <Box

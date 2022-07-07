@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function CardItem({ foodName, storeName, address, img }) {
+
   useInjectReducer({ key: 'cardItem', reducer });
   useInjectSaga({ key: 'cardItem', saga });
   const classes = useStyles();

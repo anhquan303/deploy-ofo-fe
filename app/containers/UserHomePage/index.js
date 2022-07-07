@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -21,7 +21,7 @@ import messages from './messages';
 import { Box, Grid, MobileStepper, Container } from '@mui/material';
 import { makeStyles, Button } from '@material-ui/core';
 import { getUser, removeUserSession } from '../../utils/common';
-import { logOut } from './actions';
+import { fetchListFood, logOut } from './actions';
 import Logo from '../../images/Happy_Delivery_Man_logo_cartoon_art_illustration.jpg';
 import SearchBar from "material-ui-search-bar";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -91,8 +91,6 @@ export function UserHomePage(props) {
   const [activeStep, setActiveStep] = useState(0);
   const theme = useTheme();
   const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
-
-  console.log(props)
 
   const user = getUser();
   const handleLogout = () => {
@@ -177,6 +175,11 @@ export function UserHomePage(props) {
   const handleStepChange = (step) => {
     setActiveStep(step);
   };
+
+  //get list food
+  useEffect(() => {
+    dispatch(fetchListFood());
+  }, []);
 
   return (
     // <div>
@@ -278,7 +281,7 @@ export function UserHomePage(props) {
             enableMouseEvents
           >
             {images.map((step, index) => (
-              <div key={step.label}>
+              <div key={index}>
                 {Math.abs(activeStep - index) <= 2 ? (
                   <Box
                     component="img"
@@ -351,7 +354,7 @@ export function UserHomePage(props) {
         <Grid container spacing={2} style={{ marignTop: "10px" }}>
           {foods.map((item, index) =>
 
-            <Grid item sm={2} xs={6} key={index} style={{ width: "100%" }}>
+            <Grid item sm={4} xs={6} md={2} key={index} style={{ width: "100%" }}>
               <Link to={{ pathname: `/food/${item.id}`, state: { item: item } }}
                 style={{ textDecoration: "none" }}>
                 <CardItem foodName={item.foodName} storeName={item.storeName} address={item.address} img={item.img} />
@@ -359,30 +362,6 @@ export function UserHomePage(props) {
             </Grid>
 
           )}
-          {/* <Grid item sm={2} xs={6} >
-              <CardItem />
-            </Grid>
-            <Grid item sm={2} xs={6} >
-              <CardItem />
-            </Grid>
-            <Grid item sm={2} xs={6} >
-              <CardItem />
-            </Grid>
-            <Grid item sm={2} xs={6} >
-              <CardItem />
-            </Grid>
-            <Grid item sm={2} xs={6} >
-              <CardItem />
-            </Grid>
-            <Grid item sm={2} xs={6} >
-              <CardItem />
-            </Grid>
-            <Grid item sm={2} xs={6} >
-              <CardItem />
-            </Grid>
-            <Grid item sm={2} xs={6} >
-              <CardItem />
-            </Grid> */}
         </Grid>
       </Container>
     </>

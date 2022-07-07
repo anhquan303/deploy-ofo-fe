@@ -19,7 +19,7 @@ import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
 import { Box, Grid, IconButton, Container, Avatar, List, ListItemButton, ListItemText, TextField } from '@mui/material';
-import { Headerr } from '../Headerr';
+import Headerr from './../Headerr';
 import { makeStyles, Button } from '@material-ui/core';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import StarIcon from '@mui/icons-material/Star';
@@ -127,7 +127,7 @@ export function FoodDetail(props) {
   };
 
 
-  console.log(props.location.state.item)
+  // console.log(props.location.state.item)
 
   return (
     <div>

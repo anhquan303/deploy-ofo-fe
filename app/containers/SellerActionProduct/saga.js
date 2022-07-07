@@ -6,7 +6,7 @@ import * as types from './constants';
 
 export function* deleteProduct({ payload }) {
   try {
-    const res = yield call(apiUpdateProduct, [`api/foods/${payload.id}/delete`]);
+    const res = yield call(apiUpdateProduct, [`api/store/${payload.storeId}/foods/${payload.id}/delete`]);
     if (res.status == 200) {
       yield put(deleteProductSuccess("DELETE SUCCESSFUL"));
     } else {
@@ -27,7 +27,7 @@ export function* updateProduct({ payload }) {
       image: payload.image,
       status: "Active"
     }
-    const res = yield call(apiUpdateProduct, [`api/foods/${payload.id}/update`], data);
+    const res = yield call(apiUpdateProduct, [`api/store/${payload.storeId}/foods/${payload.id}/update`], data);
     if (res.status == 200) {
       yield put(updateProductSuccess("UPDATE SUCCESSFUL"));
     } else {

@@ -32,6 +32,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { getStore } from '../../utils/common';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -86,8 +87,9 @@ export function SellerActionProduct(props) {
   let param = useParams();
 
   const classes = useStyles();
+  const store = getStore();
   const [type, setType] = useState(props.location.state.item.type);
-  const [storeId, setStoreId] = useState("1");
+  const [storeId, setStoreId] = useState(store);
   const initialValues = { name: props.location.state.item.name, price: props.location.state.item.price, description: props.location.state.item.description, image: "" };
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
@@ -160,14 +162,15 @@ export function SellerActionProduct(props) {
 
   const deleteProduct1 = () => {
     const data = {
-      id: props.location.state.item.id
+      id: props.location.state.item.id,
+      storeId: store
     }
     dispatch(deleteProduct(data));
   }
 
   useEffect(() => {
     if (props.sellerActionProduct.message == "DELETE SUCCESSFUL" || props.sellerActionProduct.message == "UPDATE SUCCESSFUL") {
-      props.history.push("/managerProduct")
+      props.history.push("/my-store/manager-product")
       dispatch(reset());
     }
   }, [props.sellerActionProduct.message])
@@ -294,7 +297,7 @@ export function SellerActionProduct(props) {
               </Grid>
               <Grid container spacing={1} >
                 <Grid item sm={12} xs={12} lg={4}>
-                  <Button onClick={() => props.history.push("/managerProduct")} className={classes.btn} variant="contained" component="span" >
+                  <Button onClick={() => props.history.push("/my-store/manager-product")} className={classes.btn} variant="contained" component="span" >
                     Trở về
                   </Button>
                 </Grid>
