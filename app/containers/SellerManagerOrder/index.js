@@ -18,7 +18,7 @@ import makeSelectSellerManagerOrder from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
-import moment from 'moment'
+import moment from 'moment';
 import {
   Box, Grid, Container, Avatar, Typography, List, FormControlLabel, Radio, RadioGroup,
   ListItemButton, ListItemIcon, ListItemText, Collapse, OutlinedInput, Select, MenuItem

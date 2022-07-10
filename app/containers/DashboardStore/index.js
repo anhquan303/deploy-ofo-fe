@@ -88,7 +88,7 @@ export function DashboardStore(props) {
               />
             </Grid>
             <Grid item sm={12} xs={12}>
-              {data ? <CustomTable data={data} itemPerPage={3} totalItem={props.dashboardStore.listStore.length} detailPage="store" columns={columns} action={action} /> : <></>}
+              {data ? <CustomTable data={data} itemPerPage={10} totalItem={props.dashboardStore.listStore.length} detailPage="store" columns={columns} action={action} /> : <></>}
             </Grid>
           </Grid>
 

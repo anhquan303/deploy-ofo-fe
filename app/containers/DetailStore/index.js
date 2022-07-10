@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -22,14 +22,14 @@ import { useParams } from 'react-router-dom';
 import DashboardHeader from '../../components/DashboardHeader';
 import ShopImage from '../../images/kinh-nghiem-mo-quan-an-nho-2.jpg';
 
-import { Box, TextField } from '@mui/material';
+import { Box, TextField, Menu, MenuItem } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { makeStyles, Grid, Button } from '@material-ui/core';
 
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-// import { makeStyles } from '@material-ui/core/styles';
+import { approvedStore, declinedStore, getStoreById, reset } from './actions';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -238,14 +238,10 @@ const useStyles = makeStyles((theme) => ({
       fontStyle: "normal"
     },
   }
-
-
-
 }));
 
-
-
 export function DetailStore(props) {
+  const { dispatch } = props;
   useInjectReducer({ key: 'detailStore', reducer });
   useInjectSaga({ key: 'detailStore', saga });
 
@@ -255,6 +251,57 @@ export function DetailStore(props) {
 
   const [value, setValue] = useState(new Date());
   const classes = useStyles();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const declineStore = (e) => {
+    e.preventDefault();
+    const data = {
+      id: props.location.state.item.id
+    }
+    dispatch(declinedStore(data));
+    setAnchorEl(null);
+  }
+
+  const approveStore = (e) => {
+    e.preventDefault();
+    setAnchorEl(null);
+    const data = {
+      id: props.location.state.item.id
+    }
+    dispatch(approvedStore(data));
+  }
+
+
+
+  useEffect(() => {
+    // if (props.detailStore.message == "CHANGE STATUS SUCCESS") {
+    const data = {
+      id: props.location.state.item.id
+    }
+    dispatch(getStoreById(data));
+    //}
+  }, []);
+
+
+  useEffect(() => {
+    if (props.detailStore.message == "APPROVED SUCCESS" || props.detailStore.message == "DECLINED SUCCESS") {
+      const data = {
+        id: props.location.state.item.id
+      }
+
+      dispatch(getStoreById(data));
+      dispatch(reset());
+    }
+  }, [props.detailStore.message]);
+
 
   return (
     <div style={{ paddingRight: "15px" }}>
@@ -290,18 +337,30 @@ export function DetailStore(props) {
                   <Grid item md={5} sm={8} xs={12} className={classes.two}>
 
                     <div className={classes.approved}>
-                      <p>{props.location.state.item.status}</p>
+                      {props.detailStore.status == "approved" ? <p>{props.detailStore.status}</p> : <p style={{ color: "#FE0000" }}>{props.detailStore.status}</p>}
+
                     </div>
 
                   </Grid>
                   <Grid item md={7} sm={4} xs={12} className={classes.three}>
 
                     <div className={classes.verify}>
-                      <Button variant="contained" component="span" className={classes.btnChangeStatus}>
+                      <Button variant="contained" component="span" className={classes.btnChangeStatus} onClick={handleClick}>
                         Change Status
                       </Button>
                     </div>
-
+                    <Menu
+                      id="basic-menu"
+                      anchorEl={anchorEl}
+                      open={open}
+                      onClose={handleClose}
+                      MenuListProps={{
+                        'aria-labelledby': 'basic-button',
+                      }}
+                    >
+                      <MenuItem onClick={approveStore}>Approve</MenuItem>
+                      <MenuItem onClick={declineStore}>Decline</MenuItem>
+                    </Menu>
                   </Grid>
                 </Grid>
               </Box>

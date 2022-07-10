@@ -81,7 +81,7 @@ export function SellerManagerProduct(props) {
   const action = false;
   const store = getStore();
 
-  console.log(props.sellerManagerProduct.foodList[0].actived)
+  //console.log(props.sellerManagerProduct.foodList[0].actived)
 
   const columns = [
     { title: "ID", field: "id" },

@@ -115,7 +115,8 @@ export function UserRegister(props) {
   const validate = (values) => {
     const errors = {};
     const regexPhone = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
-    const regexEmail = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
+    //const regexEmail = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
+    const regexEmail = /^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$/;
     if (!values.userName) {
       errors.userName = "username is required!";
     }
@@ -125,9 +126,9 @@ export function UserRegister(props) {
     if (!values.firstName) {
       errors.firstName = "firstName is required!";
     }
-    // if (!values.lastName) {
-    //   errors.lastName = "lastName is required!";
-    // }
+    if (!values.lastName) {
+      errors.lastName = "lastName is required!";
+    }
     if (!values.phone) {
       errors.phone = "phone is required!";
     }
@@ -176,7 +177,7 @@ export function UserRegister(props) {
         password: formValues.password,
         phone: formValues.phone,
         firstName: formValues.firstName,
-        lastName: formValues.firstName,
+        lastName: formValues.lastName,
         email: formValues.email,
         location: formValues.address,
       }
@@ -216,7 +217,7 @@ export function UserRegister(props) {
           <h3 className={classes.registerTag}>Đăng ký</h3>
           <div>
             <Grid container spacing={2}>
-              <Grid item sm={6} xs={12}>
+              <Grid item sm={3} xs={12}>
                 <Box
                   component="form"
                   sx={{
@@ -227,13 +228,34 @@ export function UserRegister(props) {
                 >
                   <TextField
                     id="outlined-textarea1"
-                    label="Họ và tên"
-                    placeholder="Họ và tên"
+                    label="Họ"
+                    placeholder="Họ"
                     multiline
                     name="firstName"
                     onChange={handleChange}
                     helperText={formErrors.firstName && formValues.firstName.length == "" ? formErrors.firstName : null}
                     error={formErrors.firstName != null && formValues.firstName.length == ""}
+                  />
+                </Box>
+              </Grid>
+              <Grid item sm={3} xs={12}>
+                <Box
+                  component="form"
+                  sx={{
+                    '& .MuiTextField-root': { m: 1, width: '100%' },
+                  }}
+                  noValidate
+                  autoComplete="off"
+                >
+                  <TextField
+                    id="outlined-textarea1"
+                    label="Tên"
+                    placeholder="Tên"
+                    multiline
+                    name="lastName"
+                    onChange={handleChange}
+                    helperText={formErrors.lastName && formValues.lastName.length == "" ? formErrors.lastName : null}
+                    error={formErrors.lastName != null && formValues.lastName.length == ""}
                   />
                 </Box>
               </Grid>
@@ -353,7 +375,7 @@ export function UserRegister(props) {
 
 
             <Grid container spacing={2}>
-              <Grid item sm={6} xs={12}>
+              <Grid item sm={6} xs={12} style={{ textAlign: "center" }}>
                 <LoadCanvasTemplate />
               </Grid>
               <Grid item sm={6} xs={12}>

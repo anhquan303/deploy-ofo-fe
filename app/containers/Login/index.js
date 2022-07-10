@@ -149,10 +149,13 @@ export function Login(props) {
   //redirect follow role
   useEffect(() => {
     if (user != null) {
+
       if (user.authorities[0].authority != "ADMIN") {
-        props.history.push("/");
+        //props.history.push("/");
+        setTimeout(() => props.history.push("/"), 1000);
       } else {
-        props.history.push("/dashboard");
+        //props.history.push("/dashboard");
+        setTimeout(() => props.history.push("/dashboard"), 1000);
       }
     } else {
       // props.history.push("/login");
@@ -339,7 +342,7 @@ export function Login(props) {
           <div style={{ textAlign: "center" }}>
             <div><a href="/" style={{ textDecoration: "none" }}>Trở về trang chủ</a></div>
             <br />
-            <div><span>Quên mật khẩu ? </span><a href="#" style={{ textDecoration: "none" }}>Lấy lại mật khẩu</a></div>
+            <div><span>Quên mật khẩu ? </span><a href="/forget-password" style={{ textDecoration: "none" }}>Lấy lại mật khẩu</a></div>
             <div><span>Chưa có tài khoản ? </span><a href="/userRegister" style={{ textDecoration: "none" }}>Đăng ký ngay</a></div>
           </div>
 
