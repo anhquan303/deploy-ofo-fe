@@ -12,7 +12,7 @@ export function* signUp({ payload }) {
       password: payload.password,
       phone: payload.phone,
       firstName: payload.firstName,
-      lastName: payload.firstName,
+      lastName: payload.lastName,
       email: payload.email,
       location: [{
         name: payload.location

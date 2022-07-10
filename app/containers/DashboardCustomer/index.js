@@ -23,6 +23,7 @@ import CustomTable from '../../components/CustomTable';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { fetchListUser } from './actions';
+import SearchBar from "material-ui-search-bar";
 
 const useStyles = makeStyles((theme) => ({
   information_image: {
@@ -48,6 +49,8 @@ export function DashboardCustomer(props) {
 
   const classes = useStyles();
   const action = false;
+  const [searched, setSearched] = useState("");
+  const [data, setData] = useState(props.dashboardCustomer.userList);
 
   const columns = [
     { title: "STT", field: "id" },
@@ -60,19 +63,38 @@ export function DashboardCustomer(props) {
     dispatch(fetchListUser());
   }, []);
 
+  const requestSearch = (searchedVal) => {
+    const filteredRows = props.dashboardCustomer.userList.filter((row) => {
+      return row.username.toLowerCase().includes(searchedVal.toLowerCase());
+    });
+    setData(filteredRows);
+  };
+
+  const cancelSearch = () => {
+    setSearched("");
+    requestSearch(searched);
+  };
 
   return (
     <div style={{ paddingRight: "15px" }}>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={0}>
           <Grid item sm={12} xs={12}>
+            <SearchBar
+              value={searched}
+              onChange={(searchVal) => requestSearch(searchVal)}
+              onCancelSearch={() => cancelSearch()}
+              placeholder="Tìm kiếm người dùng theo tến"
+            />
+          </Grid>
+          <Grid item sm={12} xs={12} style={{ margin: " 10px 0" }}>
             <div className={classes.information_image}>
               <h2>Total User: {props.dashboardCustomer.userList.length}</h2>
             </div>
           </Grid>
           <Grid item sm={12} xs={12}>
 
-            {props.dashboardCustomer.userList ? <CustomTable data={props.dashboardCustomer.userList} itemPerPage={3} totalItem={props.dashboardCustomer.userList.length} detailPage="customer" columns={columns} action={action} /> : <></>}
+            {props.dashboardCustomer.userList ? <CustomTable data={data} itemPerPage={10} totalItem={props.dashboardCustomer.userList.length} detailPage="customer" columns={columns} action={action} /> : <></>}
           </Grid>
         </Grid>
 

@@ -59,7 +59,7 @@ export function UserDetailOrder() {
     <div>
       <Grid container spacing={0} style={{ padding: "10px" }}>
         <Grid item xs={6} md={6} sm={6}>
-          <Button className={classes.btn} variant="outlined">
+          <Button href="/user/order-history" className={classes.btn} variant="outlined">
             Trở lại
           </Button>
         </Grid>

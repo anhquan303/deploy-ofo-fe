@@ -20,7 +20,7 @@ import saga from './saga';
 import messages from './messages';
 import { Box, Grid, MobileStepper, Container } from '@mui/material';
 import { makeStyles, Button } from '@material-ui/core';
-import { getUser, removeUserSession } from '../../utils/common';
+import { getStore, getUser, removeUserSession } from '../../utils/common';
 import { fetchListFood, logOut } from './actions';
 import Logo from '../../images/Happy_Delivery_Man_logo_cartoon_art_illustration.jpg';
 import SearchBar from "material-ui-search-bar";
@@ -91,6 +91,7 @@ export function UserHomePage(props) {
   const [activeStep, setActiveStep] = useState(0);
   const theme = useTheme();
   const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
+  const store = getStore();
 
   const user = getUser();
   const handleLogout = () => {
@@ -178,8 +179,13 @@ export function UserHomePage(props) {
 
   //get list food
   useEffect(() => {
-    dispatch(fetchListFood());
+    const data = {
+      sid: store
+    }
+    dispatch(fetchListFood(data));
   }, []);
+
+  console.log(props.userHomePage.foodList)
 
   return (
     // <div>
@@ -351,13 +357,25 @@ export function UserHomePage(props) {
           </Button>
         </div>
 
-        <Grid container spacing={2} style={{ marignTop: "10px" }}>
+        {/* <Grid container spacing={2} style={{ marignTop: "10px" }}>
           {foods.map((item, index) =>
 
             <Grid item sm={4} xs={6} md={2} key={index} style={{ width: "100%" }}>
               <Link to={{ pathname: `/food/${item.id}`, state: { item: item } }}
                 style={{ textDecoration: "none" }}>
                 <CardItem foodName={item.foodName} storeName={item.storeName} address={item.address} img={item.img} />
+              </Link>
+            </Grid>
+
+          )}
+        </Grid> */}
+
+        <Grid container spacing={2} style={{ marignTop: "10px" }}>
+          {props.userHomePage.foodList.map((item, index) =>
+            <Grid item sm={4} xs={6} md={2} key={index} style={{ width: "100%" }}>
+              <Link to={{ pathname: `/food/${item.id}`, state: { item: item } }}
+                style={{ textDecoration: "none" }}>
+                <CardItem foodName={item.name} storeName={item.foodStore.name} address={item.foodStore.email} img={item.image} />
               </Link>
             </Grid>
 

@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -21,6 +21,7 @@ import messages from './messages';
 import SaveIcon from '@mui/icons-material/Save';
 import { Box, Grid, TextField, Container } from '@mui/material';
 import { makeStyles, Button } from '@material-ui/core';
+import { changePassword } from './actions';
 
 const useStyles = makeStyles((theme) => ({
   btn: {
@@ -60,7 +61,8 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export function UserChangePassword() {
+export function UserChangePassword(props) {
+  const {dispatch} = props;
   useInjectReducer({ key: 'userChangePassword', reducer });
   useInjectSaga({ key: 'userChangePassword', saga });
   const classes = useStyles();
@@ -68,7 +70,6 @@ export function UserChangePassword() {
   const initialValues = { newPassword: "", oldPassword: "", verifyPassword: "" };
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
-  const [accept, setAccept] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
 
   //set value for input
@@ -79,9 +80,6 @@ export function UserChangePassword() {
 
   const validate = (values) => {
     const errors = {};
-    const regexPhone = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
-    const regexEmail = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
-
     if (!values.newPassword) {
       errors.newPassword = "required!";
     }
@@ -91,8 +89,8 @@ export function UserChangePassword() {
     if (!values.verifyPassword) {
       errors.verifyPassword = "required!";
     }
-    if (values.passwordVerify != values.newPassword) {
-      errors.passwordVerify1 = "password does not match";
+    if (values.verifyPassword != values.newPassword) {
+      errors.verifyPassword1 = "password does not match";
     }
     return errors;
   }
@@ -103,6 +101,20 @@ export function UserChangePassword() {
     setFormErrors(validate(formValues));
     setIsSubmit(true);
   }
+
+    //change pass
+    useEffect(() => {
+      if (Object.keys(formErrors).length === 0 && isSubmit) {
+        console.log('here')
+        const data = {
+          newPassword: formValues.newPassword,
+          oldPassword: formValues.oldPassword,
+          verifyPassword: formValues.verifyPassword,
+        }
+        dispatch(changePassword(data))
+        //setOpen(true);
+      }
+    }, [formErrors]);
 
   return (
     <div>
@@ -170,10 +182,10 @@ export function UserChangePassword() {
                 type="password"
                 autoComplete="current-password"
                 value={formValues.passwordVerify}
-                name="passwordVerify"
+                name="verifyPassword"
                 onChange={handleChange}
-                helperText={formErrors.passwordVerify && formValues.passwordVerify.length == "" ? formErrors.passwordVerify : formErrors.passwordVerify1 ? formErrors.passwordVerify1 : null}
-                error={formErrors.passwordVerify != null && formValues.passwordVerify.length == "" ? true : formErrors.passwordVerify1 != null ? true : false}
+                helperText={formErrors.verifyPassword && formValues.verifyPassword.length == "" ? formErrors.verifyPassword : formErrors.verifyPassword1 ? formErrors.verifyPassword1 : null}
+                error={formErrors.verifyPassword != null && formValues.verifyPassword.length == "" ? true : formErrors.verifyPassword1 != null ? true : false}
               />
             </Box>
             <Button className={classes.btn} variant="outlined" startIcon={<SaveIcon />} onClick={handlesubmit}>

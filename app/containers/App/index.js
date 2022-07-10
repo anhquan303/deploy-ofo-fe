@@ -19,6 +19,7 @@ import UserRegister from '../UserRegister';
 import Dashboard from '../../containers/Dashboard';
 import DashboardStore from '../../containers/DashboardStore';
 import DetailStore from '../../containers/DetailStore';
+import DetailCustomer from '../../containers/DetailCustomer';
 import SellerRegister from '../../containers/SellerRegister';
 import DashboardRegister from '../../containers/DashboardRegister';
 import DashboardCustomer from '../../containers/DashboardCustomer';
@@ -36,6 +37,8 @@ import UserOrderHistory from '../UserOrderHistory';
 import UserChangePassword from '../../containers/UserChangePassword';
 import UserDetailOrder from '../../containers/UserDetailOrder';
 import UserAddress from '../../containers/UserAddress';
+import EmailVerifiedSuccess from '../../containers/EmailVerifiedSuccess';
+import ForgetPassword from '../../containers/ForgetPassword';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
 import {
@@ -50,6 +53,7 @@ import { makeStyles } from '@material-ui/core';
 import { StylesProvider } from "@material-ui/core/styles";
 import { getUser } from '../../utils/common';
 import Headerr from './../Headerr';
+
 
 const useStyles = makeStyles((theme) => ({
 
@@ -138,7 +142,8 @@ export default function App() {
                   <Route path="/dashboard" component={Dashboard} />
                   <Route exact path="/register" component={DashboardRegister} />
                   <Route path="/register/:id" component={DetailRegister} />
-                  <Route path="/customer" component={DashboardCustomer} />
+                  <Route exact path="/customer" component={DashboardCustomer} />
+                  <Route path="/customer/:id" component={DetailCustomer} />
                   <Route exact path="/store" component={DashboardStore} />
                   <Route path="/store/:id" component={DetailStore} />
                   <Route path="" component={NotFoundPage} />
@@ -148,18 +153,18 @@ export default function App() {
             </div>
           </Grid>
           // : location.pathname == "/myStore" || location.pathname == "/managerProduct" || location.pathname == "/managerProduct/addProduct" && user.authorities[0].authority == 'USER' ?
-          :
-          user != null && user.authorities[0].authority == 'USER' && location.pathname == "/" || location.pathname.indexOf("/food/") == 0 || user != null && user.authorities[0].authority == 'SELLER' && location.pathname == "/" || location.pathname.indexOf("/food/") == 0 ?
-            <Grid container spacing={1}>
-              <Grid item sm={12} xs={12} md={12}>
-                <Switch>
-                  <Route exact path="/" component={UserHomePage} />
-                  <Route path="/food/:id" component={FoodDetail} />
-                  <Route path="/sellerRegister" component={SellerRegister} />
-                  <Route path="" component={NotFoundPage} />
-                </Switch>
-              </Grid>
-            </Grid>
+          // :
+          // user != null && user.authorities[0].authority == 'USER' && location.pathname == "/" || location.pathname.indexOf("/food/") == 0 || user != null && user.authorities[0].authority == 'SELLER' && location.pathname == "/" || location.pathname.indexOf("/food/") == 0 ?
+          //   <Grid container spacing={1}>
+          //     <Grid item sm={12} xs={12} md={12}>
+          //       <Switch>
+          //         <Route exact path="/" component={UserHomePage} />
+          //         <Route path="/food/:id" component={FoodDetail} />
+          //         <Route path="/sellerRegister" component={SellerRegister} />
+          //         <Route path="" component={NotFoundPage} />
+          //       </Switch>
+          //     </Grid>
+          //   </Grid>
             //
 
             : user != null && user.authorities[0].authority == 'SELLER' && location.pathname.indexOf("/my-store/") == 0 ?
@@ -219,6 +224,9 @@ export default function App() {
                       <Route path="/sellerRegister" component={SellerRegister} />
                       {/* <Route path="/userSetting" component={UserSetting} /> */}
                       <Route path="/food/:id" component={FoodDetail} />
+                      
+                      <Route path="/email/verify" component={EmailVerifiedSuccess} />
+                      <Route path="/forget-password" component={ForgetPassword} />
                       {/* <Route path="/order-history" component={UserOrderHistory} /> */}
 
 

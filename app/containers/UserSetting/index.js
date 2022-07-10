@@ -30,7 +30,7 @@ import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 import SaveIcon from '@mui/icons-material/Save';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import { NavLink } from 'react-router-dom';
-import { getUser } from '../../utils/common';
+import { getUser, getStore } from '../../utils/common';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -102,6 +102,7 @@ export function UserSetting(props) {
 
   const classes = useStyles();
   const user = getUser();
+  const store = getStore();
   const [open, setOpen] = useState(true);
   const [name, setName] = useState(user.firstname + " " + user.lastname);
   const [storeName, setStoreName] = useState("Quán Gốc Sung");
@@ -171,7 +172,7 @@ export function UserSetting(props) {
                 <Grid item xs={12} md={6} className={classes.text} >
                   <span>Tên đăng nhập</span>
                 </Grid>
-                <Grid item xs={12} md={6} className={classes.text} style={{ fontWeight: "lighter" }}>
+                <Grid item xs={12} md={6} className={classes.text} style={{ fontWeight: "lighter", justifyContent: "left", }}>
                   <span>{user.username}</span>
                 </Grid>
 
@@ -189,7 +190,10 @@ export function UserSetting(props) {
                     <span >Tên shop</span>
                   </Grid>
                   <Grid item xs={12} md={6} className={classes.textField}>
-                    <OutlinedInput placeholder="Please enter text" value={storeName} onChange={(e) => setStoreName(e.target.value)} />
+                    {store != null ? <OutlinedInput placeholder="Please enter text" value={storeName} onChange={(e) => setStoreName(e.target.value)} /> : 
+                    <span className={classes.text} style={{ fontWeight: "lighter", justifyContent: "left", }}>Chưa đăng ký đối tác</span>
+                    }
+                    {/* <OutlinedInput placeholder="Please enter text" value={storeName} onChange={(e) => setStoreName(e.target.value)} /> */}
                   </Grid>
                 </Grid>
               </Grid>

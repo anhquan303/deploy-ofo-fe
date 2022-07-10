@@ -9,7 +9,8 @@ import * as types from './constants';
 
 export const initialState = {
   loading: false,
-  message: ""
+  message: "",
+  listWard: []
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -26,6 +27,17 @@ const sellerRegisterReducer = (state = initialState, action) =>
         draft.message = action.payload;
         break;
       case types.SELLER_SIGNUP_FAILED:
+        draft.loading = false;
+        draft.message = action.payload;
+        break;
+      case types.GET_LIST_WARDS:
+        draft.loading = true;
+        break;
+      case types.GET_LIST_WARDS_SUCCESS:
+        draft.loading = false;
+        draft.listWard = action.payload;
+        break;
+      case types.GET_LIST_WARDS_FAILED:
         draft.loading = false;
         draft.message = action.payload;
         break;

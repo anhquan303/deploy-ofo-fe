@@ -1,5 +1,5 @@
 import { take, call, put, select, takeEvery } from 'redux-saga/effects';
-import { fetchListFoodFailed } from './actions';
+import { fetchListFoodFailed, fetchListFoodSuccess } from './actions';
 import { apiFetchData, apiSignup } from './api';
 import * as types from './constants';
 
@@ -13,8 +13,12 @@ export function* logOut({ payload }) {
 
 export function* fetchListFood({ payload }) {
   try {
-    const res = yield call(apiFetchData, ['api/foods']);
-    console.log(res)
+    const res = yield call(apiFetchData, [`api/store/0/foods`]);
+    if (res.status == 200) {
+      yield put(fetchListFoodSuccess(res.data.data));
+    } else {
+      yield put(fetchListFoodFailed("FAILED"));
+    }
   } catch (error) {
     yield put(fetchListFoodFailed(error.message));
   }
