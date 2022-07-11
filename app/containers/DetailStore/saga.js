@@ -34,7 +34,7 @@ export function* getStoreById({ payload }) {
   try {
     const res = yield call(apiFetchData, [`api/store/detail?id=${payload.id}`]);
     if (res.status == 200) {
-      yield put(getStoreByIdSuccess(res.data.status));
+      yield put(getStoreByIdSuccess(res.data));
     } else {
       yield put(getStoreByIdFailed("FAILED"));
     }

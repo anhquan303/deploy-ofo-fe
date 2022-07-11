@@ -62,3 +62,25 @@ export function reset(payload) {
   };
 }
 
+export function getRegisterById(payload) {
+  return {
+    type: types.GET_REGISTER_BY_ID,
+    payload
+  };
+}
+
+export function getRegisterByIdSuccess(payload) {
+  return {
+    type: types.GET_REGISTER_BY_ID_SUCCESS,
+    payload
+  };
+}
+
+export function getRegisterByIdFailed(payload) {
+  return {
+    type: types.GET_REGISTER_BY_ID_FAILED,
+    payload
+  };
+}
+
+

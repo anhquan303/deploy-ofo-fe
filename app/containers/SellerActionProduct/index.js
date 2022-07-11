@@ -26,7 +26,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { makeStyles, Grid, Button } from '@material-ui/core';
 import Snackbar from '@mui/material/Snackbar';
-import { deleteProduct, reset, updateProduct } from './actions';
+import { deleteProduct, getProductById, reset, updateProduct } from './actions';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -88,9 +88,9 @@ export function SellerActionProduct(props) {
 
   const classes = useStyles();
   const store = getStore();
-  const [type, setType] = useState(props.location.state.item.type);
+  const [type, setType] = useState();
   const [storeId, setStoreId] = useState(store);
-  const initialValues = { name: props.location.state.item.name, price: props.location.state.item.price, description: props.location.state.item.description, image: "" };
+  const initialValues = { name: "", price: "", description: "", image: "" };
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [open, setOpen] = useState(false);
@@ -146,7 +146,7 @@ export function SellerActionProduct(props) {
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       const data = {
-        id: props.location.state.item.id,
+        id: props.location.state.id,
         name: formValues.name,
         price: formValues.price,
         type: type,
@@ -162,7 +162,7 @@ export function SellerActionProduct(props) {
 
   const deleteProduct1 = () => {
     const data = {
-      id: props.location.state.item.id,
+      id: props.location.state.id,
       storeId: store
     }
     dispatch(deleteProduct(data));
@@ -175,6 +175,26 @@ export function SellerActionProduct(props) {
     }
   }, [props.sellerActionProduct.message])
 
+  useEffect(() => {
+    const data = {
+      id: props.location.state.id
+    }
+    dispatch(getProductById(data));
+
+  }, []);
+
+  useEffect(() => {
+    if (props.sellerActionProduct.food) {
+      setType(props.sellerActionProduct.food.type);
+      formValues.name = props.sellerActionProduct.food.name;
+      formValues.price = props.sellerActionProduct.food.price;
+      formValues.description = props.sellerActionProduct.food.description;
+      formValues.image = props.sellerActionProduct.food.image;
+    }
+  }, [props.sellerActionProduct.food]);
+
+  
+  console.log(type)
   return (
     <div style={{ paddingRight: "15px" }}>
       <div style={{ textAlign: "center" }}>

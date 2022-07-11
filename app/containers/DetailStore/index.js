@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "0 2rem 3rem rgba(132, 139, 200, 0.18)",
     transition: "0.5s",
     height: "100%",
-    backgroundImage: `url(${ShopImage})`,
+    // backgroundImage: `url(${ShopImage})`,
     backgroundSize: "cover",
     // [theme.breakpoints.down("sm")]: {
     //   height: "200px"
@@ -246,7 +246,7 @@ export function DetailStore(props) {
   useInjectSaga({ key: 'detailStore', saga });
 
 
-  let param = useParams();
+  // let param = useParams();
 
 
   const [value, setValue] = useState(new Date());
@@ -264,7 +264,7 @@ export function DetailStore(props) {
   const declineStore = (e) => {
     e.preventDefault();
     const data = {
-      id: props.location.state.item.id
+      id: props.location.state.id
     }
     dispatch(declinedStore(data));
     setAnchorEl(null);
@@ -274,7 +274,7 @@ export function DetailStore(props) {
     e.preventDefault();
     setAnchorEl(null);
     const data = {
-      id: props.location.state.item.id
+      id: props.location.state.id
     }
     dispatch(approvedStore(data));
   }
@@ -282,19 +282,17 @@ export function DetailStore(props) {
 
 
   useEffect(() => {
-    // if (props.detailStore.message == "CHANGE STATUS SUCCESS") {
     const data = {
-      id: props.location.state.item.id
+      id: props.location.state.id
     }
     dispatch(getStoreById(data));
-    //}
   }, []);
 
 
   useEffect(() => {
     if (props.detailStore.message == "APPROVED SUCCESS" || props.detailStore.message == "DECLINED SUCCESS") {
       const data = {
-        id: props.location.state.item.id
+        id: props.location.state.id
       }
 
       dispatch(getStoreById(data));
@@ -305,149 +303,149 @@ export function DetailStore(props) {
 
   return (
     <div style={{ paddingRight: "15px" }}>
-      {/* <DashboardHeader text="Bún Bò Huế" /> */}
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={3}>
-          <Grid item md={6} sm={12} xs={12} >
-            <div className={classes.information_image}>
+      {props.detailStore.store ?
+        <>
+          <Box sx={{ flexGrow: 1 }}>
+            <Grid container spacing={3}>
+              <Grid item md={6} sm={12} xs={12} >
 
-            </div>
-          </Grid>
-          <Grid item md={6} sm={12} xs={12}>
-            <div className={classes.information_one}>
-              <Box sx={{ flexGrow: 1 }}>
-                <Grid container spacing={2}>
-                  <Grid item sm={8} xs={12} className={classes.one}>
+                <div className={classes.information_image} style={{ backgroundImage: `url(${props.detailStore.store.storeImage.avatar})` }}>
 
-                    <div className={classes.intro}>
-                      <p className={classes.text}>{props.location.state.item.name}</p>
-                      <p className={classes.text}>Thôn 8, Thạch Thất</p>
-                      <p className={classes.text}>3535453435</p>
-                    </div>
+                </div>
+              </Grid>
+              <Grid item md={6} sm={12} xs={12}>
+                <div className={classes.information_one}>
+                  <Box sx={{ flexGrow: 1 }}>
+                    <Grid container spacing={2}>
+                      <Grid item sm={8} xs={12} className={classes.one}>
 
-                  </Grid>
-                  <Grid item sm={4} xs={12} className={classes.zero}>
-                    <div className={classes.divCheckIcon} >
-                      {/* <div style={{ backgroundColor: "red", width: "100px", height: "100px" }}> */}
-                      {/* <CheckCircleIcon className={classes.verifyIcon} /> */}
-                      <CheckCircleIcon style={{ width: "100%", height: "100%", color: "#5890FF" }} />
-                    </div>
+                        <div className={classes.intro}>
+                          <p className={classes.text}>{props.detailStore.store.name}</p>
+                          <p className={classes.text}>{props.detailStore.store.otherLocation.name}, {props.detailStore.store.otherLocation.village}, {props.detailStore.store.otherLocation.town}</p>
+                          <p className={classes.text}>{props.detailStore.store.phone}</p>
+                        </div>
 
-                  </Grid>
-                  <Grid item md={5} sm={8} xs={12} className={classes.two}>
+                      </Grid>
+                      <Grid item sm={4} xs={12} className={classes.zero}>
+                        <div className={classes.divCheckIcon} >
+                          <CheckCircleIcon style={{ width: "100%", height: "100%", color: "#5890FF" }} />
+                        </div>
 
-                    <div className={classes.approved}>
-                      {props.detailStore.status == "approved" ? <p>{props.detailStore.status}</p> : <p style={{ color: "#FE0000" }}>{props.detailStore.status}</p>}
+                      </Grid>
+                      <Grid item md={5} sm={8} xs={12} className={classes.two}>
 
-                    </div>
+                        <div className={classes.approved}>
+                          {props.detailStore.status == "approved" ? <p>{props.detailStore.store.status}</p> : <p style={{ color: "#FE0000" }}>{props.detailStore.store.status}</p>}
 
-                  </Grid>
-                  <Grid item md={7} sm={4} xs={12} className={classes.three}>
+                        </div>
 
-                    <div className={classes.verify}>
-                      <Button variant="contained" component="span" className={classes.btnChangeStatus} onClick={handleClick}>
-                        Change Status
-                      </Button>
-                    </div>
-                    <Menu
-                      id="basic-menu"
-                      anchorEl={anchorEl}
-                      open={open}
-                      onClose={handleClose}
-                      MenuListProps={{
-                        'aria-labelledby': 'basic-button',
-                      }}
-                    >
-                      <MenuItem onClick={approveStore}>Approve</MenuItem>
-                      <MenuItem onClick={declineStore}>Decline</MenuItem>
-                    </Menu>
-                  </Grid>
-                </Grid>
-              </Box>
-            </div>
-          </Grid>
-        </Grid>
-      </Box>
+                      </Grid>
+                      <Grid item md={7} sm={4} xs={12} className={classes.three}>
 
-      <Box sx={{ flexGrow: 1 }}>
-        <h1>Information</h1>
-        <div className={classes.information_second}>
-          <Grid container spacing={2}>
-            <Grid item sm={6} xs={12}>
-              <div style={{ textAlign: "center" }}>
-                <span><h2>Owner: {props.location.state.item.user.username}</h2></span>
-                <span><h2>Register at: 04/08/2022</h2></span>
-              </div>
+                        <div className={classes.verify}>
+                          <Button variant="contained" component="span" className={classes.btnChangeStatus} onClick={handleClick}>
+                            Change Status
+                          </Button>
+                        </div>
+                        <Menu
+                          id="basic-menu"
+                          anchorEl={anchorEl}
+                          open={open}
+                          onClose={handleClose}
+                          MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                          }}
+                        >
+                          <MenuItem onClick={approveStore}>Approve</MenuItem>
+                          <MenuItem onClick={declineStore}>Decline</MenuItem>
+                        </Menu>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </div>
+              </Grid>
             </Grid>
-            <Grid item sm={6} xs={12}>
-              <div style={{ textAlign: "center" }}>
-                <span><h2>Cell Phone: {props.location.state.item.user.phoneNumber}</h2></span>
-                <span><h2>Approved at: 04/08/2022</h2></span>
-              </div>
-            </Grid>
-          </Grid>
-        </div>
-      </Box>
+          </Box>
 
-      <div style={{ marginTop: "20px" }}>
-        <Grid container spacing={2}>
-          <Grid item md={3} sm={4} xs={12}>
-            <span><h2>Order</h2></span>
-          </Grid>
-          <Grid item md={9} sm={8} xs={12}  >
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <Box sx={{ flexGrow: 1 }}>
+            <h1>Information</h1>
+            <div className={classes.information_second}>
               <Grid container spacing={2}>
-                <Grid item md={4} sm={3} xs={12}>
-
-                  <Box
-                    component="form"
-                    sx={{
-                      '& .MuiTextField-root': { m: 0, width: '100%' },
-                    }}
-                    noValidate
-                    autoComplete="off"
-                  >
-                    <DatePicker
-                      label="From"
-                      value={value}
-                      onChange={(newValue) => {
-                        setValue(newValue);
-                      }}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                  </Box>
+                <Grid item sm={6} xs={12}>
+                  <div style={{ textAlign: "center" }}>
+                    <span><h2>Owner: {props.detailStore.store.otherLocation.owner_name}</h2></span>
+                    <span><h2>Register at: 04/08/2022</h2></span>
+                  </div>
                 </Grid>
-                <Grid item md={4} sm={3} xs={12}>
-                  <Box
-                    component="form"
-                    sx={{
-                      '& .MuiTextField-root': { m: 0, width: '100%' },
-                    }}
-                    noValidate
-                    autoComplete="off"
-                  >
-                    <DatePicker
-                      label="To"
-                      value={value}
-                      onChange={(newValue) => {
-                        setValue(newValue);
-                      }}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                  </Box>
-                </Grid>
-                <Grid item md={4} sm={6} xs={12}>
-                  <Button className={classes.btnSearch} variant="contained" component="span" >
-                    Search
-                  </Button>
+                <Grid item sm={6} xs={12}>
+                  <div style={{ textAlign: "center" }}>
+                    <span><h2>Cell Phone: {props.detailStore.store.user.phoneNumber}</h2></span>
+                    <span><h2>Approved at: 04/08/2022</h2></span>
+                  </div>
                 </Grid>
               </Grid>
-            </LocalizationProvider>
+            </div>
+          </Box>
 
-          </Grid>
-        </Grid>
-      </div>
+          <div style={{ marginTop: "20px" }}>
+            <Grid container spacing={2}>
+              <Grid item md={3} sm={4} xs={12}>
+                <span><h2>Order</h2></span>
+              </Grid>
+              <Grid item md={9} sm={8} xs={12}  >
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <Grid container spacing={2}>
+                    <Grid item md={4} sm={3} xs={12}>
 
+                      <Box
+                        component="form"
+                        sx={{
+                          '& .MuiTextField-root': { m: 0, width: '100%' },
+                        }}
+                        noValidate
+                        autoComplete="off"
+                      >
+                        <DatePicker
+                          label="From"
+                          value={value}
+                          onChange={(newValue) => {
+                            setValue(newValue);
+                          }}
+                          renderInput={(params) => <TextField {...params} />}
+                        />
+                      </Box>
+                    </Grid>
+                    <Grid item md={4} sm={3} xs={12}>
+                      <Box
+                        component="form"
+                        sx={{
+                          '& .MuiTextField-root': { m: 0, width: '100%' },
+                        }}
+                        noValidate
+                        autoComplete="off"
+                      >
+                        <DatePicker
+                          label="To"
+                          value={value}
+                          onChange={(newValue) => {
+                            setValue(newValue);
+                          }}
+                          renderInput={(params) => <TextField {...params} />}
+                        />
+                      </Box>
+                    </Grid>
+                    <Grid item md={4} sm={6} xs={12}>
+                      <Button className={classes.btnSearch} variant="contained" component="span" >
+                        Search
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </LocalizationProvider>
+
+              </Grid>
+            </Grid>
+          </div>
+        </> : null}
     </div >
   );
 }

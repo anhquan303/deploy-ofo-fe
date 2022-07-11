@@ -125,7 +125,7 @@ export function DetailCustomer(props) {
   const declineStore = (e) => {
     e.preventDefault();
     const data = {
-      id: props.location.state.item.id,
+      id: props.location.state.id,
       status: "Declined"
     }
     dispatch(declinedUser(data));
@@ -136,7 +136,7 @@ export function DetailCustomer(props) {
     e.preventDefault();
     setAnchorEl(null);
     const data = {
-      id: props.location.state.item.id,
+      id: props.location.state.id,
       status: "Approved"
     }
     dispatch(approvedUser(data));
@@ -144,7 +144,7 @@ export function DetailCustomer(props) {
 
   useEffect(() => {
     const data = {
-      id: props.location.state.item.id
+      id: props.location.state.id
     }
     dispatch(getUserById(data));
   }, []);
@@ -152,146 +152,142 @@ export function DetailCustomer(props) {
   useEffect(() => {
     if (props.detailCustomer.message == "APPROVED SUCCESS" || props.detailCustomer.message == "DECLINED SUCCESS") {
       const data = {
-        id: props.location.state.item.id
+        id: props.location.state.id
       }
       dispatch(getUserById(data));
       dispatch(reset());
     }
   }, [props.detailCustomer.message]);
 
-  console.log(props.detailCustomer.message)
-
+  console.log(props.detailCustomer.user)
   return (
     <div style={{ padding: "15px" }}>
-      <Grid container spacing={0} >
-        <Grid item xs={6} md={6} style={{ padding: "10px" }}>
-          <p className={classes.font} style={{ fontWeight: "400", fontSize: "30px" }}>{currentDate}</p>
-        </Grid>
-        <Grid item xs={6} md={6} style={{ padding: "10px",  }}>
-          {/* <SearchBar
-            value={searched}
-            onChange={(searchVal) => requestSearch(searchVal)}
-            onCancelSearch={() => cancelSearch()}
-            placeholder="Tìm kiếm người dùng theo tến"
-          /> */}
-        </Grid>
-      </Grid>
-      <p className={classes.title} >User</p>
-      <Grid container spacing={0} >
-        <Grid item xs={12} md={4} style={{ padding: "10px" }}>
-          <div style={{ padding: "10px", border: "1px solid #000", textAlign: "center", borderRadius: "10px" }}>
-            <Avatar sx={{ width: 150, height: 150, margin: "5px auto" }} component="span" src={Avatar1} />
-            <p className={classes.font} style={{ fontWeight: "700", fontSize: "30px" }}>{props.location.state.item.firstname} {props.location.state.item.lastname}</p>
-            <p className={classes.text} style={{ color: "#949494" }}>{props.location.state.item.email}</p>
-            <p className={classes.text} >{props.location.state.item.phoneNumber}</p>
-            <p className={classes.text}>{props.detailCustomer.user ? props.detailCustomer.user.status : null}</p>
-            <hr />
-            <Button className={classes.btn} variant="outlined" startIcon={<SendRoundedIcon />}>
-              Gửi email
-            </Button>
-            <Button className={classes.btn} variant="outlined" startIcon={<AutorenewIcon />} onClick={handleClick}>
-              Đổi trạng thái
-            </Button>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button',
-              }}
-            >
-              <MenuItem onClick={approveStore}>Approve</MenuItem>
-              <MenuItem onClick={declineStore}>Decline</MenuItem>
-            </Menu>
-          </div>
-        </Grid>
-
-        <Grid item xs={12} md={4} style={{ padding: "10px" }}>
-          <div style={{ padding: "10px", border: "1px solid #000", borderRadius: "10px" }}>
-            <p className={classes.title}>Contact</p>
-            <hr />
-            <div className={classes.contact}>
-              <Grid container spacing={0} >
-                <Grid item xs={2} md={2} style={{ padding: "10px" }} className={classes.center}>
-                  <Avatar style={{ backgroundColor: "#FF9900", color: "#000" }}>
-                    <LocalPhoneRoundedIcon />
-                  </Avatar>
-                </Grid>
-                <Grid item xs={8} md={10} style={{ padding: "10px" }}>
-                  <p className={classes.text}>Số điện thoại</p>
-                  <p className={classes.text}>{props.location.state.item.phoneNumber}</p>
-
-                </Grid>
-              </Grid>
-            </div>
-
-            <div className={classes.contact}>
-              <Grid container spacing={0} >
-                <Grid item xs={2} md={2} style={{ padding: "10px" }} className={classes.center}>
-                  <Avatar style={{ backgroundColor: "#FF9900", color: "#000" }}>
-                    <HomeRoundedIcon />
-                  </Avatar>
-                </Grid>
-                <Grid item xs={8} md={10} style={{ padding: "10px" }}>
-                  <p className={classes.text}>Địa chỉ</p>
-                  <p className={classes.text}>Tuấn Cường 1, Thạch Hòa, Thạch Thất</p>
-                </Grid>
-              </Grid>
-            </div>
-
-            <div className={classes.contact}>
-              <Grid container spacing={0} >
-                <Grid item xs={2} md={2} style={{ padding: "10px" }} className={classes.center}>
-                  <Avatar style={{ backgroundColor: "#FF9900", color: "#000" }}>
-                    <AssignmentRoundedIcon />
-                  </Avatar>
-                </Grid>
-                <Grid item xs={8} md={10} style={{ padding: "10px" }}>
-                  <p className={classes.text}>Order gần nhất</p>
-                  <p className={classes.text}>07/05/2022</p>
-                </Grid>
-              </Grid>
-            </div>
-
-          </div>
-        </Grid>
-
-        <Grid item xs={12} md={4}>
+      {props.detailCustomer.user ?
+        <>
           <Grid container spacing={0} >
-            <Grid item xs={12} md={12} style={{ padding: "10px" }}>
-              <div style={{ padding: "10px", border: "1px solid #000", borderRadius: "10px" }}>
-                <p className={classes.title}>Order</p>
-                <hr />
-                <div>
-                  <p className={classes.font} style={{ fontWeight: "200", fontSize: "30px" }}>50 &#40;total&#41;</p>
-                </div>
-              </div>
+            <Grid item xs={6} md={6} style={{ padding: "10px" }}>
+              <p className={classes.font} style={{ fontWeight: "400", fontSize: "30px" }}>{currentDate}</p>
             </Grid>
-            <Grid item xs={12} md={12} style={{ padding: "10px" }}>
-              <div style={{ padding: "10px", border: "1px solid #000", borderRadius: "10px" }}>
-                <p className={classes.title}>Order Cost</p>
-                <hr />
-                <div>
-                  <p className={classes.font} style={{ fontWeight: "200", fontSize: "30px" }}>2.500.000 VND</p>
-                </div>
-              </div>
+            <Grid item xs={6} md={6} style={{ padding: "10px", }}>
+
             </Grid>
           </Grid>
-        </Grid>
-      </Grid>
-      <div>
-        <Tabs style={{ margin: "0 auto" }} value={value} onChange={handleChangeTab} textColor="primary" indicatorColor="primary" centered>
-          <Tab label="Tất cả đơn" />
-          <Tab label="Đơn đã nhận" />
-          <Tab label="Đơn chờ xác nhận" />
-          <Tab label="Đơn đã hủy" />
-        </Tabs>
-      </div>
-      <div>
-        <CustomTable data={order} itemPerPage={5} totalItem={order.length} detailPage="" columns={columns} action={action} />
-      </div>
+          <p className={classes.title} >User</p>
+          <Grid container spacing={0} >
+            <Grid item xs={12} md={4} style={{ padding: "10px" }}>
+              <div style={{ padding: "10px", border: "1px solid #000", textAlign: "center", borderRadius: "10px" }}>
+                <Avatar sx={{ width: 150, height: 150, margin: "5px auto" }} component="span" src={Avatar1} />
+                <p className={classes.font} style={{ fontWeight: "700", fontSize: "30px" }}>{props.detailCustomer.user.firstname} {props.detailCustomer.user.lastname}</p>
+                <p className={classes.text} style={{ color: "#949494" }}>{props.detailCustomer.user.email}</p>
+                <p className={classes.text} >{props.detailCustomer.user.phoneNumber}</p>
+                <p className={classes.text}>{props.detailCustomer.user ? props.detailCustomer.user.status : null}</p>
+                <hr />
+                <Button className={classes.btn} variant="outlined" startIcon={<SendRoundedIcon />}>
+                  Gửi email
+                </Button>
+                <Button className={classes.btn} variant="outlined" startIcon={<AutorenewIcon />} onClick={handleClick}>
+                  Đổi trạng thái
+                </Button>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                  }}
+                >
+                  <MenuItem onClick={approveStore}>Approve</MenuItem>
+                  <MenuItem onClick={declineStore}>Decline</MenuItem>
+                </Menu>
+              </div>
+            </Grid>
 
+            <Grid item xs={12} md={4} style={{ padding: "10px" }}>
+              <div style={{ padding: "10px", border: "1px solid #000", borderRadius: "10px" }}>
+                <p className={classes.title}>Contact</p>
+                <hr />
+                <div className={classes.contact}>
+                  <Grid container spacing={0} >
+                    <Grid item xs={2} md={2} style={{ padding: "10px" }} className={classes.center}>
+                      <Avatar style={{ backgroundColor: "#FF9900", color: "#000" }}>
+                        <LocalPhoneRoundedIcon />
+                      </Avatar>
+                    </Grid>
+                    <Grid item xs={8} md={10} style={{ padding: "10px" }}>
+                      <p className={classes.text}>Số điện thoại</p>
+                      <p className={classes.text}>{props.detailCustomer.user.phoneNumber}</p>
+
+                    </Grid>
+                  </Grid>
+                </div>
+
+                <div className={classes.contact}>
+                  <Grid container spacing={0} >
+                    <Grid item xs={2} md={2} style={{ padding: "10px" }} className={classes.center}>
+                      <Avatar style={{ backgroundColor: "#FF9900", color: "#000" }}>
+                        <HomeRoundedIcon />
+                      </Avatar>
+                    </Grid>
+                    <Grid item xs={8} md={10} style={{ padding: "10px" }}>
+                      <p className={classes.text}>Địa chỉ</p>
+                      <p className={classes.text}>Tuấn Cường 1, Thạch Hòa, Thạch Thất</p>
+                    </Grid>
+                  </Grid>
+                </div>
+
+                <div className={classes.contact}>
+                  <Grid container spacing={0} >
+                    <Grid item xs={2} md={2} style={{ padding: "10px" }} className={classes.center}>
+                      <Avatar style={{ backgroundColor: "#FF9900", color: "#000" }}>
+                        <AssignmentRoundedIcon />
+                      </Avatar>
+                    </Grid>
+                    <Grid item xs={8} md={10} style={{ padding: "10px" }}>
+                      <p className={classes.text}>Order gần nhất</p>
+                      <p className={classes.text}>07/05/2022</p>
+                    </Grid>
+                  </Grid>
+                </div>
+
+              </div>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <Grid container spacing={0} >
+                <Grid item xs={12} md={12} style={{ padding: "10px" }}>
+                  <div style={{ padding: "10px", border: "1px solid #000", borderRadius: "10px" }}>
+                    <p className={classes.title}>Order</p>
+                    <hr />
+                    <div>
+                      <p className={classes.font} style={{ fontWeight: "200", fontSize: "30px" }}>50 &#40;total&#41;</p>
+                    </div>
+                  </div>
+                </Grid>
+                <Grid item xs={12} md={12} style={{ padding: "10px" }}>
+                  <div style={{ padding: "10px", border: "1px solid #000", borderRadius: "10px" }}>
+                    <p className={classes.title}>Order Cost</p>
+                    <hr />
+                    <div>
+                      <p className={classes.font} style={{ fontWeight: "200", fontSize: "30px" }}>2.500.000 VND</p>
+                    </div>
+                  </div>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <div>
+            <Tabs style={{ margin: "0 auto" }} value={value} onChange={handleChangeTab} textColor="primary" indicatorColor="primary" centered>
+              <Tab label="Tất cả đơn" />
+              <Tab label="Đơn đã nhận" />
+              <Tab label="Đơn chờ xác nhận" />
+              <Tab label="Đơn đã hủy" />
+            </Tabs>
+          </div>
+          <div>
+            <CustomTable data={order} itemPerPage={5} totalItem={order.length} detailPage="" columns={columns} action={action} />
+          </div>
+        </> : null}
       {/* <Helmet>
         <title>DetailCustomer</title>
         <meta name="description" content="Description of DetailCustomer" />

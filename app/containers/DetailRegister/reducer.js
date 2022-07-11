@@ -10,7 +10,8 @@ import * as types from './constants';
 export const initialState = {
   loading: false,
   message: "",
-  status: ""
+  status: "",
+  register: undefined
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -45,6 +46,18 @@ const detailRegisterReducer = (state = initialState, action) =>
         draft.loading = false;
         draft.message = "";
         draft.status = "";
+        break;
+      case types.GET_REGISTER_BY_ID:
+        draft.loading = true;
+        break;
+      case types.GET_REGISTER_BY_ID_SUCCESS:
+        draft.loading = false;
+        draft.register = action.payload;
+        break;
+      case types.GET_REGISTER_BY_ID_FAILED:
+        draft.loading = false;
+        draft.message = action.payload;
+        break;
     }
   });
 
