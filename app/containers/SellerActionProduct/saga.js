@@ -1,6 +1,6 @@
 import { take, call, put, select, takeEvery } from 'redux-saga/effects';
-import { deleteProductFailed, deleteProductSuccess, updateProductFailed, updateProductSuccess } from './actions';
-import { apiUpdateProduct } from './api';
+import { deleteProductFailed, deleteProductSuccess, getProductByIdFailed, getProductByIdSuccess, updateProductFailed, updateProductSuccess } from './actions';
+import { apiFetchData, apiUpdateProduct } from './api';
 import * as types from './constants';
 
 
@@ -38,9 +38,23 @@ export function* updateProduct({ payload }) {
   }
 }
 
+export function* getProductById({ payload }) {
+  try {
+    const res = yield call(apiFetchData, [`api/store/0/foods/${payload.id}/detail`]);
+    if (res.status == 200) {
+      yield put(getProductByIdSuccess(res.data.data));
+    } else {
+      yield put(getProductByIdFailed("FAILED"));
+    }
+  } catch (error) {
+    yield put(getProductByIdFailed(error.message));
+  }
+}
+
 // Individual exports for testing
 export default function* sellerActionProductSaga() {
   // See example in containers/HomePage/saga.js
   yield takeEvery(types.DELETE_PRODUCT, deleteProduct);
   yield takeEvery(types.UPDATE_PRODUCT, updateProduct);
+  yield takeEvery(types.GET_PRODUCT_BY_ID, getProductById);
 }

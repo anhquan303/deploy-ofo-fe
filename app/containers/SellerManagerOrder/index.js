@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -28,6 +28,7 @@ import AddShoppingCartRoundedIcon from '@mui/icons-material/AddShoppingCartRound
 import HourglassTopRoundedIcon from '@mui/icons-material/HourglassTopRounded';
 import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
 import CustomTable from '../../components/CustomTable';
+import CustomTableResponsive from '../../components/CustomTableResponsive';
 
 const useStyles = makeStyles((theme) => ({
   font: {
@@ -51,6 +52,15 @@ export function SellerManagerOrder() {
   const classes = useStyles();
   const action = false;
 
+  const columns1 = [
+    { id: 'stt', label: 'STT', minWidth: 10, align: 'center' },
+    { id: 'code', label: 'Order ID', minWidth: 100, align: 'center' },
+    { id: 'customerName', label: 'Customer Name', minWidth: 100, align: 'center' },
+    { id: 'transaction', label: 'Transaction', minWidth: 100, align: 'center' },
+    { id: 'status', label: 'Status', minWidth: 100, align: 'center' },
+    { id: 'time', label: 'Time', minWidth: 100, align: 'center' },
+  ];
+
   const order = [
     { id: "1", code: "#12323", totalPrice: "1260000", status: "pending", customerName: "Anh Quan", transaction: "Cash", time: "07/05/2022, 9:17:56" },
     { id: "2", code: "#12324", totalPrice: "5160000", status: "pending", customerName: "Anh Quan", transaction: "Cash", time: "07/05/2022, 9:17:56" },
@@ -63,13 +73,35 @@ export function SellerManagerOrder() {
     { id: "9", code: "#12311", totalPrice: "645000", status: "pending", customerName: "Anh Quan", transaction: "Cash", time: "07/05/2022, 9:17:56" },
   ];
 
-  const columns = [
-    { title: "Order ID", field: "code" },
-    { title: "Customer Name", field: "customerName" },
-    { title: "Transaction", field: "transaction" },
-    { title: "Status", field: "status" },
-    { title: "Time", field: "time" },
-  ];
+  // const columns = [
+  //   { title: "Order ID", field: "code" },
+  //   { title: "Customer Name", field: "customerName" },
+  //   { title: "Transaction", field: "transaction" },
+  //   { title: "Status", field: "status" },
+  //   { title: "Time", field: "time" },
+  // ];
+
+  function createData(id, stt, code, customerName, transaction, status, time) {
+    //const density = population / size;
+    return { id, stt, code, customerName, transaction, status, time };
+  }
+
+  const [rows, setRows] = useState(order.map((item, index) =>
+    createData(item.id, index + 1, item.code, item.customerName, item.transaction, item.status, item.time)
+  ));
+  // setRows(order.map((item, index) =>
+  //       createData(item.id, index + 1, item.username, item.email, item.phoneNumber, item.status)
+  //     ))
+
+  // useEffect(() => {
+  //   if (order) {
+  //     setRows(order.map((item, index) =>
+  //       createData(item.id, index + 1, item.username, item.email, item.phoneNumber, item.status)
+  //     ))
+  //   }
+  // }, [order])
+
+
 
   return (
     <div style={{ padding: "15px" }}>
@@ -122,8 +154,9 @@ export function SellerManagerOrder() {
           </div>
         </Grid>
       </Grid>
-      <CustomTable data={order} itemPerPage={5} totalItem={order.length} detailPage="my-store/manager-order" columns={columns} action={action} />
+      {/* <CustomTable data={order} itemPerPage={5} totalItem={order.length} detailPage="my-store/manager-order" columns={columns} action={action} /> */}
       {/* <FormattedMessage {...messages.header} /> */}
+      {order ? <CustomTableResponsive columns={columns1} data={order} detailPage="my-store/manager-order" rows={rows} /> : null}
     </div>
   );
 }

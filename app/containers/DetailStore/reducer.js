@@ -10,7 +10,8 @@ import * as types from './constants';
 export const initialState = {
   loading: false,
   message: "",
-  status: ""
+  status: "",
+  store: undefined
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -35,7 +36,7 @@ const detailStoreReducer = (state = initialState, action) =>
         break;
       case types.GET_STORE_BY_ID_SUCCESS:
         draft.loading = false;
-        draft.status = action.payload;
+        draft.store = action.payload;
         break;
       case types.GET_STORE_BY_ID_FAILED:
         draft.loading = false;

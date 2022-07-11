@@ -14,6 +14,10 @@ export const UPDATE_PRODUCT = 'app/SellerActionProduct/UPDATE_PRODUCT';
 export const UPDATE_PRODUCT_SUCCESS = 'app/SellerActionProduct/UPDATE_PRODUCT_SUCCESS';
 export const UPDATE_PRODUCT_FAILED = 'app/SellerActionProduct/UPDATE_PRODUCT_FAILED';
 
+export const GET_PRODUCT_BY_ID = 'app/SellerActionProduct/GET_PRODUCT_BY_ID';
+export const GET_PRODUCT_BY_ID_SUCCESS = 'app/SellerActionProduct/GET_PRODUCT_BY_ID_SUCCESS';
+export const GET_PRODUCT_BY_ID_FAILED = 'app/SellerActionProduct/GET_PRODUCT_BY_ID_FAILED';
+
 export const RESET = 'app/SellerActionProduct/RESET';
 
 

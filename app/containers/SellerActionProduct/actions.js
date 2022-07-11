@@ -61,3 +61,24 @@ export function reset(payload) {
     payload
   };
 }
+
+export function getProductById(payload) {
+  return {
+    type: types.GET_PRODUCT_BY_ID,
+    payload
+  };
+}
+
+export function getProductByIdSuccess(payload) {
+  return {
+    type: types.GET_PRODUCT_BY_ID_SUCCESS,
+    payload
+  };
+}
+
+export function getProductByIdFailed(payload) {
+  return {
+    type: types.GET_PRODUCT_BY_ID_FAILED,
+    payload
+  };
+}

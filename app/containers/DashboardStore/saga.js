@@ -5,7 +5,7 @@ import * as types from './constants';
 
 export function* getAllStoree({ payload }) {
   try {
-    const res = yield call(apiFetchData, ['api/store/getallstore']);
+    const res = yield call(apiFetchData, ['api/store/getbystatus?status=approved']);
     if (res.status == 200) {
       yield put(getAllStoreSuccess(res.data))
     } else {
