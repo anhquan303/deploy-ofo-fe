@@ -127,7 +127,7 @@ export function FoodDetail(props) {
   };
 
 
-  // console.log(props.location.state.item)
+  console.log(props.location.state)
 
   return (
     <div>
