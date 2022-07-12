@@ -112,6 +112,7 @@
  
    const user = getUser();
  
+
    return (
      <StylesProvider injectFirst>
        <AppWrapper>

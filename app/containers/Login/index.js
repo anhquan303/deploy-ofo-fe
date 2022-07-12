@@ -157,12 +157,7 @@ export function Login(props) {
         //props.history.push("/dashboard");
         setTimeout(() => props.history.push("/dashboard"), 1000);
       }
-    } else {
-      // props.history.push("/login");
-      // if (user && token) {
-      //   removeUserSession();
-      // }
-    }
+    } 
   }, [props.login.message, user]);
 
 

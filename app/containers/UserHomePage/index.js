@@ -185,8 +185,6 @@ export function UserHomePage(props) {
     dispatch(fetchListFood(data));
   }, []);
 
-  console.log(props.userHomePage.foodList)
-
   return (
     // <div>
     //   <AppBar sx={{ background: "#fff" }} position='static'>
