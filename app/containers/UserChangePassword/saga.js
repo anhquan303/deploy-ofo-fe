@@ -5,7 +5,6 @@ import * as types from './constants';
 
 export function* changePassword({ payload }) {
   try {
-    console.log(payload)
     const data = {
       currentPassword: payload.oldPassword,
       password: payload.newPassword,
@@ -14,7 +13,7 @@ export function* changePassword({ payload }) {
     const res = yield call(apiChangePass, ['api/user/changePassword'], data);
     console.log(res)
     if (res.status == 200) {
-      yield put(changePasswordSuccess("Success"))
+      yield put(changePasswordSuccess(res.data.message))
     } else {
       yield put(changePasswordFailed("Failed"))
     }

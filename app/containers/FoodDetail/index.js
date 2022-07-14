@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -33,6 +33,7 @@ import SearchBar from "material-ui-search-bar";
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { getUser } from '../../utils/common';
 import SendIcon from '@mui/icons-material/Send';
+import { getFoodById } from './actions';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -91,6 +92,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function FoodDetail(props) {
+  const { dispatch } = props;
   useInjectReducer({ key: 'foodDetail', reducer });
   useInjectSaga({ key: 'foodDetail', saga });
 
@@ -127,7 +129,14 @@ export function FoodDetail(props) {
   };
 
 
-  console.log('here', props.location.state)
+  console.log('here', props.location.state.item.id)
+
+  useEffect(() => {
+    const data = {
+      id: props.location.state.item.id
+    }
+    dispatch(getFoodById(data))
+  }, []);
 
   return (
     <div>
@@ -141,8 +150,8 @@ export function FoodDetail(props) {
             <Button className={classes.btn} variant="outlined" startIcon={<ThumbUpIcon />}>
               Yêu thích
             </Button>
-            <p className={classes.font}>{props.location.state.item.foodName} - {props.location.state.item.storeName}</p>
-            <p className={classes.font}>{props.location.state.item.address} - Hòa Lạc</p>
+            <p className={classes.font}>{props.foodDetail.food ? props.foodDetail.food.name : null} - {props.foodDetail.food ? props.foodDetail.food.foodStore.name : null}</p>
+            <p className={classes.font}>{props.location.state.item.address ? props.location.state.item.address : null} - Hòa Lạc</p>
             <div>
               <StarIcon className={classes.star} />
               <StarIcon className={classes.star} />
@@ -154,9 +163,9 @@ export function FoodDetail(props) {
             </div>
             <div style={{ margin: "10px 0" }} >
               <CircleIcon style={{ color: "#128B02", width: "10px", height: "10px" }} />
-              <span style={{ margin: "0 5px" }}>Mở cửa 08:00 - 23:00</span>
+              <span style={{ margin: "0 5px" }}>Mở cửa {props.foodDetail.food ? props.foodDetail.food.foodStore.openTime : null} - {props.foodDetail.food ? props.foodDetail.food.foodStore.closeTime : null}</span>
             </div>
-            <p style={{ fontFamily: "sans-serif", margin: "5px 0" }}>Giá bán {props.location.state.item.price}</p>
+            <p style={{ fontFamily: "sans-serif", margin: "5px 0" }}>Giá bán {props.foodDetail.food ? props.foodDetail.food.price : null}</p>
             <div>
               <Grid container spacing={2} >
                 <Grid item xs={12} md={6} className={classes.center}>
@@ -188,7 +197,7 @@ export function FoodDetail(props) {
                   <Avatar alt="avatar store" src={Avatar1} sx={{ width: 56, height: 56 }} />
                 </Grid>
                 <Grid item xs={12} md={10}>
-                  <p style={{ margin: "0" }}>Quán Hambuger thượng hạng</p>
+                  <p style={{ margin: "0" }}>{props.foodDetail.food ? props.foodDetail.food.foodStore.name : null}</p>
                   <Button className={classes.btn} variant="outlined" startIcon={<ThumbUpIcon />}>
                     Yêu thích
                   </Button>

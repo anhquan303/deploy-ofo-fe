@@ -146,7 +146,7 @@ function SellerSideBar(props) {
           <Typography className={classes.text}>Manager Product</Typography>
         </div>
       </NavLink>
-      <NavLink to="/turnover" className={classes.link} onClick={handleDrawerToggle}>
+      <NavLink to="/my-store/turnover" className={classes.link} onClick={handleDrawerToggle}>
         <div className={classes.item}>
           <AccountBoxIcon className={classes.icon} />
           <Typography className={classes.text}>Turnover</Typography>

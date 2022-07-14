@@ -64,7 +64,7 @@ function CustomTableResponsive({ columns, data, detailPage, rows }) {
   console.log(rows)
 
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+    <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: "20px" }}>
       <TableContainer sx={{ maxHeight: 600 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>

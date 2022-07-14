@@ -139,7 +139,7 @@ export function UserOrderHistory() {
 
           <Grid container spacing={0} style={{ padding: "10px" }}>
             <Grid item xs={12} md={6} sm={12}>
-              <Button className={classes.btn} variant="outlined">
+              <Button href="/user/rating-comment" className={classes.btn} variant="outlined">
                 Đánh giá
               </Button>
             </Grid>

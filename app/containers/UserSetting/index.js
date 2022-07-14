@@ -20,7 +20,7 @@ import saga from './saga';
 import messages from './messages';
 import { Headerr } from '../Headerr';
 import {
-  Box, Grid, Container, Avatar, Typography, List, FormControlLabel, Radio, RadioGroup,
+  Box, Grid, Container, Avatar, Typography, TextField, FormControlLabel, Radio, RadioGroup,
   ListItemButton, ListItemIcon, ListItemText, Collapse, OutlinedInput, Select, MenuItem
 } from '@mui/material';
 import { makeStyles, Button, Fab, CardContent } from '@material-ui/core';
@@ -31,6 +31,9 @@ import SaveIcon from '@mui/icons-material/Save';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import { NavLink } from 'react-router-dom';
 import { getUser, getStore } from '../../utils/common';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -104,14 +107,12 @@ export function UserSetting(props) {
   const user = getUser();
   const store = getStore();
   const [open, setOpen] = useState(true);
-  const [name, setName] = useState(user.firstname + " " + user.lastname);
+  const [firstname, setFirstName] = useState(user.firstname);
+  const [lastname, setLastName] = useState(user.lastname);
   const [storeName, setStoreName] = useState("Quán Gốc Sung");
   const [gender, setGender] = useState("");
-  const [bday, setBDay] = useState(1);
-  const [bmonth, setBMonth] = useState(1);
-  const [byear, setBYear] = useState(1);
-  const months = [];
 
+  const [dob, setDOB] = useState(new Date());
 
   const handleClick = () => {
     setOpen(!open);
@@ -121,13 +122,7 @@ export function UserSetting(props) {
     setValue(event.target.value);
   };
 
-  const days = [];
-  for (var i = 1; i <= 31; i++) {
-    days.push(i);
-  }
-  for (var i = 1; i <= 12; i++) {
-    months.push(i);
-  }
+
 
   const handleUploadClick = () => {
 
@@ -140,149 +135,131 @@ export function UserSetting(props) {
         <p className={classes.font} style={{ fontWeight: "lighter", fontSize: "15px" }}>Quản lý thông tin để bảo mật tài khoản</p>
       </div>
       <hr />
+
       <Grid container spacing={0} style={{ marginTop: "15px" }}>
-        <Grid item xs={12} md={8} style={{ padding: "10px" }}>
-          <Grid container spacing={0}>
-            <Grid item xs={12} md={4}>
-              <div className={classes.center} style={{ justifyContent: "center" }}>
-                <CardContent>
-                  <Grid container justify="center" alignItems="center">
-                    <input
-                      accept="image/*"
-                      className={classes.input}
-                      id="contained-button-file"
-                      multiple
-                      type="file"
-                      onChange={handleUploadClick}
-                    />
-                    <label htmlFor="contained-button-file">
-                      {user ? <Avatar sx={{ width: 150, height: 150, margin: "0 auto" }} component="span" src={Avatar1}>
-                        <AddPhotoAlternateIcon />
-                      </Avatar> :
-                        <Avatar src="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png" />
-                      }
-
-                    </label>
-                  </Grid>
-                </CardContent>
-              </div>
-            </Grid>
-            <Grid item xs={12} md={8}>
-              <Grid container spacing={0}>
-                <Grid item xs={12} md={6} className={classes.text} >
-                  <span>Tên đăng nhập</span>
-                </Grid>
-                <Grid item xs={12} md={6} className={classes.text} style={{ fontWeight: "lighter", justifyContent: "left", }}>
-                  <span>{user.username}</span>
-                </Grid>
-
-                <Grid container spacing={0} style={{ marginTop: "10px" }}>
-                  <Grid item xs={12} md={6} className={classes.text} >
-                    <span >Tên</span>
-                  </Grid>
-                  <Grid item xs={12} md={6} className={classes.textField}>
-                    <OutlinedInput placeholder="Please enter text" value={name} onChange={(e) => setName(e.target.value)} />
-                  </Grid>
-                </Grid>
-
-                <Grid container spacing={0} style={{ marginTop: "10px" }}>
-                  <Grid item xs={12} md={6} className={classes.text} >
-                    <span >Tên shop</span>
-                  </Grid>
-                  <Grid item xs={12} md={6} className={classes.textField}>
-                    {store != null ? <OutlinedInput placeholder="Please enter text" value={storeName} onChange={(e) => setStoreName(e.target.value)} /> : 
-                    <span className={classes.text} style={{ fontWeight: "lighter", justifyContent: "left", }}>Chưa đăng ký đối tác</span>
-                    }
-                    {/* <OutlinedInput placeholder="Please enter text" value={storeName} onChange={(e) => setStoreName(e.target.value)} /> */}
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={0} style={{ marginTop: "10px" }}>
-              <Grid item xs={12} md={6} className={classes.text} style={{ justifyContent: "center" }}>
-                <span >Giới tính</span>
-              </Grid>
-              <Grid item xs={12} md={6} >
-                <RadioGroup
-                  row
-                  aria-labelledby="demo-form-control-label-placement"
-                  value={gender}
-                  onChange={handleChangeGender}
-                  className={classes.radioButton}
-                >
-                  <FormControlLabel value="male" control={<Radio />} label="Nam" />
-                  <FormControlLabel value="female" control={<Radio />} label="Nữ" />
-                  <FormControlLabel value="diff" control={<Radio />} label="Khác" />
-                </RadioGroup>
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={0} style={{ marginTop: "10px" }}>
-              <Grid item xs={12} md={6} className={classes.text} style={{ justifyContent: "center" }}>
-                <span >Ngày tháng năm sinh</span>
-              </Grid>
-              <Grid item xs={12} md={6} className={classes.dob}>
-                <Select
-                  labelId="demo-simple-select-autowidth-label"
-                  id="demo-simple-select-autowidth"
-                  value={bday}
-                  onChange={(e) => setBDay(e.target.value)}
-                  autoWidth
-                  label="ngayf"
-                >
-                  {days.map((item, index) =>
-                    <MenuItem key={index} value={item} style={{ maxHeight: "50px" }}>{item}</MenuItem>
-                  )}
-                </Select>
-                <Select
-                  labelId="demo-simple-select-autowidth-label"
-                  id="demo-simple-select-autowidth"
-                  value={bmonth}
-                  onChange={(e) => setBMonth(e.target.value)}
-                  autoWidth
-                  label="thang"
-                  style={{ margin: "0 10px" }}
-                >
-                  {months.map((item, index) =>
-                    <MenuItem key={index} value={item} style={{ maxHeight: "50px" }}>{item}</MenuItem>
-                  )}
-                </Select>
-                <OutlinedInput placeholder="Please enter text" value={byear} onChange={(e) => setBYear(e.target.value)} style={{ width: "35%" }} />
-              </Grid>
-            </Grid>
-          </Grid>
-          <div style={{ textAlign: "center" }}>
-            <Button className={classes.btn} variant="outlined" startIcon={<SaveIcon />}>
-              Lưu
-            </Button>
-          </div>
-
-        </Grid>
         <Grid item xs={12} md={4} style={{ padding: "10px" }}>
-          <Grid container spacing={0}>
-            <Grid item xs={3} md={3} className={classes.right}>
-              <span>Email</span>
+          <div className={classes.center} style={{ justifyContent: "right" }}>
+            <CardContent>
+              <Grid container >
+                <input
+                  accept="image/*"
+                  className={classes.input}
+                  id="contained-button-file"
+                  multiple
+                  type="file"
+                  onChange={handleUploadClick}
+                />
+                <label htmlFor="contained-button-file">
+                  {user ? <Avatar sx={{ width: 150, height: 150 }} component="span" src={Avatar1}>
+                    <AddPhotoAlternateIcon />
+                  </Avatar> :
+                    <Avatar src="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png" />
+                  }
+
+                </label>
+              </Grid>
+            </CardContent>
+          </div>
+        </Grid>
+        <Grid item xs={12} md={7} style={{ padding: "10px" }}>
+          <div>
+            <Grid container spacing={0}>
+              <Grid item xs={12} md={6} className={classes.text} >
+                <span>Tên đăng nhập</span>
+              </Grid>
+              <Grid item xs={12} md={6} className={classes.text} style={{ fontWeight: "lighter", justifyContent: "left", }}>
+                <span>{user.username}</span>
+              </Grid>
+
+              <Grid container spacing={0} style={{ marginTop: "10px" }}>
+                <Grid item xs={12} md={6} className={classes.text} >
+                  <span >Họ</span>
+                </Grid>
+                <Grid item xs={12} md={6} className={classes.textField}>
+                  <OutlinedInput placeholder="Please enter text" value={firstname} onChange={(e) => setFirstName(e.target.value)} />
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={0} style={{ marginTop: "10px" }}>
+                <Grid item xs={12} md={6} className={classes.text} >
+                  <span >Tên</span>
+                </Grid>
+                <Grid item xs={12} md={6} className={classes.textField}>
+                  <OutlinedInput placeholder="Please enter text" value={lastname} onChange={(e) => setLastName(e.target.value)} />
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={0} style={{ marginTop: "10px" }}>
+                <Grid item xs={12} md={6} className={classes.text} >
+                  <span>Số điện thoại</span>
+                </Grid>
+                <Grid item xs={12} md={3} className={classes.text} style={{ fontWeight: "lighter", justifyContent: "left", }}>
+                  <span>{user.phone}</span>
+                </Grid>
+                <Grid item xs={12} md={3} className={classes.text} >
+                  <span style={{ fontSize: "13px" }}><a href='#'>thay đổi</a></span>
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={0} style={{ marginTop: "10px" }}>
+                <Grid item xs={12} md={6} className={classes.text} >
+                  <span>Email</span>
+                </Grid>
+                <Grid item xs={12} md={3} className={classes.text} style={{ fontWeight: "lighter", justifyContent: "left", }}>
+                  <span>{user.email}</span>
+                </Grid>
+                <Grid item xs={12} md={3} className={classes.text} >
+                  <span style={{ fontSize: "13px" }}><a href='#'>thay đổi</a></span>
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={0} style={{ marginTop: "10px" }}>
+                <Grid item xs={12} md={6} className={classes.text} >
+                  <span >Ngày tháng năm sinh</span>
+                </Grid>
+                <Grid item xs={12} md={6} className={classes.textField}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      label="DOB"
+                      value={dob}
+                      onChange={(newValue) => {
+                        setDOB(newValue);
+                      }}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                  </LocalizationProvider>
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={0} style={{ marginTop: "10px" }}>
+                <Grid item xs={12} md={6} className={classes.text} >
+                  <span >Giới tính</span>
+                </Grid>
+                <Grid item xs={12} md={6} >
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-form-control-label-placement"
+                    value={gender}
+                    onChange={handleChangeGender}
+                    className={classes.radioButton}
+                  >
+                    <FormControlLabel value="male" control={<Radio />} label="Nam" />
+                    <FormControlLabel value="female" control={<Radio />} label="Nữ" />
+                    <FormControlLabel value="diff" control={<Radio />} label="Khác" />
+                  </RadioGroup>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item xs={6} md={6} className={classes.right}>
-              <span>abc@gmail.com</span>
-            </Grid>
-            <Grid item xs={3} md={3} style={{textAlign: "center"}}>
-              <span style={{ marginLeft: "10px", fontSize: "13px" }}><a href='#'>thay đổi</a></span>
-            </Grid>
-            <Grid item xs={3} md={3} className={classes.right}>
-              <span>Số điện thoại</span>
-            </Grid>
-            <Grid item xs={6} md={6} className={classes.right}>
-              <span>0123456798</span>
-            </Grid>
-            <Grid item xs={3} md={3} style={{textAlign: "center"}}>
-              <span style={{ marginLeft: "10px", fontSize: "13px" }}><a href='#'>thay đổi</a></span>
-            </Grid>
-          </Grid>
+
+          </div>
         </Grid>
 
       </Grid>
+      <div style={{ textAlign: "center" }}>
+        <Button className={classes.btn} variant="outlined" startIcon={<SaveIcon />}>
+          Lưu
+        </Button>
+      </div>
     </div >
   );
 }

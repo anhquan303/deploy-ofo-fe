@@ -126,7 +126,6 @@ const useStyles = makeStyles((theme) => ({
     transform: 'translate(-50%, -50%)',
     width: 650,
     bgcolor: 'background.paper',
-    border: '2px solid #000',
     boxShadow: 24,
     p: 4,
     backgroundColor: "#fff",
@@ -193,7 +192,6 @@ export function SellerRegister(props) {
   const handleUploadFile = (e) => {
     // const file = URL.createObjectURL(e.target.files[0])
     const file = e.target.files;
-    console.log(file)
     // const data = new FormData();
     // data.append(file, file[0])
     //setIdentityCardFront("/C/Users/anhqu/OneDrive/Desktop/" + file[0].name);

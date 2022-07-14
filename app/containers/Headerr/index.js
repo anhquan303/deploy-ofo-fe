@@ -107,11 +107,11 @@ export function Headerr(props) {
     requestSearch(searched);
   };
 
-  useEffect(() => {
-    if (user == null) {
-      history.push("/")
-    }
-  }, [user])
+  // useEffect(() => {
+  //   if (user == null) {
+  //     history.push("/")
+  //   }
+  // }, [user])
 
 
   return (
