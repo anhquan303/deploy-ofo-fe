@@ -10,7 +10,8 @@ import * as types from './constants';
 export const initialState = {
   loading: false,
   message: "",
-  food: undefined
+  food: undefined,
+  active: "ACTIVE"
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -53,6 +54,28 @@ const sellerActionProductReducer = (state = initialState, action) =>
         draft.food = action.payload;
         break;
       case types.GET_PRODUCT_BY_ID_FAILED:
+        draft.loading = false;
+        draft.message = action.payload;
+        break;
+      case types.ACTIVE_PRODUCT:
+        draft.loading = true;
+        break;
+      case types.ACTIVE_PRODUCT_SUCCESS:
+        draft.loading = false;
+        draft.active = action.payload;
+        break;
+      case types.ACTIVE_PRODUCT_FAILED:
+        draft.loading = false;
+        draft.message = action.payload;
+        break;
+      case types.DEACTIVE_PRODUCT:
+        draft.loading = true;
+        break;
+      case types.DEACTIVE_PRODUCT_SUCCESS:
+        draft.loading = false;
+        draft.active = action.payload;
+        break;
+      case types.DEACTIVE_PRODUCT_FAILED:
         draft.loading = false;
         draft.message = action.payload;
         break;

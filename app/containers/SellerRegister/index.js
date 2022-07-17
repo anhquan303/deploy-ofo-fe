@@ -32,7 +32,7 @@ import { NavLink } from 'react-router-dom';
 import { getUser } from '../../utils/common';
 import TimePicker from 'react-time-picker';
 import moment from 'moment'
-import { getListWards, sellerSignUp } from './actions';
+import { getListWards, reset, sellerSignUp } from './actions';
 import Modal from '@mui/material/Modal';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -126,7 +126,6 @@ const useStyles = makeStyles((theme) => ({
     transform: 'translate(-50%, -50%)',
     width: 650,
     bgcolor: 'background.paper',
-    border: '2px solid #000',
     boxShadow: 24,
     p: 4,
     backgroundColor: "#fff",
@@ -169,7 +168,7 @@ export function SellerRegister(props) {
 
 
   const initialValues = {
-    name: "", description: "", slogan: "", avatar: "", images: [], email: "", phone: "",
+    name: "", description: "", slogan: "", avatar: "", images: [], email: user.email, phone: user.phone,
     isInCampus: "", owner_name: user.username, village: "", town: "", district: "Thạch Thất", menu: ""
   };
   const [formValues, setFormValues] = useState(initialValues);
@@ -193,7 +192,6 @@ export function SellerRegister(props) {
   const handleUploadFile = (e) => {
     // const file = URL.createObjectURL(e.target.files[0])
     const file = e.target.files;
-    console.log(file)
     // const data = new FormData();
     // data.append(file, file[0])
     //setIdentityCardFront("/C/Users/anhqu/OneDrive/Desktop/" + file[0].name);
@@ -364,7 +362,7 @@ export function SellerRegister(props) {
         location: `[other_location]|${formValues.village}|${type}|${formValues.district}`
       }
       dispatch(sellerSignUp(data));
-      setOpen(true)
+      
     }
   }, [formErrors]);
 
@@ -376,10 +374,10 @@ export function SellerRegister(props) {
     setFormErrors(validate2());
     setFormErrors(validate3(formValues));
     setIsSubmit(true);
-
   }
 
   const closeModal = () => {
+    dispatch(reset());
     setOpen(false);
     props.history.push('/')
   }
@@ -394,6 +392,12 @@ export function SellerRegister(props) {
   const handleChangeType = (e) => {
     setType(e.target.value);
   };
+
+  useEffect(() => {
+    if (props.sellerRegister.message != "") {
+      setOpen(true);
+    }
+  }, [props.sellerRegister.message]);
 
   return (
     <div className={classes.body}>

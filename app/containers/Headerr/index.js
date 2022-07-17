@@ -18,10 +18,10 @@ import makeSelectHeaderr from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
-import { Box, Grid, MobileStepper, Container } from '@mui/material';
+import { Box, Grid, MobileStepper, Container, Badge } from '@mui/material';
 import { makeStyles, Button } from '@material-ui/core';
 import { getUser, removeUserSession } from '../../utils/common';
-import { logOut } from './actions';
+import { getCart, logOut } from './actions';
 import Logo from '../../images/Happy_Delivery_Man_logo_cartoon_art_illustration.jpg';
 import SearchBar from "material-ui-search-bar";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -76,15 +76,14 @@ export function Headerr(props) {
   const classes = useStyles();
   const [searched, setSearched] = useState("");
   const user = getUser();
+  const history = useHistory();
 
   // console.log(props)
   const handleLogout = () => {
     dispatch(logOut());
     removeUserSession();
-    props.history.push("/")
+    history.push("/")
   }
-
-  const history = useHistory();
 
   const handleSellerRegister = () => {
     if (user) {
@@ -108,10 +107,13 @@ export function Headerr(props) {
   };
 
   useEffect(() => {
-    if (user == null) {
-      history.push("/")
+    if (user != null) {
+      const data = {
+        id: user.id
+      }
+      dispatch(getCart(data));
     }
-  }, [user])
+  }, [])
 
 
   return (
@@ -167,7 +169,9 @@ export function Headerr(props) {
           </Grid>
           <Grid item xs={3} md={3}>
             <div style={{ textAlign: "center", marginTop: "15px" }}>
-              <AddShoppingCartIcon />
+              <Badge badgeContent={props.headerr.cart.length} color="primary">
+                <AddShoppingCartIcon color="action" />
+              </Badge>
             </div>
           </Grid>
         </Grid>

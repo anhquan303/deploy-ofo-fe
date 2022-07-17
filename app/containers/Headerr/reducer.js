@@ -9,7 +9,8 @@ import * as types from './constants';
 
 export const initialState = {
   loading: false,
-  message: ""
+  message: "",
+  cart: []
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -26,6 +27,17 @@ const headerrReducer = (state = initialState, action) =>
         draft.message = action.payload;
         break;
       case types.LOG_OUT_FAILED:
+        draft.loading = false;
+        draft.message = action.payload;
+        break;
+      case types.GET_CART:
+        draft.loading = true;
+        break;
+      case types.GET_CART_SUCCESS:
+        draft.loading = false;
+        draft.cart = action.payload;
+        break;
+      case types.GET_CART_FAILED:
         draft.loading = false;
         draft.message = action.payload;
         break;

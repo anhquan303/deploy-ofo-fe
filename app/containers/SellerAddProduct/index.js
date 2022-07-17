@@ -24,9 +24,10 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { makeStyles, Grid, Button } from '@material-ui/core';
-import { addProduct } from './actions';
+import { addProduct, reset } from './actions';
 import Snackbar from '@mui/material/Snackbar';
 import { getStore } from '../../utils/common';
+
 
 const useStyles = makeStyles((theme) => ({
   upload: {
@@ -157,6 +158,7 @@ export function SellerAddProduct(props) {
   useEffect(() => {
     if (props.sellerAddProduct.message === "ADD SUCCESSFUL") {
       props.history.push("/my-store/manager-product")
+      dispatch(reset());
     }
   }, [props.sellerAddProduct.message])
 

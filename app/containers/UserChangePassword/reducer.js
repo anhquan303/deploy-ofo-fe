@@ -29,6 +29,21 @@ const userChangePasswordReducer = (state = initialState, action) =>
         draft.loading = false;
         draft.message = action.payload;
         break;
+      case types.RESET:
+        draft.loading = false;
+        draft.message = "";
+        break;
+      case types.LOG_OUT:
+        draft.loading = true;
+        break;
+      case types.LOG_OUT_SUCCESS:
+        draft.loading = false;
+        draft.message = action.payload;
+        break;
+      case types.LOG_OUT_FAILED:
+        draft.loading = false;
+        draft.message = action.payload;
+        break;
     }
   });
 

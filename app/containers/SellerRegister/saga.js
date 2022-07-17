@@ -44,11 +44,10 @@ export function* sellerSignUp({ payload }) {
     //   .then((response) => console.log(response))
     //   .catch((error) => console.log(error))
 
-    console.log(payload)
+
     // const formData1 = new FormData();
     // formData1.append('file', payload.certificate.identity_card_front);
     const res = yield call(uploadImage, ['api/store/register'], formData)
-    console.log(res)
     if (res.status == 200) {
       yield put(sellerSignUpSuccess("Bạn đã đăng ký thành công, vui lòng chờ để dược duyệt, kết quả sẽ được trả về email"))
     } else {

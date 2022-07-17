@@ -46,7 +46,7 @@
            height="150"
            width="150"
            image="https://ofo-image.s3.amazonaws.com/store_image/11_avatar?fbclid=IwAR0vxhkzaE-EV9LWbgXTGoM65tqhAG8U_3mfSWy8a-8vfTOSQzHVtve9haQ"
-           alt="green iguana"
+           alt="anh mon an"
  
          />
          <CardContent>
