@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo, useState, useEffect, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -19,7 +19,10 @@ import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
 import Logo from '../../images/Happy_Delivery_Man_logo_cartoon_art_illustration.jpg';
-import { Box, TextField, Tab, Tabs, TextareaAutosize, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
+import {
+  Box, TextField, Tab, MenuItem, Tabs,
+  TextareaAutosize, FormGroup, FormControl, InputLabel, FormControlLabel, Checkbox
+} from '@mui/material';
 import { makeStyles, Container, Typography, Grid, Button } from '@material-ui/core';
 import BackGround from '../../images/dhfpt.png';
 import { NavLink } from 'react-router-dom';
@@ -29,9 +32,10 @@ import { NavLink } from 'react-router-dom';
 import { getUser } from '../../utils/common';
 import TimePicker from 'react-time-picker';
 import moment from 'moment'
-import { sellerSignUp } from './actions';
+import { getListWards, reset, sellerSignUp } from './actions';
 import Modal from '@mui/material/Modal';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -122,7 +126,6 @@ const useStyles = makeStyles((theme) => ({
     transform: 'translate(-50%, -50%)',
     width: 650,
     bgcolor: 'background.paper',
-    border: '2px solid #000',
     boxShadow: 24,
     p: 4,
     backgroundColor: "#fff",
@@ -159,13 +162,14 @@ export function SellerRegister(props) {
   const [certificate, setCertificate] = useState("");
   const [avatar, setAvatar] = useState("");
   const [value, setValue] = useState(0);
-  const [startTime, setStartTime] = useState(moment().format('hh:mm'));
-  const [endTime, setEndTime] = useState(moment().format('hh:mm'));
+  const [startTime, setStartTime] = useState(moment().format('hh:mm:ss'));
+  const [endTime, setEndTime] = useState(moment().format('hh:mm:ss'));
+  const urlPromoRef = createRef();
 
 
   const initialValues = {
-    name: "", description: "", slogan: "", avatar: "", images: [], email: "", phone: "",
-    isInCampus: "", owner_name: user.username, village: "", town: "", district: ""
+    name: "", description: "", slogan: "", avatar: "", images: [], email: user.email, phone: user.phone,
+    isInCampus: "", owner_name: user.username, village: "", town: "", district: "Thạch Thất", menu: ""
   };
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
@@ -175,6 +179,7 @@ export function SellerRegister(props) {
   const [horizontal, setHorizontal] = useState("right");
   const [open, setOpen] = useState(false);
   const [next, setNext] = useState(false);
+  const [type, setType] = useState("");
   const classes = useStyles();
 
   const handleChangeTab = (event, newValue) => {
@@ -184,60 +189,61 @@ export function SellerRegister(props) {
 
 
   //can cuoc cong dan mat truoc
-  const handleUploadFile = async e => {
+  const handleUploadFile = (e) => {
+    // const file = URL.createObjectURL(e.target.files[0])
     const file = e.target.files;
-    console.log(file)
-    const data = new FormData();
-    data.append(file, file[0])
-    setIdentityCardFront(file[0].name);
+    // const data = new FormData();
+    // data.append(file, file[0])
+    //setIdentityCardFront("/C/Users/anhqu/OneDrive/Desktop/" + file[0].name);
+    setIdentityCardFront(file[0]);
   }
 
   //can cuoc cong dan mat sau
   const handleUploadFile1 = async e => {
     const file = e.target.files;
-    console.log(file)
     const data = new FormData();
     data.append(file, file[0])
-    setIdentityCardBack(file[0].name);
+    //setIdentityCardBack("/C/Users/anhqu/OneDrive/Desktop/" + file[0].name);
+    setIdentityCardBack(file[0]);
   }
 
   //anh dai dien cua quan an
   const handleUploadAvatar = async e => {
     const file = e.target.files;
-    console.log(file)
     const data = new FormData();
     data.append(file, file[0])
-    setAvatar(file[0].name)
+    //setAvatar("/C/Users/anhqu/OneDrive/Desktop/" + file[0].name)
+    setAvatar(file[0])
   }
 
 
   //chung nhan thuc pham sach
   const handleUploadCerti = async e => {
     const file = e.target.files;
-    console.log(file)
     const data = new FormData();
     data.append(file, file[0])
-    setCertificate(file[0].name)
+    //setCertificate("/C/Users/anhqu/OneDrive/Desktop/" + file[0].name)
+    setCertificate(file[0])
   }
 
 
   //menu
   const handleUploadMenu = async e => {
     const file = e.target.files;
-    console.log(file)
     const data = new FormData();
     data.append(file, file[0])
-    setMenu(file[0].name)
+    setMenu(file[0])
+    //setMenu("/C/Users/anhqu/OneDrive/Desktop/" + file[0].name)
   }
 
 
 
   const handleChangeStartTime = (newValue) => {
-    setStartTime(moment(newValue, "HH:mm").format("hh:mm"))
+    setStartTime(moment(newValue, "HH:mm:ss").format("hh:mm:ss"))
   }
 
   const handleChangeEndTime = (newValue) => {
-    setEndTime(moment(newValue, "HH:mm").format("hh:mm"))
+    setEndTime(moment(newValue, "HH:mm:ss").format("hh:mm:ss"))
     //console.log(moment(newValue, "HH:mm").format("hh:mm"))
   }
 
@@ -291,11 +297,11 @@ export function SellerRegister(props) {
     if (!values.village) {
       errors.village = "village is required!";
     }
-    if (!values.town) {
-      errors.town = "town is required!";
-    }
+    // if (!values.town) {
+    //   errors.town = "town is required!";
+    // }
     if (!values.district) {
-      errors.district = "district is required!";
+      errors.district = "address is required!";
     }
     return errors;
   }
@@ -312,13 +318,17 @@ export function SellerRegister(props) {
     return errors;
   }
 
-  // const validate3 = (values) => {
-  //   const errors = {};
-  //   if (!values.description) {
-  //     errors.description = "description is required!";
-  //   }
-  //   return errors;
-  // }
+  //validate for third tab
+  const validate3 = (values) => {
+    const errors = {};
+    if (!values.description) {
+      errors.description = "description is required!";
+    }
+    if (!menu) {
+      errors.menu = "menu is required!";
+    }
+    return errors;
+  }
 
   //next tab
   useEffect(() => {
@@ -335,6 +345,7 @@ export function SellerRegister(props) {
         email: formValues.email,
         open_time: startTime,
         close_time: endTime,
+        menu: menu,
         image: {
           avatar: avatar,
           images: [
@@ -348,14 +359,12 @@ export function SellerRegister(props) {
         },
         isInCampus: false,
         owner_name: formValues.owner_name,
-        location: `[other_location]|${formValues.village}|${formValues.town}|${formValues.district}`
+        location: `[other_location]|${formValues.village}|${type}|${formValues.district}`
       }
       dispatch(sellerSignUp(data));
-      setOpen(true)
+      
     }
   }, [formErrors]);
-
-  console.log(props.sellerRegister.message)
 
 
   //submit 3 pages
@@ -363,15 +372,32 @@ export function SellerRegister(props) {
     e.preventDefault();
     setFormErrors(validate(formValues));
     setFormErrors(validate2());
+    setFormErrors(validate3(formValues));
     setIsSubmit(true);
-
   }
 
   const closeModal = () => {
+    dispatch(reset());
     setOpen(false);
     props.history.push('/')
   }
 
+  //get list wards
+  useEffect(() => {
+    dispatch(getListWards());
+  }, []);
+
+
+  //set ward
+  const handleChangeType = (e) => {
+    setType(e.target.value);
+  };
+
+  useEffect(() => {
+    if (props.sellerRegister.message != "") {
+      setOpen(true);
+    }
+  }, [props.sellerRegister.message]);
 
   return (
     <div className={classes.body}>
@@ -385,23 +411,6 @@ export function SellerRegister(props) {
           </div>
           <h3 className={classes.registerTag}>Đăng Ký Đối Tác</h3>
           <div style={{ display: "flex", textAlign: "center" }}>
-            {/* <Grid container spacing={3} style={{ margin: "0 auto" }}>
-              <Grid item sm="auto" xs="auto">
-                <NavLink to="/sellerRegister" className={classes.link}>
-                  <Typography>1. Thông tin quán - cơ bản</Typography>
-                </NavLink>
-              </Grid>
-              <Grid item sm="auto" xs="auto">
-                <NavLink to="/sellerRegister" className={classes.link}>
-                  <Typography>2. Thông tin người đại diện</Typography>
-                </NavLink>
-              </Grid>
-              <Grid item sm="auto" xs="auto">
-                <NavLink to="/sellerRegister" className={classes.link}>
-                  <Typography>3. Thông tin quán - chi tiết</Typography>
-                </NavLink>
-              </Grid>
-            </Grid> */}
             <Tabs style={{ margin: "0 auto" }} value={value} onChange={handleChangeTab} textColor="primary" indicatorColor="primary" centered>
               <Tab label="1. Thông tin quán - cơ bản" />
               <Tab label="2. Thông tin người đại diện" />
@@ -496,6 +505,7 @@ export function SellerRegister(props) {
                     autoComplete="off"
                   >
                     <TextField
+                      disabled
                       id="outlined-textarea"
                       label="Huyện"
                       placeholder="Huyện"
@@ -509,7 +519,7 @@ export function SellerRegister(props) {
                   </Box>
                 </Grid>
                 <Grid item sm="auto" xs="auto" style={{ width: "100%" }}>
-                  <Box
+                  {/* <Box
                     component="form"
                     sx={{
                       '& .MuiTextField-root': { m: 1, width: '100%' },
@@ -528,7 +538,32 @@ export function SellerRegister(props) {
                       helperText={formErrors.town && formValues.town.length == "" ? formErrors.town : null}
                       error={formErrors.town != null && formValues.town.length == ""}
                     />
-                  </Box>
+                  </Box> */}
+                  <div style={{ marginLeft: "8px", width: "100%" }}>
+                    <Box
+                      component="form"
+                      sx={{
+                        '& .MuiTextField-root': { m: 1, width: '100%' },
+                      }}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">Xã</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={type}
+                          label="Xã"
+                          onChange={handleChangeType}
+                        >
+                          {props.sellerRegister.listWard.map((item, index) =>
+                            <MenuItem key={index} value={item.name}>{item.name}</MenuItem>
+                          )}
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  </div>
                 </Grid>
                 <Grid item sm="auto" xs="auto" style={{ width: "100%" }}>
                   <Box

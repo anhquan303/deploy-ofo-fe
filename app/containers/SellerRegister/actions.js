@@ -33,3 +33,32 @@ export function sellerSignUpFailed(payload) {
     payload
   };
 }
+
+export function getListWards(payload) {
+  return {
+    type: types.GET_LIST_WARDS,
+    payload
+  };
+}
+
+export function getListWardsSuccess(payload) {
+  return {
+    type: types.GET_LIST_WARDS_SUCCESS,
+    payload
+  };
+}
+
+export function getListWardsFailed(payload) {
+  return {
+    type: types.GET_LIST_WARDS_FAILED,
+    payload
+  };
+}
+
+export function reset(payload) {
+  return {
+    type: types.RESET,
+    payload
+  };
+}
+

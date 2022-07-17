@@ -5,7 +5,9 @@ import * as types from './constants';
 
 export function* fetchListFood({ payload }) {
   try {
-    const res = yield call(apiFetchData, ['api/foods']);
+
+    const res = yield call(apiFetchData, [`api/store/${payload.id}/foods`]);
+    console.log(res)
     if (res.status == 200) {
       yield put(fetchListFoodSuccess(res.data.data));
     } else {
@@ -31,30 +33,31 @@ export function* searchFood({ payload }) {
 
     // console.log(call)
 
-    var url = 'api/foods';
+    var url = `api/store/${payload.id}/foods`;
     if (payload.name != "" && payload.startPrice == "" && payload.endPrice == "") {
-      url = 'api/foods?name=' + `${payload.name}`;
+      url = `api/store/${payload.id}/foods?name=` + `${payload.name}`;
     }
     if (payload.startPrice != "" && payload.name == "" && payload.endPrice == "") {
-      url = 'api/foods?startPrice=' + `${payload.startPrice}`;
+      url = `api/store/${payload.id}/foods?startPrice=` + `${payload.startPrice}`;
     }
     if (payload.endPrice != "" && payload.name == "" && payload.startPrice == "") {
-      url = 'api/foods?endPrice=' + `${payload.endPrice}`;
+      url = `api/store/${payload.id}/foods?endPrice=` + `${payload.endPrice}`;
     }
     if (payload.endPrice != "" && payload.name != "" && payload.startPrice == "") {
-      url = 'api/foods?name=' + `${payload.name}` + '&&endPrice=' + `${payload.endPrice}`;
+      url = `api/store/${payload.id}/foods?name=` + `${payload.name}` + '&&endPrice=' + `${payload.endPrice}`;
     }
     if (payload.endPrice != "" && payload.name == "" && payload.startPrice != "") {
-      url = 'api/foods?startPrice=' + `${payload.startPrice}` + '&&endPrice=' + `${payload.endPrice}`;
+      url = `api/store/${payload.id}?startPrice=` + `${payload.startPrice}` + '&&endPrice=' + `${payload.endPrice}`;
     }
     if (payload.endPrice == "" && payload.name != "" && payload.startPrice != "") {
-      url = 'api/foods?name=' + `${payload.name}` + '&&startPrice=' + `${payload.startPrice}`;
+      url = `api/store/${payload.id}?name=` + `${payload.name}` + '&&startPrice=' + `${payload.startPrice}`;
     }
     if (payload.endPrice != "" && payload.name != "" && payload.startPrice != "") {
-      url = 'api/foods?name=' + `${payload.name}` + '&&startPrice=' + `${payload.startPrice}` + '&&endPrice=' + `${payload.endPrice}`;
+      url = `api/store/${payload.id}?name=` + `${payload.name}` + '&&startPrice=' + `${payload.startPrice}` + '&&endPrice=' + `${payload.endPrice}`;
     }
 
     const res = yield call(apiFetchData, [`${url}`]);
+    console.log(res)
     if (res.status == 200) {
       yield put(searchFoodSuccess(res.data.data));
     } else {

@@ -33,3 +33,25 @@ export function logOutFailed(payload) {
     payload,
   };
 }
+
+export function fetchListFood(payload) {
+  return {
+    type: types.FETCH_LIST_FOOD,
+    payload,
+  };
+}
+
+export function fetchListFoodSuccess(payload) {
+  return {
+    type: types.FETCH_LIST_FOOD_SUCCESS,
+    payload,
+  };
+}
+
+export function fetchListFoodFailed(payload) {
+  return {
+    type: types.FETCH_LIST_FOOD_FAILED,
+    payload,
+  };
+}
+

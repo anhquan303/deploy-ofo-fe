@@ -6,8 +6,7 @@ import * as types from './constants';
 
 export function* fetchListUser({ payload }) {
   try {
-    const res = yield call(apiFetchData, ['api/user/alluser']);
-    console.log(res)
+    const res = yield call(apiFetchData, ['api/user/allUser']);
     if (res.status == 200) {
       yield put(fetchListUserSuccess(res.data.data));
     } else {

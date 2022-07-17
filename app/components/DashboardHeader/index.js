@@ -85,8 +85,6 @@ function DashboardHeader({ text, user }) {
   const classes = useStyles();
   // const location = useLocation();
 
-  console.log('user', user)
-
   return (
     <Grid container spacing={3}>
       <Grid item sm={7} xs={7}>

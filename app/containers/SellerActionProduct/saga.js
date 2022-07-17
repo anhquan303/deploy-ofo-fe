@@ -1,12 +1,12 @@
 import { take, call, put, select, takeEvery } from 'redux-saga/effects';
-import { deleteProductFailed, deleteProductSuccess, updateProductFailed, updateProductSuccess } from './actions';
-import { apiUpdateProduct } from './api';
+import { activeProductFailed, activeProductSuccess, deactiveProductFailed, deactiveProductSuccess, deleteProductFailed, deleteProductSuccess, getProductByIdFailed, getProductByIdSuccess, updateProductFailed, updateProductSuccess } from './actions';
+import { apiFetchData, apiUpdateProduct } from './api';
 import * as types from './constants';
 
 
 export function* deleteProduct({ payload }) {
   try {
-    const res = yield call(apiUpdateProduct, [`api/foods/${payload.id}/delete`]);
+    const res = yield call(apiUpdateProduct, [`api/store/${payload.storeId}/foods/${payload.id}/delete`]);
     if (res.status == 200) {
       yield put(deleteProductSuccess("DELETE SUCCESSFUL"));
     } else {
@@ -27,8 +27,7 @@ export function* updateProduct({ payload }) {
       image: payload.image,
       status: "Active"
     }
-    const res = yield call(apiUpdateProduct, [`api/foods/${payload.id}/update`], data);
-    console.log('here', res)
+    const res = yield call(apiUpdateProduct, [`api/store/${payload.storeId}/foods/${payload.id}/update`], data);
     if (res.status == 200) {
       yield put(updateProductSuccess("UPDATE SUCCESSFUL"));
     } else {
@@ -39,9 +38,51 @@ export function* updateProduct({ payload }) {
   }
 }
 
+export function* getProductById({ payload }) {
+  try {
+    const res = yield call(apiFetchData, [`api/store/0/foods/${payload.id}/detail`]);
+    if (res.status == 200) {
+      yield put(getProductByIdSuccess(res.data.data));
+    } else {
+      yield put(getProductByIdFailed("FAILED"));
+    }
+  } catch (error) {
+    yield put(getProductByIdFailed(error.message));
+  }
+}
+
+export function* activeProduct({ payload }) {
+  try {
+    const res = yield call(apiUpdateProduct, [`api/store/${payload.sid}/foods/${payload.fid}/active`]);
+    if (res.status == 200) {
+      yield put(activeProductSuccess("ACTIVE"));
+    } else {
+      yield put(activeProductFailed("FAILED"));
+    }
+  } catch (error) {
+    yield put(activeProductFailed(error.message));
+  }
+}
+
+export function* deactiveProduct({ payload }) {
+  try {
+    const res = yield call(apiUpdateProduct, [`api/store/${payload.sid}/foods/${payload.fid}/de-active`]);
+    if (res.status == 200) {
+      yield put(deactiveProductSuccess("DEACTIVE"));
+    } else {
+      yield put(deactiveProductFailed("FAILED"));
+    }
+  } catch (error) {
+    yield put(deactiveProductFailed(error.message));
+  }
+}
+
 // Individual exports for testing
 export default function* sellerActionProductSaga() {
   // See example in containers/HomePage/saga.js
   yield takeEvery(types.DELETE_PRODUCT, deleteProduct);
   yield takeEvery(types.UPDATE_PRODUCT, updateProduct);
+  yield takeEvery(types.GET_PRODUCT_BY_ID, getProductById);
+  yield takeEvery(types.ACTIVE_PRODUCT, activeProduct);
+  yield takeEvery(types.DEACTIVE_PRODUCT, deactiveProduct);
 }

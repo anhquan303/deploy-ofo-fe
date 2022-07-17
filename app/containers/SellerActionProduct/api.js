@@ -8,3 +8,12 @@ export const apiUpdateProduct = (data, payload) => {
             .catch((err) => reject(err));
     });
 }
+
+export const apiFetchData = (data) => {
+    return new Promise((resolve, reject) => {
+        return apiBase
+            .get(`${data[0]}`, data[1])
+            .then((res) => resolve(res))
+            .catch((err) => reject(err));
+    });
+}

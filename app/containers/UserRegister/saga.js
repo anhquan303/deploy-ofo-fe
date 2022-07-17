@@ -12,14 +12,13 @@ export function* signUp({ payload }) {
       password: payload.password,
       phone: payload.phone,
       firstName: payload.firstName,
-      lastName: payload.firstName,
+      lastName: payload.lastName,
       email: payload.email,
       location: [{
         name: payload.location
       }]
     }
     const res = yield call(apiSignup, ['auth/adduser'], data);
-    console.log(res)
     if (res.status == 200) {
       yield put(signUpSuccess(res.data.msg))
     } else {

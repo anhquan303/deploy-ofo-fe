@@ -26,12 +26,14 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { makeStyles, Grid, Button } from '@material-ui/core';
 import Snackbar from '@mui/material/Snackbar';
-import { deleteProduct, updateProduct } from './actions';
+import { activeProduct, deactiveProduct, deleteProduct, getProductById, reset, updateProduct } from './actions';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { getStore } from '../../utils/common';
+import Switch from '@mui/material/Switch';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -75,6 +77,12 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: "5px",
     }
   },
+  font: {
+    margin: "0",
+    fontFamily: "san-serif",
+    fontSize: "30px",
+    fontWeight: "700"
+  }
 }));
 
 
@@ -84,12 +92,12 @@ export function SellerActionProduct(props) {
   useInjectSaga({ key: 'sellerActionProduct', saga });
 
   let param = useParams();
-  console.log('param ', props.location.state.item)
 
   const classes = useStyles();
-  const [type, setType] = useState(props.location.state.item.type);
-  const [storeId, setStoreId] = useState("1");
-  const initialValues = { name: props.location.state.item.name, price: props.location.state.item.price, description: props.location.state.item.description, image: "" };
+  const store = getStore();
+  const [type, setType] = useState();
+  const [storeId, setStoreId] = useState(store);
+  const initialValues = { name: "", price: "", description: "", image: "" };
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [open, setOpen] = useState(false);
@@ -97,6 +105,7 @@ export function SellerActionProduct(props) {
   const [horizontal, setHorizontal] = useState("right");
   const [isSubmit, setIsSubmit] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [checked, setChecked] = useState(true);
 
 
   //set value for input
@@ -145,7 +154,7 @@ export function SellerActionProduct(props) {
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       const data = {
-        id: props.location.state.item.id,
+        id: props.location.state.id,
         name: formValues.name,
         price: formValues.price,
         type: type,
@@ -161,22 +170,76 @@ export function SellerActionProduct(props) {
 
   const deleteProduct1 = () => {
     const data = {
-      id: props.location.state.item.id
+      id: props.location.state.id,
+      storeId: store
     }
     dispatch(deleteProduct(data));
   }
 
   useEffect(() => {
     if (props.sellerActionProduct.message == "DELETE SUCCESSFUL" || props.sellerActionProduct.message == "UPDATE SUCCESSFUL") {
-      props.history.push("/managerProduct")
+      props.history.push("/my-store/manager-product")
+      dispatch(reset());
     }
   }, [props.sellerActionProduct.message])
+
+  useEffect(() => {
+    const data = {
+      id: props.location.state.id
+    }
+    dispatch(getProductById(data));
+
+  }, []);
+
+  useEffect(() => {
+    if (props.sellerActionProduct.food) {
+      setType(props.sellerActionProduct.food.type);
+      formValues.name = props.sellerActionProduct.food.name;
+      formValues.price = props.sellerActionProduct.food.price;
+      formValues.description = props.sellerActionProduct.food.description;
+      formValues.image = props.sellerActionProduct.food.image;
+    }
+  }, [props.sellerActionProduct.food]);
+
+
+  const handleChangeActive = (event) => {
+    setChecked(event.target.checked);
+  };
+
+  //console.log(checked)
+
+  useEffect(() => {
+    if (checked == true) {
+      const data = {
+        sid: storeId,
+        fid: props.location.state.id
+      }
+      dispatch(activeProduct(data));
+    } else {
+      const data = {
+        sid: storeId,
+        fid: props.location.state.id
+      }
+      dispatch(deactiveProduct(data));
+    }
+  }, [checked])
 
   return (
     <div style={{ paddingRight: "15px" }}>
       <div style={{ textAlign: "center" }}>
-        <p>Thay đổi sản phảm</p>
+
+        <p className={classes.font}>Thay đổi sản phẩm</p>
         <div className={classes.inside}>
+          <div style={{ textAlign: "right" }}>
+            {props.sellerActionProduct.active == "ACTIVE" ?
+              <span style={{ color: "#20D167", fontWeight: "700" }}>{props.sellerActionProduct.active}</span>
+              : <span style={{ color: "#FE0000", fontWeight: "700" }}>{props.sellerActionProduct.active}</span>}
+            <Switch
+              checked={checked}
+              onChange={handleChangeActive}
+              inputProps={{ 'aria-label': 'controlled' }}
+            />
+          </div>
           <form>
             <Grid container spacing={0} >
               <Grid item sm={12} xs={12} className={classes.marginBot}>
@@ -293,17 +356,17 @@ export function SellerActionProduct(props) {
                 </Box>
               </Grid>
               <Grid container spacing={1} >
-                <Grid item sm={12} xs={12} lg={4}>
-                  <Button onClick={() => props.history.push("/managerProduct")} className={classes.btn} variant="contained" component="span" >
+                <Grid item sm={12} xs={12} md={12} lg={4}>
+                  <Button onClick={() => props.history.push("/my-store/manager-product")} className={classes.btn} variant="contained" component="span" >
                     Trở về
                   </Button>
                 </Grid>
-                <Grid item sm={12} xs={12} lg={4}>
+                <Grid item sm={12} xs={12} md={12} lg={4}>
                   <Button className={classes.btn} variant="contained" component="span" onClick={() => setOpenDialog(true)}>
                     Xóa sản phẩm
                   </Button>
                 </Grid>
-                <Grid item sm={12} xs={12} lg={4}>
+                <Grid item sm={12} xs={12} md={12} lg={4}>
                   <Button className={classes.btn} variant="contained" component="span" onClick={HandleSubmit}>
                     Thay đổi sản phẩm
                   </Button>

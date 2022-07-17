@@ -16,7 +16,7 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { DetailStore } from '../../containers/DetailStore';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   all: {
     marginTop: "20px",
     background: "#ffffff",
@@ -34,11 +34,16 @@ const useStyles = makeStyles(() => ({
     borderCollapse: "collapse"
   },
   tr: {
-    height: "2.8rem",
+    //height: "2.8rem",
     borderBottom: "1px solid rgba(132, 139, 200, 0.18)",
     color: "#677483",
     "&:hover": {
       backgroundColor: "#ececec",
+    },
+    [theme.breakpoints.down("sm")]: {
+      display: "block",
+      width: "100%",
+      //height: "fit-content",
     },
   },
   pagination: {
@@ -51,7 +56,44 @@ const useStyles = makeStyles(() => ({
   th: {
     fontSize: "24px",
     fontWeight: "bolder",
-    color: "#000000"
+    color: "#000000",
+    textAlign: "center",
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+      // position: "absolute",
+      // left: 0,
+      // width: "50%",
+      // paddingLeft: "15px",
+      // fontSize: "15px",
+
+    },
+  },
+  td: {
+    textAlign: "center",
+    [theme.breakpoints.down("sm")]: {
+      textAlign: "right",
+      display: "block",
+      width: "100%",
+      paddingLeft: "50%",
+      position: "relative",
+      '&::before': {
+        content: 'attr(data-text)',
+        position: 'absolute',
+        left: '0',
+        width: '50%',
+        paddingLeft: "15px",
+        fontSize: "15px",
+        fontWeight: "bold",
+        textAlign: "left"
+      }
+    },
+
+  },
+  tbody: {
+    [theme.breakpoints.down("sm")]: {
+      display: "block",
+      width: "100%"
+    },
   }
 
 }));
@@ -84,18 +126,16 @@ function CustomTable({ data, itemPerPage, totalItem, detailPage, columns, action
   const handleChangPage = (event, page) => {
     setCurrentPage(page)
   }
-
   const TableHeadItem = ({ item }) => <th className={classes.th}>{item.title}</th>
   const TableRowItem = ({ item, columns }) =>
   (
-
     <tr className={classes.tr} onClick={() => handleClick(item)}>
+
       {columns.map((columnsItem, index) => {
-        return <td key={index}>{item[`${columnsItem.field}`]}</td>
+        return <td key={index} className={classes.td} data-text={columnsItem.title}>{item[`${columnsItem.field}`]}</td>
       })}
       {action == true ? <td><button>Delete</button></td> : null}
     </tr>
-
   )
 
   return (
@@ -108,10 +148,13 @@ function CustomTable({ data, itemPerPage, totalItem, detailPage, columns, action
           </tr>
 
         </thead>
-        <tbody>
+        <tbody className={classes.tbody}>
+
           {currentItems.map((item, index) => <TableRowItem item={item} columns={columns} key={index} />)}
         </tbody>
+
       </table>
+      <span>{currentItems.length == 0 ? <p style={{ textAlign: "center", fontFamily: "sans-serif", fontSize: "30px", color: "#FF0000" }}>Không có dữ liệu</p> : null}</span>
       <nav className={classes.pagination}>
         <Stack spacing={2}>
           <Pagination count={length} onChange={handleChangPage} />

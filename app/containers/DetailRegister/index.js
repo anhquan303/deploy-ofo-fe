@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -20,10 +20,13 @@ import saga from './saga';
 import messages from './messages';
 import { Box, TextField } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { Menu, MenuItem } from '@mui/material';
 import { makeStyles, Grid, Button } from '@material-ui/core';
 import ShopImage from '../../images/kinh-nghiem-mo-quan-an-nho-2.jpg';
-import Menu from '../../images/menu.jpg';
+import Menu1 from '../../images/menu.jpg';
 import Certi from '../../images/mau-an-toan-thuc-pham.jpg';
+import { approvedStore, declinedStore, getRegisterById, reset } from './actions';
+import PendingIcon from '@mui/icons-material/Pending';
 
 const useStyles = makeStyles((theme) => ({
   information_image: {
@@ -34,7 +37,6 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "0 2rem 3rem rgba(132, 139, 200, 0.18)",
     transition: "0.5s",
     height: "100%",
-    backgroundImage: `url(${ShopImage})`,
     backgroundSize: "cover",
     [theme.breakpoints.down("sm")]: {
       height: "200px"
@@ -54,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "20px",
     borderRadius: "50px",
     marginTop: "1rem",
-    boxShadow: "0 2rem 3rem rgba(132, 139, 200, 0.18)",
+    boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
     transition: "0.5s",
     height: "100%",
   },
@@ -63,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1.5em",
     textAlign: "center",
     color: "#DAF33D",
+    textTransform: "uppercase"
   },
   btnChangeStatus: {
     // "& .MuiButton-root": {
@@ -203,100 +206,160 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function DetailRegister(props) {
+  const { dispatch } = props;
   useInjectReducer({ key: 'detailRegister', reducer });
   useInjectSaga({ key: 'detailRegister', saga });
 
-  console.log('param ', props.location.state.item)
 
   const classes = useStyles();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const approveStore = (e) => {
+    e.preventDefault();
+    setAnchorEl(null);
+    const data = {
+      id: props.location.state.id
+    }
+    dispatch(approvedStore(data));
+  }
+
+  const declineStore = (e) => {
+    e.preventDefault();
+
+    const data = {
+      id: props.location.state.id
+    }
+    dispatch(declinedStore(data));
+    setAnchorEl(null);
+  }
+
+
+
+  useEffect(() => {
+    if (props.detailRegister.status == "Success") {
+      props.history.push("/register");
+      dispatch(reset());
+    }
+  }, [props.detailRegister.status]);
+
+  useEffect(() => {
+    const data = {
+      id: props.location.state.id
+    }
+    dispatch(getRegisterById(data));
+  }, []);
+
+  console.log(props.detailRegister.register)
+
   return (
     <div style={{ paddingRight: "15px" }}>
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={3}>
-          <Grid item md={6} sm={12} xs={12} >
-            <div className={classes.information_image}>
+      {props.detailRegister.register ? <>
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={3}>
+            <Grid item md={6} sm={12} xs={12} >
+              <div className={classes.information_image} style={{ backgroundImage: `url(${props.detailRegister.register.storeImage.avatar})`, }}>
 
-            </div>
-          </Grid>
-          <Grid item md={6} sm={12} xs={12}>
-            <div className={classes.information_one}>
-              <Box sx={{ flexGrow: 1 }}>
-                <Grid container spacing={2}>
-                  <Grid item sm={8} xs={12} className={classes.one}>
-
-                    <div className={classes.intro}>
-                      <p className={classes.text}>{props.location.state.item.name}</p>
-                      <p className={classes.text}>Thôn 8, Thạch Thất</p>
-                      <p className={classes.text}>3535453435</p>
-                    </div>
-
-                  </Grid>
-                  <Grid item sm={4} xs={12} className={classes.zero}>
-                    <div className={classes.divCheckIcon} >
-                      <CheckCircleIcon style={{ width: "100%", height: "100%", color: "#5890FF" }} />
-                    </div>
-
-                  </Grid>
-                  <Grid item md={5} sm={8} xs={12} className={classes.two}>
-
-                    <div className={classes.pending}>
-                      <p>Pending</p>
-                    </div>
-
-                  </Grid>
-                  <Grid item md={7} sm={4} xs={12} className={classes.three}>
-
-                    <div className={classes.verify}>
-                      <Button variant="contained" component="span" className={classes.btnChangeStatus}>
-                        Change Status
-                      </Button>
-                    </div>
-
-                  </Grid>
-                </Grid>
-              </Box>
-            </div>
-          </Grid>
-        </Grid>
-
-        <div style={{ backgroundColor: "#FFFFFF", marginTop: "30px", padding: "20px", borderRadius: "20px" }}>
-          <Box sx={{ flexGrow: 1 }} >
-            <Grid container spacing={3} >
-              <Grid item md={4} sm={4} xs={12}>
-                <div style={{ textAlign: "center" }}>
-                  <p className={classes.detailText}>Owner: {props.location.state.item.user.username}</p>
-                  <p className={classes.detailText}>Register ar: 04/08/2022</p>
-                  <p className={classes.detailText}>Cell Phone: {props.location.state.item.user.phoneNumber}</p>
-                  <p className={classes.detailText}>Email: {props.location.state.item.user.email}</p>
-                  <p className={classes.detailText}>Open Time: {props.location.state.item.open_time}</p>
-                  <p className={classes.detailText}>Close Time: {props.location.state.item.close_time}</p>
-                </div>
-                <div style={{ textAlign: "center" }}>
-                  <p className={classes.titleText}>Menu</p>
-                  <img src={Menu} alt="menu" className={classes.detailImg} />
-                </div>
-              </Grid>
-              <Grid item md={4} sm={4} xs={12}>
-                <div style={{ textAlign: "center" }}>
-                  <p className={classes.titleText}>Căn cước công dân mặt trước</p>
-                  <img src={Menu} alt="menu" className={classes.detailImg} />
-                </div>
-                <div style={{ textAlign: "center" }}>
-                  <p className={classes.titleText}>Căn cước công dân mặt sau</p>
-                  <img src={Menu} alt="menu" className={classes.detailImg} />
-                </div>
-              </Grid>
-              <Grid item md={4} sm={4} xs={12}>
-                <div style={{ textAlign: "center" }}>
-                  <p className={classes.titleText}>Chứng nhận thực phẩm sạch</p>
-                  <img src={Certi} alt="menu" className={classes.detailImg} />
-                </div>
-              </Grid>
+              </div>
             </Grid>
-          </Box>
-        </div>
-      </Box>
+            <Grid item md={6} sm={12} xs={12}>
+              <div className={classes.information_one} >
+                <Box sx={{ flexGrow: 1 }}>
+                  <Grid container spacing={2}>
+                    <Grid item sm={8} xs={12} className={classes.one}>
 
+                      <div className={classes.intro}>
+                        <p className={classes.text}>{props.detailRegister.register.name}</p>
+                        <p className={classes.text}>{props.detailRegister.register.otherLocation.name}, {props.detailRegister.register.otherLocation.village}, {props.detailRegister.register.otherLocation.town}</p>
+                        <p className={classes.text}>{props.detailRegister.register.phone}</p>
+                      </div>
+
+                    </Grid>
+                    <Grid item sm={4} xs={12} className={classes.zero}>
+                      <div className={classes.divCheckIcon} >
+                        <PendingIcon style={{ width: "100%", height: "100%", color: "#FFD04D" }} />
+                      </div>
+
+                    </Grid>
+                    <Grid item md={5} sm={8} xs={12} className={classes.two}>
+
+                      <div className={classes.pending}>
+                        <p>{props.detailRegister.register.status}</p>
+                      </div>
+
+                    </Grid>
+                    <Grid item md={7} sm={4} xs={12} className={classes.three}>
+
+                      <div className={classes.verify}>
+                        <Button variant="contained" component="span" className={classes.btnChangeStatus} onClick={handleClick}>
+                          Change Status
+                        </Button>
+                      </div>
+                      <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                          'aria-labelledby': 'basic-button',
+                        }}
+                      >
+                        <MenuItem onClick={approveStore}>Approve</MenuItem>
+                        <MenuItem onClick={declineStore}>Decline</MenuItem>
+                      </Menu>
+
+                    </Grid>
+                  </Grid>
+                </Box>
+              </div>
+            </Grid>
+          </Grid>
+
+          <div style={{ backgroundColor: "#FFFFFF", marginTop: "30px", padding: "20px", borderRadius: "20px" }}>
+            <Box sx={{ flexGrow: 1 }} >
+              <Grid container spacing={3} >
+                <Grid item md={4} sm={4} xs={12}>
+                  <div style={{ textAlign: "center" }}>
+                    <p className={classes.detailText}>Owner: {props.detailRegister.register.owner_name}</p>
+                    <p className={classes.detailText}>Register ar: 04/08/2022</p>
+                    <p className={classes.detailText}>Cell Phone: {props.detailRegister.register.user.phoneNumber}</p>
+                    <p className={classes.detailText}>Email: {props.detailRegister.register.user.email}</p>
+                    <p className={classes.detailText}>Open Time: {props.detailRegister.register.open_time}</p>
+                    <p className={classes.detailText}>Close Time: {props.detailRegister.register.close_time}</p>
+                  </div>
+                  <div style={{ textAlign: "center" }}>
+                    <p className={classes.titleText}>Menu</p>
+                    <img src={props.detailRegister.register.storeImage.menu} alt="menu" className={classes.detailImg} />
+                  </div>
+                </Grid>
+                <Grid item md={4} sm={4} xs={12}>
+                  <div style={{ textAlign: "center" }}>
+                    <p className={classes.titleText}>Căn cước công dân mặt trước</p>
+                    <img src={props.detailRegister.register.storeImage.identity_card_front} alt="menu" className={classes.detailImg} />
+                  </div>
+                  <div style={{ textAlign: "center" }}>
+                    <p className={classes.titleText}>Căn cước công dân mặt sau</p>
+                    <img src={props.detailRegister.register.storeImage.identity_card_back} alt="menu" className={classes.detailImg} />
+                  </div>
+                </Grid>
+                <Grid item md={4} sm={4} xs={12}>
+                  <div style={{ textAlign: "center" }}>
+                    <p className={classes.titleText}>Chứng nhận thực phẩm sạch</p>
+                    <img src={props.detailRegister.register.storeImage.food_quality_certificate} alt="menu" className={classes.detailImg} />
+                  </div>
+                </Grid>
+              </Grid>
+            </Box>
+          </div>
+        </Box>
+      </> : null}
     </div >
   );
 }

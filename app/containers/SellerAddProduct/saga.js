@@ -12,11 +12,8 @@ export function* addProduct({ payload }) {
       description: payload.description,
       image: payload.image,
       status: "",
-      storeId: payload.storeId
-
     }
-    const res = yield call(apiAddProduct, ['api/foods'], data);
-    console.log('addProduct', res)
+    const res = yield call(apiAddProduct, [`api/store/${payload.storeId}/foods`], data);
     if (res.status == 200) {
       yield put(addProductSuccess("ADD SUCCESSFUL"));
     } else {
