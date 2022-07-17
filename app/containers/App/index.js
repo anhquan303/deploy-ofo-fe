@@ -118,7 +118,6 @@ export default function App() {
 
   const user = getUser();
 
-
   return (
     <StylesProvider injectFirst>
       <AppWrapper>

@@ -24,7 +24,11 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { makeStyles, Grid, Button } from '@material-ui/core';
+<<<<<<< HEAD
 import { addProduct, reset } from './actions';
+=======
+import { addProduct } from './actions';
+>>>>>>> 9100c548fd50412b1f823084f920fd720a567507
 import Snackbar from '@mui/material/Snackbar';
 import { getStore } from '../../utils/common';
 

@@ -4,11 +4,19 @@
  * This is the first thing users see of our App, at the '/' route
  */
 
+<<<<<<< HEAD
 import React, { useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
+=======
+import React, { useEffect, memo, useState } from 'react';
+import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet';
+import { FormattedMessage } from 'react-intl';
+import { connect, useDispatch } from 'react-redux';
+>>>>>>> 9100c548fd50412b1f823084f920fd720a567507
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
@@ -28,6 +36,7 @@ import Input from './Input';
 import Section from './Section';
 import messages from './messages';
 import { loadRepos } from '../App/actions';
+<<<<<<< HEAD
 import { changeUsername } from './actions';
 import { makeSelectUsername } from './selectors';
 import reducer from './reducer';
@@ -98,6 +107,63 @@ export function HomePage({
         </Section>
       </div>
     </article>
+=======
+import { logOut } from './actions';
+import { makeSelectUsername } from './selectors';
+import reducer from './reducer';
+import saga from './saga';
+import { Box, AppBar, Toolbar, Select, MenuItem, FormControl } from '@mui/material';
+import { makeStyles, Container, Typography, Grid, Button } from '@material-ui/core';
+import { NavLink } from 'react-router-dom';
+import FastfoodIcon from '@mui/icons-material/Fastfood';
+import { getUser, removeUserSession } from '../../utils/common';
+
+
+const key = 'home';
+
+export function HomePage(props) {
+  useInjectReducer({ key, reducer });
+  useInjectSaga({ key, saga });
+
+  const [language, setLanguage] = useState("English");
+  console.log(props)
+  //const dispatch = useDispatch();
+
+  const user = getUser();
+  const handleLogout = (e) => {
+    e.preventDefault();
+    //dispatch(logOut());
+    removeUserSession();
+    props.history.push("/")
+  }
+
+  const handleSellerRegister = () => {
+    if (user) {
+      props.history.push("/sellerRegister")
+    } else {
+      props.history.push("/login")
+    }
+  }
+
+  return (
+    <div>
+      <AppBar sx={{ background: "#fff" }} position='static'>
+        <Toolbar>
+
+          <Button onClick={handleSellerRegister}>Become a seller in No Ne </Button>
+          {user ? <Button href='/myStore'>My Store </Button> : null}
+          <Box sx={{ marginLeft: 'auto' }} >
+            {user == null ?
+              <>
+                <Button href="/userRegister">Sign up </Button>
+                <Button href="/login">Login </Button>
+              </>
+              : <Button onClick={handleLogout}>Logout </Button>}
+          </Box>
+        </Toolbar>
+      </AppBar>
+    </div >
+>>>>>>> 9100c548fd50412b1f823084f920fd720a567507
   );
 }
 
