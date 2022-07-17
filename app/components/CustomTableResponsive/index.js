@@ -24,7 +24,6 @@ function CustomTableResponsive({ columns, data, detailPage, rows }) {
   const history = useHistory();
 
   const handleClick = (id) => {
-    console.log(id)
     const location = {
       pathname: `/${detailPage}/${id}`,
       state: {
@@ -61,7 +60,6 @@ function CustomTableResponsive({ columns, data, detailPage, rows }) {
     setPage(0);
   };
 
-  console.log(rows)
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: "20px" }}>

@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -34,6 +34,9 @@ import { getUser, getStore } from '../../utils/common';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { getUserById, reset, updateUser } from './actions';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -74,6 +77,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   textField: {
+    width: "100%",
     [theme.breakpoints.down("sm")]: {
       textAlign: "center"
     }
@@ -100,6 +104,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function UserSetting(props) {
+  const { dispatch } = props;
   useInjectReducer({ key: 'userSetting', reducer });
   useInjectSaga({ key: 'userSetting', saga });
 
@@ -107,26 +112,106 @@ export function UserSetting(props) {
   const user = getUser();
   const store = getStore();
   const [open, setOpen] = useState(true);
-  const [firstname, setFirstName] = useState(user.firstname);
-  const [lastname, setLastName] = useState(user.lastname);
-  const [storeName, setStoreName] = useState("Quán Gốc Sung");
   const [gender, setGender] = useState("");
-
   const [dob, setDOB] = useState(new Date());
+  const initialValues = { firstname: "", lastname: "" };
+  const [formValues, setFormValues] = useState(initialValues);
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [vertical, setVertical] = useState("top");
+  const [horizontal, setHorizontal] = useState("right");
 
   const handleClick = () => {
     setOpen(!open);
   };
 
   const handleChangeGender = (event) => {
-    setValue(event.target.value);
+    setGender(event.target.value);
   };
-
-
 
   const handleUploadClick = () => {
 
+  };
+
+  const validate = (values) => {
+    const errors = {};
+    if (!values.firstname) {
+      errors.firstname = "firstname is required!";
+    }
+    if (!values.lastname) {
+      errors.lastname = "lastname is required!";
+    }
+    return errors;
   }
+
+  //set value for input
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  }
+
+  const handleUpdateUser = (e) => {
+    e.preventDefault();
+    setFormErrors(validate(formValues));
+    setIsSubmit(true);
+  }
+
+  //update
+  useEffect(() => {
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+      const data = {
+        firstname: formValues.firstname,
+        lastname: formValues.lastname,
+        gender: gender,
+        dateOfBirth: dob
+      }
+      dispatch(updateUser(data));
+      //setOpen(true);
+    }
+
+  }, [formErrors])
+
+  //get user by id 
+  useEffect(() => {
+    if (props.userSetting.message == "UPDATE SUCCESS") {
+      setOpenAlert(true);
+      const data = {
+        id: user.id
+      }
+      dispatch(getUserById(data));
+      setTimeout(() => dispatch(reset()), 6000);
+    }
+  }, [props.userSetting.message]);
+
+  useEffect(() => {
+    const data = {
+      id: user.id
+    }
+    dispatch(getUserById(data));
+  }, []);
+
+  useEffect(() => {
+    if (props.userSetting.user) {
+      setGender(props.userSetting.user.gender);
+      setDOB(props.userSetting.user.dateOfBirth);
+      formValues.firstname = props.userSetting.user.firstname;
+      formValues.lastname = props.userSetting.user.lastname;
+    }
+  }, [props.userSetting.user]);
+
+  // console.log(props.userSetting.user)
+
+  const Alert = React.forwardRef(function Alert(
+    props,
+    ref,
+  ) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  const handleCloseAlert = (e) => {
+    setOpenAlert(false);
+  };
 
   return (
     <div>
@@ -164,60 +249,76 @@ export function UserSetting(props) {
         <Grid item xs={12} md={7} style={{ padding: "10px" }}>
           <div>
             <Grid container spacing={0}>
-              <Grid item xs={12} md={6} className={classes.text} >
+              <Grid item xs={12} md={5} className={classes.text} >
                 <span>Tên đăng nhập</span>
               </Grid>
-              <Grid item xs={12} md={6} className={classes.text} style={{ fontWeight: "lighter", justifyContent: "left", }}>
+              <Grid item xs={12} md={7} className={classes.text} style={{ fontWeight: "lighter", justifyContent: "left", }}>
                 <span>{user.username}</span>
               </Grid>
 
               <Grid container spacing={0} style={{ marginTop: "10px" }}>
-                <Grid item xs={12} md={6} className={classes.text} >
+                <Grid item xs={12} md={5} className={classes.text} >
                   <span >Họ</span>
                 </Grid>
-                <Grid item xs={12} md={6} className={classes.textField}>
-                  <OutlinedInput placeholder="Please enter text" value={firstname} onChange={(e) => setFirstName(e.target.value)} />
+                <Grid item xs={12} md={7} className={classes.textField}>
+                  <OutlinedInput
+                    style={{ width: "100%" }}
+                    placeholder="Please enter text"
+                    value={formValues.firstname}
+                    onChange={handleChange}
+                    name="firstname"
+                    error={formErrors.firstname != null && formValues.firstname.length == ""}
+                    helperText={formErrors.firstname && formValues.firstname.length == "" ? formErrors.firstname : null}
+                  />
                 </Grid>
               </Grid>
 
               <Grid container spacing={0} style={{ marginTop: "10px" }}>
-                <Grid item xs={12} md={6} className={classes.text} >
+                <Grid item xs={12} md={5} className={classes.text} >
                   <span >Tên</span>
                 </Grid>
-                <Grid item xs={12} md={6} className={classes.textField}>
-                  <OutlinedInput placeholder="Please enter text" value={lastname} onChange={(e) => setLastName(e.target.value)} />
+                <Grid item xs={12} md={7} className={classes.textField}>
+                  <OutlinedInput
+                    style={{ width: "100%" }}
+                    placeholder="Please enter text"
+                    value={formValues.lastname}
+                    onChange={handleChange}
+                    name="lastname"
+                    error={formErrors.lastname != null && formValues.lastname.length == ""}
+                    helperText={formErrors.lastname && formValues.lastname.length == "" ? formErrors.lastname : null}
+                  />
                 </Grid>
               </Grid>
 
               <Grid container spacing={0} style={{ marginTop: "10px" }}>
-                <Grid item xs={12} md={6} className={classes.text} >
+                <Grid item xs={12} md={5} className={classes.text} >
                   <span>Số điện thoại</span>
                 </Grid>
-                <Grid item xs={12} md={3} className={classes.text} style={{ fontWeight: "lighter", justifyContent: "left", }}>
-                  <span>{user.phone}</span>
+                <Grid item xs={12} md={5} className={classes.text} style={{ fontWeight: "lighter", justifyContent: "left", }}>
+                  <span>{props.userSetting.user ? props.userSetting.user.phoneNumber : null}</span>
                 </Grid>
-                <Grid item xs={12} md={3} className={classes.text} >
+                <Grid item xs={12} md={2} className={classes.text} >
                   <span style={{ fontSize: "13px" }}><a href='#'>thay đổi</a></span>
                 </Grid>
               </Grid>
 
               <Grid container spacing={0} style={{ marginTop: "10px" }}>
-                <Grid item xs={12} md={6} className={classes.text} >
+                <Grid item xs={12} md={5} className={classes.text} >
                   <span>Email</span>
                 </Grid>
-                <Grid item xs={12} md={3} className={classes.text} style={{ fontWeight: "lighter", justifyContent: "left", }}>
-                  <span>{user.email}</span>
+                <Grid item xs={12} md={5} className={classes.text} style={{ fontWeight: "lighter", justifyContent: "left", }}>
+                  <span>{props.userSetting.user ? props.userSetting.user.email : null}</span>
                 </Grid>
-                <Grid item xs={12} md={3} className={classes.text} >
+                <Grid item xs={12} md={2} className={classes.text} >
                   <span style={{ fontSize: "13px" }}><a href='#'>thay đổi</a></span>
                 </Grid>
               </Grid>
 
               <Grid container spacing={0} style={{ marginTop: "10px" }}>
-                <Grid item xs={12} md={6} className={classes.text} >
+                <Grid item xs={12} md={5} className={classes.text} >
                   <span >Ngày tháng năm sinh</span>
                 </Grid>
-                <Grid item xs={12} md={6} className={classes.textField}>
+                <Grid item xs={12} md={7} className={classes.textField}>
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
                       label="DOB"
@@ -232,10 +333,10 @@ export function UserSetting(props) {
               </Grid>
 
               <Grid container spacing={0} style={{ marginTop: "10px" }}>
-                <Grid item xs={12} md={6} className={classes.text} >
+                <Grid item xs={12} md={5} className={classes.text} >
                   <span >Giới tính</span>
                 </Grid>
-                <Grid item xs={12} md={6} >
+                <Grid item xs={12} md={7} >
                   <RadioGroup
                     row
                     aria-labelledby="demo-form-control-label-placement"
@@ -243,8 +344,8 @@ export function UserSetting(props) {
                     onChange={handleChangeGender}
                     className={classes.radioButton}
                   >
-                    <FormControlLabel value="male" control={<Radio />} label="Nam" />
-                    <FormControlLabel value="female" control={<Radio />} label="Nữ" />
+                    <FormControlLabel value="true" control={<Radio />} label="Nam" />
+                    <FormControlLabel value="false" control={<Radio />} label="Nữ" />
                     <FormControlLabel value="diff" control={<Radio />} label="Khác" />
                   </RadioGroup>
                 </Grid>
@@ -256,10 +357,18 @@ export function UserSetting(props) {
 
       </Grid>
       <div style={{ textAlign: "center" }}>
-        <Button className={classes.btn} variant="outlined" startIcon={<SaveIcon />}>
+        <Button className={classes.btn} variant="outlined" startIcon={<SaveIcon />} onClick={handleUpdateUser}>
           Lưu
         </Button>
       </div>
+
+      <Snackbar open={openAlert} autoHideDuration={6000} anchorOrigin={{ vertical, horizontal }} onClose={handleCloseAlert}>
+        {/* {props.userAddress.message.includes("FAILED") == false || props.userAddress.message.includes("Failed") == false || props.userAddress.message != "Network Error" ? */}
+        <Alert severity="success" onClose={handleCloseAlert} sx={{ width: '100%' }}>
+          {props.userSetting.message}
+        </Alert>
+
+      </Snackbar>
     </div >
   );
 }

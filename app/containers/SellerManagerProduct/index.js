@@ -83,10 +83,10 @@ export function SellerManagerProduct(props) {
   const classes = useStyles();
 
   const columns1 = [
-    { id: 'stt', label: 'STT', minWidth: 10, align: 'center' },
+    { id: 'stt', label: 'No.', minWidth: 10, align: 'center' },
     { id: 'name', label: 'Food Name', minWidth: 100, align: 'center' },
     { id: 'price', label: 'Price', minWidth: 100, align: 'center' },
-    { id: 'createdAt', label: 'Creat At', minWidth: 100, align: 'center' },
+    { id: 'createdAt', label: 'Create At', minWidth: 100, align: 'center' },
     { id: 'type', label: 'Type', minWidth: 100, align: 'center' },
     { id: 'actived', label: 'Active', minWidth: 100, align: 'center' },
   ];

@@ -542,7 +542,7 @@ export function UserAddress(props) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Bạn có chắc chắn xóa sản phẩm này?"}
+          {"Bạn có chắc chắn xóa địa chỉ này?"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">

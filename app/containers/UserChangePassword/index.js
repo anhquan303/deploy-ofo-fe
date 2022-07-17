@@ -21,7 +21,11 @@ import messages from './messages';
 import SaveIcon from '@mui/icons-material/Save';
 import { Box, Grid, TextField, Container } from '@mui/material';
 import { makeStyles, Button } from '@material-ui/core';
-import { changePassword } from './actions';
+import { changePassword, logout, reset } from './actions';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import { removeUserSession } from '../../utils/common';
+
 
 const useStyles = makeStyles((theme) => ({
   btn: {
@@ -62,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function UserChangePassword(props) {
-  const {dispatch} = props;
+  const { dispatch } = props;
   useInjectReducer({ key: 'userChangePassword', reducer });
   useInjectSaga({ key: 'userChangePassword', saga });
   const classes = useStyles();
@@ -71,6 +75,10 @@ export function UserChangePassword(props) {
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [vertical, setVertical] = useState("top");
+  const [horizontal, setHorizontal] = useState("right");
+
 
   //set value for input
   const handleChange = (e) => {
@@ -102,19 +110,44 @@ export function UserChangePassword(props) {
     setIsSubmit(true);
   }
 
-    //change pass
-    useEffect(() => {
-      if (Object.keys(formErrors).length === 0 && isSubmit) {
-        console.log('here')
-        const data = {
-          newPassword: formValues.newPassword,
-          oldPassword: formValues.oldPassword,
-          verifyPassword: formValues.verifyPassword,
-        }
-        dispatch(changePassword(data))
-        //setOpen(true);
+  //change pass
+  useEffect(() => {
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+      const data = {
+        newPassword: formValues.newPassword,
+        oldPassword: formValues.oldPassword,
+        verifyPassword: formValues.verifyPassword,
       }
-    }, [formErrors]);
+      dispatch(changePassword(data))
+      //setOpen(true);
+    }
+  }, [formErrors]);
+
+  const Alert = React.forwardRef(function Alert(
+    props,
+    ref,
+  ) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  const handleCloseAlert = (event) => {
+    setOpenAlert(false);
+  };
+
+  useEffect(() => {
+    if (props.userChangePassword.message != "") {
+      setOpenAlert(true);
+      setTimeout(() => dispatch(reset()), 2000);
+      if (props.userChangePassword.message == "CHANGE PASSWORD SUCCESSFUL") {
+        setTimeout(() => dispatch(logout()), 2000);
+        removeUserSession();
+        setTimeout(() => props.history.push("/login"), 2000);
+      }
+    }
+
+  }, [props.userChangePassword.message]);
+
+
 
   return (
     <div>
@@ -136,7 +169,7 @@ export function UserChangePassword(props) {
             >
               <TextField
                 error={formErrors.oldPassword != null && formValues.oldPassword.length == ""}
-                id="outlined-password-input"
+                id="outlined-password-input1"
                 label="Mật khẩu cũ"
                 type="password"
                 autoComplete="current-password"
@@ -157,7 +190,7 @@ export function UserChangePassword(props) {
             >
               <TextField
                 error={formErrors.newPassword != null && formValues.newPassword.length == ""}
-                id="outlined-password-input"
+                id="outlined-password-input2"
                 label="Mật khẩu mới"
                 type="password"
                 autoComplete="current-password"
@@ -177,7 +210,7 @@ export function UserChangePassword(props) {
               autoComplete="off"
             >
               <TextField
-                id="outlined-password-input"
+                id="outlined-password-input3"
                 label="Xác nhận mật khẩu"
                 type="password"
                 autoComplete="current-password"
@@ -194,6 +227,14 @@ export function UserChangePassword(props) {
           </div>
         </Grid>
       </Grid>
+
+      <Snackbar open={openAlert} autoHideDuration={2000} anchorOrigin={{ vertical, horizontal }} onClose={handleCloseAlert}>
+        {/* {props.userAddress.message.includes("FAILED") == false || props.userAddress.message.includes("Failed") == false || props.userAddress.message != "Network Error" ? */}
+        <Alert severity="success" onClose={handleCloseAlert} sx={{ width: '100%' }}>
+          {props.userChangePassword.message}
+        </Alert>
+
+      </Snackbar>
     </div >
   );
 }

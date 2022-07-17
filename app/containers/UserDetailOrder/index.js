@@ -92,10 +92,10 @@ export function UserDetailOrder() {
             <Grid container spacing={0} style={{ padding: "10px" }}>
               <Grid item xs={12} md={6} sm={12}>
                 <Grid container spacing={0} style={{ padding: "10px" }}>
-                  <Grid item xs={12} md={3} sm={12}>
+                  <Grid item xs={12} md={4} sm={12}>
                     <Avatar variant="square" src="https://i.ytimg.com/vi/A_o2qfaTgKs/maxresdefault.jpg" />
                   </Grid>
-                  <Grid item xs={12} md={9} sm={12}>
+                  <Grid item xs={12} md={8} sm={12}>
                     Bún Bò Huế <br />
                     x2
                   </Grid>

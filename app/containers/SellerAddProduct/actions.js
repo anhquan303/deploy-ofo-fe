@@ -34,3 +34,10 @@ export function addProductFailed(payload) {
     payload
   };
 }
+
+export function reset(payload) {
+  return {
+    type: types.RESET,
+    payload
+  };
+}

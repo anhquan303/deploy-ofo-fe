@@ -42,6 +42,9 @@ import ForgetPassword from '../../containers/ForgetPassword';
 import UserRatingComment from '../../containers/UserRatingComment';
 import SellerTurnover from '../../containers/SellerTurnover';
 import Payment from '../../containers/Payment';
+import SellerSetting from '../../containers/SellerSetting';
+import UserForgetPassword from '../../containers/UserForgetPassword';
+import UserResetPassword from '../../containers/UserResetPassword';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
 import {
@@ -184,9 +187,9 @@ export default function App() {
                     <Route exact path="/my-store/manager-product" component={SellerManagerProduct} />
                     <Route path="/my-store/manager-product/addProduct" component={SellerAddProduct} />
                     <Route path="/my-store/manager-product/:id" component={SellerActionProduct} />
-                    {/* <Route path="/my-store/manager-order" component={SellerManagerOrder} /> */}
                     <Route path="/my-store/manager-order/:id" component={SellerOrderDetail} />
                     <Route path="/my-store/turnover" component={SellerTurnover} />
+                    <Route path="/my-store/setting" component={SellerSetting} />
                     {/* <Route path="/sellerRegister" component={SellerRegister} /> */}
                     <Route path="" component={NotFoundPage} />
                   </Switch>
@@ -210,7 +213,7 @@ export default function App() {
                         <Route exact path="/user/order-history/:id" component={UserDetailOrder} />
                         <Route path="/user/change-password" component={UserChangePassword} />
                         <Route path="/user/address" component={UserAddress} />
-                        <Route path="/user/rating-comment" component={UserRatingComment} />
+                        <Route path="/user/rating-comment/:id" component={UserRatingComment} />
                         <Route path="" component={NotFoundPage} />
                       </Switch>
                     </Grid>
@@ -237,8 +240,10 @@ export default function App() {
                       <Route exact path="/" component={UserHomePage} />
                       {/* <Route path="/features" component={FeaturePage} /> */}
                       <Route path="/login" component={Login} />
+                      <Route path="/forget-password" component={UserForgetPassword} />
                       <Route path="/userRegister" component={UserRegister} />
                       <Route path="/sellerRegister" component={SellerRegister} />
+                      <Route path="/reset-password" component={UserResetPassword} />
                       <Route path="/food/:id" component={FoodDetail} />
                       <Route path="/email/verify" component={EmailVerifiedSuccess} />
                       <Route path="/forget-password" component={ForgetPassword} />

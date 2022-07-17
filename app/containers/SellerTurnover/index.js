@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -19,6 +19,7 @@ import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
 import MonetizationOnRoundedIcon from '@mui/icons-material/MonetizationOnRounded';
+import moment from 'moment';
 
 import {
   Box, Grid, Container, Avatar, Typography, List, TextField, FormControl, Input, Select, MenuItem, InputLabel
@@ -31,6 +32,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Line, Bar } from "react-chartjs-2";
 import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import { getDataForChart } from './actions';
+import { getStore } from '../../utils/common';
 
 const useStyles = makeStyles((theme) => ({
   btn: {
@@ -81,7 +84,8 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export function SellerTurnover() {
+export function SellerTurnover(props) {
+  const { dispatch } = props;
   useInjectReducer({ key: 'sellerTurnover', reducer });
   useInjectSaga({ key: 'sellerTurnover', saga });
   const classes = useStyles();
@@ -90,11 +94,21 @@ export function SellerTurnover() {
   const [toDay, setToDay] = useState(new Date());
 
   const [time, setTime] = useState(1);
+  const store = getStore();
 
   const handleChangeTime = (e) => {
     setTime(e.target.value);
   };
 
+  useEffect(() => {
+    const data = {
+      sid: store,
+      days: time
+    }
+    dispatch(getDataForChart(data));
+  }, [time]);
+
+  // console.log(props.sellerTurnover.saleData[props.sellerTurnover.saleData.length - 1].totalAmount)
   return (
     <div>
       <p className={classes.title} style={{ fontSize: "25px" }}>Chỉ số quan trọng</p>
@@ -104,7 +118,7 @@ export function SellerTurnover() {
             <Grid container spacing={0}>
               <Grid item md={6} sm={12} xs={12} >
                 <p className={classes.title}>Doanh số</p>
-                <p className={classes.title}>0 VND</p>
+                <p className={classes.title}>{props.sellerTurnover.saleData.length != 0 ? props.sellerTurnover.saleData[props.sellerTurnover.saleData.length - 1].totalAmount : null} VND</p>
               </Grid>
               <Grid item md={6} sm={12} xs={12} style={{ textAlign: "center" }}>
                 <MonetizationOnRoundedIcon sx={{ width: 50, height: 50, color: "#FFAC30" }} />
@@ -126,7 +140,7 @@ export function SellerTurnover() {
             <Grid container spacing={0}>
               <Grid item md={6} sm={12} xs={12} >
                 <p className={classes.title}>Đơn hàng</p>
-                <p className={classes.title}>0</p>
+                <p className={classes.title}>{props.sellerTurnover.saleData.length != 0 ? props.sellerTurnover.saleData[props.sellerTurnover.saleData.length - 1].totalOrder : null}</p>
               </Grid>
               <Grid item md={6} sm={12} xs={12} style={{ textAlign: "center" }}>
                 <AssignmentRoundedIcon sx={{ width: 50, height: 50, color: "#FFAC30" }} />
@@ -170,7 +184,7 @@ export function SellerTurnover() {
             <Grid container spacing={0}>
               <Grid item md={6} sm={12} xs={12} >
                 <p className={classes.title}>Doanh số trên mỗi đơn hàng</p>
-                <p className={classes.title}>0 VND</p>
+                <p className={classes.title}>{props.sellerTurnover.saleData.length != 0 ? props.sellerTurnover.saleData[props.sellerTurnover.saleData.length - 1].salesPerOrder : null} VND</p>
               </Grid>
               <Grid item md={6} sm={12} xs={12} style={{ textAlign: "center" }}>
                 <MonetizationOnRoundedIcon sx={{ width: 50, height: 50, color: "#FFAC30" }} />
@@ -224,27 +238,36 @@ export function SellerTurnover() {
 
 
       <div style={{ padding: "30px" }}>
-        {/* <Line
+        <Line
           data={{
-            labels: dailyData.map(({ date }) => date),
+            //labels: props.sellerTurnover.saleData.map((data) => data.day),
+            labels: props.sellerTurnover.saleData.map((data) => moment(data.day).format('DD/MM/YYYY')),
+
             datasets: [
               {
-                data: dailyData.map((data) => data.confirmed),
-                label: "Infected",
-                borderColor: "#3333ff",
+                data: props.sellerTurnover.saleData.map((data) => data.totalAmount),
+                label: "Doanh số",
+                borderColor: "#FFAC30",
                 fill: true
               },
               {
-                data: dailyData.map((data) => data.deaths),
-                label: "Deaths",
-                borderColor: "red",
+                data: props.sellerTurnover.saleData.map((data) => data.totalOrder),
+                label: "Đơn hàng",
+                borderColor: "#1168EB",
+                backgroundColor: "rgba(255, 0, 0, 0.5)",
+                fill: true
+              },
+              {
+                data: props.sellerTurnover.saleData.map((data) => data.salesPerOrder),
+                label: "Doanh số trên mỗi đơn hàng",
+                borderColor: "#FE0000",
                 backgroundColor: "rgba(255, 0, 0, 0.5)",
                 fill: true
               }
             ]
           }}
-        /> */}
-        <Line
+        />
+        {/* <Line
           data={{
             labels: ["12/07/2022", "13/07/2022", "14/07/2022"],
             datasets: [
@@ -277,7 +300,7 @@ export function SellerTurnover() {
               }
             ]
           }}
-        />
+        /> */}
       </div>
     </div>
   );

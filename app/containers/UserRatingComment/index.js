@@ -23,6 +23,8 @@ import { makeStyles, Button } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone';
 import SendIcon from '@mui/icons-material/Send';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import { getUser } from '../../utils/common';
+import { userAddCommentFood, userRatingFood } from './actions';
 
 const useStyles = makeStyles((theme) => ({
   btn: {
@@ -55,17 +57,33 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export function UserRatingComment() {
+export function UserRatingComment(props) {
+  const { dispatch } = props;
   useInjectReducer({ key: 'userRatingComment', reducer });
   useInjectSaga({ key: 'userRatingComment', saga });
 
   const classes = useStyles();
   const [star, setStar] = useState(0);
-  const [file, setFile] = useState();
+  const [comment, setComment] = useState("");
+  const user = getUser();
 
-  const handleChange = (files) => {
-    setFile(files)
+  const handleSubmit = () => {
+    const data = {
+      food_id: props.location.state.id,
+      user_id: user.id,
+      description: comment
+    }
+    dispatch(userAddCommentFood(data));
+
+    const data1 = {
+      food_id: props.location.state.id,
+      user_id: user.id,
+      star: star
+    }
+    dispatch(userRatingFood(data1));
   }
+
+  console.log(props.location.state.id);
 
   return (
     <div>
@@ -145,9 +163,9 @@ export function UserRatingComment() {
             setStar(newValue);
           }}
         />
-        <DropzoneArea
+        {/* <DropzoneArea
           onChange={() => handleChange(file)}
-        />
+        /> */}
 
         <div style={{ margin: "0 auto", width: "fit-content" }}>
 
@@ -155,8 +173,13 @@ export function UserRatingComment() {
             {/* {user ? <Avatar alt="avatar store" src={Avatar1} sx={{ width: 26, height: 26, marginRight: "3px" }} />
                 : <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />} */}
             <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-            <TextField id="input-with-sx" label="Viết bình luận ..." variant="standard" />
-            <IconButton style={{ color: "#FF9900" }}>
+            <TextField
+              id="input-with-sx"
+              label="Viết bình luận ..."
+              variant="standard"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)} />
+            <IconButton style={{ color: "#FF9900" }} onClick={handleSubmit}>
               <SendIcon />
             </IconButton>
           </Box>
