@@ -24,6 +24,7 @@ import SearchBar from "material-ui-search-bar";
 import DashboardHeader from '../../components/DashboardHeader';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import CustomTableResponsive from '../../components/CustomTableResponsive';
 
 export function DashboardStore(props) {
   const { dispatch, listStore } = props;
@@ -63,6 +64,51 @@ export function DashboardStore(props) {
     { title: "Slogan", field: "slogan" },
     { title: "Status", field: "status" },
   ]
+  console.log(props.dashboardStore.listStore)
+
+  const columns1 = [
+    { id: 'stt', label: 'STT', minWidth: 10, align: 'center' },
+    { id: 'name', label: 'Name', minWidth: 100, align: 'center' },
+    { id: 'email', label: 'Email', minWidth: 100, align: 'center' },
+    { id: 'slogan', label: 'Slogan', minWidth: 100, align: 'center' },
+    { id: 'status', label: 'Status', minWidth: 100, align: 'center' },
+    // {
+    //   id: 'population',
+    //   label: 'Population',
+    //   minWidth: 170,
+    //   align: 'right',
+    //   format: (value) => value.toLocaleString('en-US'),
+    // },
+    // {
+    //   id: 'size',
+    //   label: 'Size\u00a0(km\u00b2)',
+    //   minWidth: 170,
+    //   align: 'right',
+    //   format: (value) => value.toLocaleString('en-US'),
+    // },
+    // {
+    //   id: 'density',
+    //   label: 'Density',
+    //   minWidth: 170,
+    //   align: 'right',
+    //   format: (value) => value.toFixed(2),
+    // },
+  ];
+
+  function createData(id, stt, name, email, slogan, status) {
+    //const density = population / size;
+    return { id, stt, name, email, slogan, status };
+  }
+
+  const [rows, setRows] = useState([]);
+  useEffect(() => {
+    if (data) {
+      setRows(data.map((item, index) =>
+        createData(item.id, index + 1, item.name, item.email, item.slogan, item.status)
+      ))
+    }
+  }, [data])
+
   return (
     <>
       {/* <div style={{ marginRight: "10px" }}>
@@ -86,8 +132,11 @@ export function DashboardStore(props) {
                 onCancelSearch={() => cancelSearch()}
               />
             </Grid>
+            {/* <Grid item sm={12} xs={12}>
+              {data ? <CustomTable data={data} itemPerPage={10} totalItem={props.dashboardStore.listStore.length} detailPage="store" columns={columns} action={action} /> : <></>}
+            </Grid> */}
             <Grid item sm={12} xs={12}>
-              {data ? <CustomTable data={data} itemPerPage={3} totalItem={props.dashboardStore.listStore.length} detailPage="store" columns={columns} action={action} /> : <></>}
+              {data ? <CustomTableResponsive columns={columns1} data={data} detailPage="store" rows={rows} /> : null}
             </Grid>
           </Grid>
 

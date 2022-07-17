@@ -10,7 +10,6 @@ import { useHistory } from 'react-router-dom';
 
 export function* login({ payload }) {
   try {
-    console.log(payload)
     const data = {
       username: payload.username,
       password: payload.password
@@ -18,12 +17,9 @@ export function* login({ payload }) {
 
 
     const res = yield call(apiLogin, ['auth/login'], data);
-    console.log('res login ', res)
-    // if (res.data.success == true) {
-    if (res.status == 200) {
-      console.log(res.data.accessToken)
-      console.log(res.data.user)
-      setUserSession(res.data.accessToken, res.data.user)
+    if (res.data.success == true) {
+    //if (res.status == 200) {
+      setUserSession(res.data.accessToken, res.data.user, res.data.store)
       yield put(loginSuccess("Login success"))
     } else {
       yield put(loginFailed(res.data.msg))

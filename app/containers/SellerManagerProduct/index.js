@@ -28,6 +28,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { makeStyles, Button } from '@material-ui/core';
 import { fetchListFood, searchFood } from './actions';
+import { getStore } from '../../utils/common';
+import CustomTableResponsive from '../../components/CustomTableResponsive';
 
 const useStyles = makeStyles((theme) => ({
   information_image: {
@@ -77,24 +79,42 @@ export function SellerManagerProduct(props) {
   const [nameSearch, setNameSearch] = useState("");
   const [priceFrom, setPriceFrom] = useState("");
   const [priceTo, setPriceTo] = useState("");
-  const action = false;
+  const store = getStore();
+  const classes = useStyles();
 
-
-  const columns = [
-    { title: "ID", field: "id" },
-    { title: "Food Name", field: "name" },
-    { title: "Price", field: "price" },
-    { title: "Creat At", field: "createdAt" },
-    { title: "Type", field: "type" },
-    { title: "Status", field: "status" },
+  const columns1 = [
+    { id: 'stt', label: 'No.', minWidth: 10, align: 'center' },
+    { id: 'name', label: 'Food Name', minWidth: 100, align: 'center' },
+    { id: 'price', label: 'Price', minWidth: 100, align: 'center' },
+    { id: 'createdAt', label: 'Create At', minWidth: 100, align: 'center' },
+    { id: 'type', label: 'Type', minWidth: 100, align: 'center' },
+    { id: 'actived', label: 'Active', minWidth: 100, align: 'center' },
   ];
 
-  const classes = useStyles();
+  function createData( id, stt, name, price, createdAt, type, actived) {
+    //const density = population / size;
+    return { id, stt, name, price, createdAt, type, actived };
+  }
+
+  const [rows, setRows] = useState([]);
+  useEffect(() => {
+    if (props.sellerManagerProduct.foodList) {
+      setRows(props.sellerManagerProduct.foodList.map((item, index) =>
+        createData(item.id, index + 1, item.name, item.price, item.createdAt, item.type, item.actived)
+      ))
+    }
+  }, [props.sellerManagerProduct.foodList])
+
+
+
 
   const [type, setType] = useState();
 
   useEffect(() => {
-    dispatch(fetchListFood());
+    const data = {
+      id: store
+    }
+    dispatch(fetchListFood(data));
   }, []);
 
   //set Type
@@ -106,7 +126,8 @@ export function SellerManagerProduct(props) {
     const data = {
       name: nameSearch,
       startPrice: priceFrom,
-      endPrice: priceTo
+      endPrice: priceTo,
+      id: store
     }
     dispatch(searchFood(data));
   }
@@ -116,6 +137,8 @@ export function SellerManagerProduct(props) {
     setPriceFrom("");
     setPriceTo("");
   }
+
+  console.log(props.sellerManagerProduct.foodList)
 
   return (
     <div style={{ paddingRight: "15px" }}>
@@ -248,11 +271,12 @@ export function SellerManagerProduct(props) {
       </div >
 
       <div style={{ marginTop: "20px" }}>
-        <Button onClick={() => props.history.push("/managerProduct/addProduct")} className={classes.btn} variant="contained" component="span" style={{ width: "fit-content", display: "block", marginLeft: "auto" }}>
+        <Button onClick={() => props.history.push("/my-store/manager-product/addProduct")} className={classes.btn} variant="contained" component="span" style={{ width: "fit-content", display: "block", marginLeft: "auto" }}>
           Thêm sản phẩm
         </Button>
       </div>
-      <CustomTable data={props.sellerManagerProduct.foodList} itemPerPage={5} totalItem={props.sellerManagerProduct.foodList.length} detailPage="managerProduct" columns={columns} action={action} />
+      {/* <CustomTable data={props.sellerManagerProduct.foodList} itemPerPage={5} totalItem={props.sellerManagerProduct.foodList.length} detailPage="my-store/manager-product" columns={columns} action={action} /> */}
+      {props.sellerManagerProduct.foodList ? <CustomTableResponsive columns={columns1} data={props.sellerManagerProduct.foodList} detailPage="my-store/manager-product" rows={rows} /> : null}
     </div >
   );
 }

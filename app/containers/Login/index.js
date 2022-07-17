@@ -28,12 +28,13 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import GoogleLogin from 'react-google-login';
 import { Link, useHistory } from 'react-router-dom';
-import { login } from './actions';
+import { login, reset } from './actions';
 import { getToken, getUser, removeUserSession } from '../../utils/common';
 import Snackbar from '@mui/material/Snackbar';
 import BackGround from '../../images/dhfpt.png';
 import { Grid } from '@mui/material';
 import { makeStyles, Button } from '@material-ui/core';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 const useStyles = makeStyles((theme) => ({
   body: {
@@ -110,7 +111,7 @@ export function Login(props) {
 
   const responseGoogle = (response) => {
     //setToken(response.tokenObj.id_token);
-    console.log('google', response.tokenObj.id_token)
+    //console.log('google', response.tokenObj.id_token)
   }
 
   const classes = useStyles();
@@ -149,16 +150,14 @@ export function Login(props) {
   //redirect follow role
   useEffect(() => {
     if (user != null) {
+
       if (user.authorities[0].authority != "ADMIN") {
-        props.history.push("/");
+        //props.history.push("/");
+        setTimeout(() => props.history.push("/"), 1000);
       } else {
-        props.history.push("/dashboard");
+        //props.history.push("/dashboard");
+        setTimeout(() => props.history.push("/dashboard"), 1000);
       }
-    } else {
-      // props.history.push("/login");
-      // if (user && token) {
-      //   removeUserSession();
-      // }
     }
   }, [props.login.message, user]);
 
@@ -185,7 +184,25 @@ export function Login(props) {
     setOpen(false);
   }
 
+  const Alert = React.forwardRef(function Alert(
+    props,
+    ref,
+  ) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
 
+  const handleCloseAlert = (event) => {
+    setOpen(false);
+  };
+
+
+  useEffect(() => {
+    if (props.login.message != "") {
+      setOpen(true);
+      setTimeout(() => dispatch(reset()), 1000);
+    }
+
+  }, [props.login.message]);
   return (
     <div className={classes.body}>
       <div className={classes.container}>
@@ -339,18 +356,34 @@ export function Login(props) {
           <div style={{ textAlign: "center" }}>
             <div><a href="/" style={{ textDecoration: "none" }}>Trở về trang chủ</a></div>
             <br />
-            <div><span>Quên mật khẩu ? </span><a href="#" style={{ textDecoration: "none" }}>Lấy lại mật khẩu</a></div>
+            <div><span>Quên mật khẩu ? </span><a href="/forget-password" style={{ textDecoration: "none" }}>Lấy lại mật khẩu</a></div>
             <div><span>Chưa có tài khoản ? </span><a href="/userRegister" style={{ textDecoration: "none" }}>Đăng ký ngay</a></div>
           </div>
 
         </form>
-        <Snackbar
+        {/* <Snackbar
           anchorOrigin={{ vertical, horizontal }}
           open={open}
           onClose={handleCloseToast}
           message={props.login.message}
           autoHideDuration={5000}
-        />
+        /> */}
+
+        <Snackbar open={open} autoHideDuration={1000} anchorOrigin={{ vertical, horizontal }} onClose={handleCloseAlert}>
+          {/* {props.userAddress.message.includes("FAILED") == false || props.userAddress.message.includes("Failed") == false || props.userAddress.message != "Network Error" ? */}
+          {/* <Alert severity="success" onClose={handleCloseAlert} sx={{ width: '100%' }}>
+            {props.login.message}
+          </Alert> */}
+          {props.login.message && props.login.message == "USERNAME OR PASSWORD INVALID  " ?
+            <Alert severity="error" onClose={handleCloseAlert} sx={{ width: '100%' }}>
+              {props.login.message}
+            </Alert>
+            :
+            <Alert severity="success" onClose={handleCloseAlert} sx={{ width: '100%' }}>
+              {props.login.message}
+            </Alert>
+          }
+        </Snackbar>
 
       </div>
     </div>

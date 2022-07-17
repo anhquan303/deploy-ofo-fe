@@ -24,8 +24,10 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { makeStyles, Grid, Button } from '@material-ui/core';
-import { addProduct } from './actions';
+import { addProduct, reset } from './actions';
 import Snackbar from '@mui/material/Snackbar';
+import { getStore } from '../../utils/common';
+
 
 const useStyles = makeStyles((theme) => ({
   upload: {
@@ -77,10 +79,12 @@ export function SellerAddProduct(props) {
   useInjectReducer({ key: 'sellerAddProduct', reducer });
   useInjectSaga({ key: 'sellerAddProduct', saga });
   const classes = useStyles();
+  const store = getStore();
 
+  console.log(props)
 
   const [type, setType] = useState("");
-  const [storeId, setStoreId] = useState("1");
+  const [storeId, setStoreId] = useState(store);
   const initialValues = { name: "", price: "", description: "", image: "" };
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
@@ -153,7 +157,8 @@ export function SellerAddProduct(props) {
 
   useEffect(() => {
     if (props.sellerAddProduct.message === "ADD SUCCESSFUL") {
-      props.history.push("/managerProduct")
+      props.history.push("/my-store/manager-product")
+      dispatch(reset());
     }
   }, [props.sellerAddProduct.message])
 
@@ -279,7 +284,7 @@ export function SellerAddProduct(props) {
               </Grid>
               <Grid container spacing={1} >
                 <Grid item sm={6} xs={12} >
-                  <Button onClick={() => props.history.push("/managerProduct")} className={classes.btn} variant="contained" component="span" >
+                  <Button onClick={() => props.history.push("/my-store/manager-product")} className={classes.btn} variant="contained" component="span" >
                     Trở về
                   </Button>
                 </Grid>

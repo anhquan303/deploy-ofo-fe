@@ -54,3 +54,73 @@ export function updateProductFailed(payload) {
     payload
   };
 }
+
+export function reset(payload) {
+  return {
+    type: types.RESET,
+    payload
+  };
+}
+
+export function getProductById(payload) {
+  return {
+    type: types.GET_PRODUCT_BY_ID,
+    payload
+  };
+}
+
+export function getProductByIdSuccess(payload) {
+  return {
+    type: types.GET_PRODUCT_BY_ID_SUCCESS,
+    payload
+  };
+}
+
+export function getProductByIdFailed(payload) {
+  return {
+    type: types.GET_PRODUCT_BY_ID_FAILED,
+    payload
+  };
+}
+
+export function activeProduct(payload) {
+  return {
+    type: types.ACTIVE_PRODUCT,
+    payload
+  };
+}
+
+export function activeProductSuccess(payload) {
+  return {
+    type: types.ACTIVE_PRODUCT_SUCCESS,
+    payload
+  };
+}
+
+export function activeProductFailed(payload) {
+  return {
+    type: types.ACTIVE_PRODUCT_FAILED,
+    payload
+  };
+}
+
+export function deactiveProduct(payload) {
+  return {
+    type: types.DEACTIVE_PRODUCT,
+    payload
+  };
+}
+
+export function deactiveProductSuccess(payload) {
+  return {
+    type: types.DEACTIVE_PRODUCT_SUCCESS,
+    payload
+  };
+}
+
+export function deactiveProductFailed(payload) {
+  return {
+    type: types.DEACTIVE_PRODUCT_FAILED,
+    payload
+  };
+}

@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo, useEffect } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -23,13 +23,14 @@ import CustomTable from '../../components/CustomTable';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { fetchListRegister } from './actions';
+import CustomTableResponsive from '../../components/CustomTableResponsive';
 
 const useStyles = makeStyles((theme) => ({
   information_image: {
     background: "#fff",
     padding: "10px",
     borderRadius: "20px",
-    margin: "0 auto",
+    margin: "10px auto",
     boxShadow: "0 2rem 3rem rgba(132, 139, 200, 0.18)",
     transition: "0.5s",
     height: "fit-content",
@@ -55,6 +56,28 @@ export function DashboardRegister(props) {
     { title: "Status", field: "status" },
   ];
 
+  const columns1 = [
+    { id: 'stt', label: 'STT', minWidth: 10, align: 'center' },
+    { id: 'name', label: 'Store Name', minWidth: 100, align: 'center' },
+    { id: 'owner_name', label: 'Owner', minWidth: 100, align: 'center' },
+    { id: 'phone', label: 'Phone', minWidth: 100, align: 'center' },
+    { id: 'status', label: 'Status', minWidth: 100, align: 'center' },
+  ];
+
+  function createData(id, stt, name, owner_name, phone, status) {
+    //const density = population / size;
+    return { id, stt, name, owner_name, phone, status };
+  }
+
+  const [rows, setRows] = useState([]);
+  useEffect(() => {
+    if (props.dashboardRegister.registerList) {
+      setRows(props.dashboardRegister.registerList.map((item, index) =>
+        createData(item.id, index + 1, item.name, item.owner_name, item.phone, item.status)
+      ))
+    }
+  }, [props.dashboardRegister.registerList])
+
   useEffect(() => {
     dispatch(fetchListRegister());
   }, []);
@@ -71,7 +94,8 @@ export function DashboardRegister(props) {
             </div>
           </Grid>
           <Grid item sm={12} xs={12}>
-            <CustomTable data={props.dashboardRegister.registerList} itemPerPage={5} totalItem={props.dashboardRegister.registerList.length} detailPage="register" columns={columns} action={action} />
+            {/* <CustomTable data={props.dashboardRegister.registerList} itemPerPage={5} totalItem={props.dashboardRegister.registerList.length} detailPage="register" columns={columns} action={action} /> */}
+            {props.dashboardRegister.registerList ? <CustomTableResponsive columns={columns1} data={props.dashboardRegister.registerList} detailPage="register" rows={rows} /> : null}
           </Grid>
         </Grid>
 
