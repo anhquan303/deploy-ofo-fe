@@ -17,7 +17,6 @@ export function* login({ payload }) {
 
 
     const res = yield call(apiLogin, ['auth/login'], data);
-    console.log(res)
     if (res.data.success == true) {
     //if (res.status == 200) {
       setUserSession(res.data.accessToken, res.data.user, res.data.store)

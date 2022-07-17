@@ -20,8 +20,7 @@ import saga from './saga';
 import messages from './messages';
 import moment from 'moment';
 import {
-  Box, Grid, Container, Avatar, Typography, List, FormControlLabel, Radio, RadioGroup,
-  ListItemButton, ListItemIcon, ListItemText, Collapse, OutlinedInput, Select, MenuItem
+  Box, Grid, Avatar
 } from '@mui/material';
 import { makeStyles, Button } from '@material-ui/core';
 import AddShoppingCartRoundedIcon from '@mui/icons-material/AddShoppingCartRounded';
@@ -29,6 +28,8 @@ import HourglassTopRoundedIcon from '@mui/icons-material/HourglassTopRounded';
 import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
 import CustomTable from '../../components/CustomTable';
 import CustomTableResponsive from '../../components/CustomTableResponsive';
+import { getStore } from '../../utils/common';
+import { getOrderByStoreId } from './actions';
 
 const useStyles = makeStyles((theme) => ({
   font: {
@@ -44,21 +45,28 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export function SellerManagerOrder() {
+export function SellerManagerOrder(props) {
+  const { dispatch } = props;
   useInjectReducer({ key: 'sellerManagerOrder', reducer });
   useInjectSaga({ key: 'sellerManagerOrder', saga });
 
   const currentDate = moment().format('DD-MM-YYYY');
   const classes = useStyles();
-  const action = false;
+  const store = getStore();
+  const [data, setData] = useState(props.sellerManagerOrder.listOrder);
+
+  useEffect(() => {
+    setData(props.sellerManagerOrder.listOrder);
+  }, [props.sellerManagerOrder.listOrder])
+
+
 
   const columns1 = [
     { id: 'stt', label: 'STT', minWidth: 10, align: 'center' },
     { id: 'code', label: 'Order ID', minWidth: 100, align: 'center' },
     { id: 'customerName', label: 'Customer Name', minWidth: 100, align: 'center' },
-    { id: 'transaction', label: 'Transaction', minWidth: 100, align: 'center' },
     { id: 'status', label: 'Status', minWidth: 100, align: 'center' },
-    { id: 'time', label: 'Time', minWidth: 100, align: 'center' },
+    // { id: 'time', label: 'Time', minWidth: 100, align: 'center' },
   ];
 
   const order = [
@@ -73,33 +81,31 @@ export function SellerManagerOrder() {
     { id: "9", code: "#12311", totalPrice: "645000", status: "pending", customerName: "Anh Quan", transaction: "Cash", time: "07/05/2022, 9:17:56" },
   ];
 
-  // const columns = [
-  //   { title: "Order ID", field: "code" },
-  //   { title: "Customer Name", field: "customerName" },
-  //   { title: "Transaction", field: "transaction" },
-  //   { title: "Status", field: "status" },
-  //   { title: "Time", field: "time" },
-  // ];
-
-  function createData(id, stt, code, customerName, transaction, status, time) {
+  function createData(id, stt, code, customerName, status) {
     //const density = population / size;
-    return { id, stt, code, customerName, transaction, status, time };
+    return { id, stt, code, customerName, status };
   }
 
-  const [rows, setRows] = useState(order.map((item, index) =>
-    createData(item.id, index + 1, item.code, item.customerName, item.transaction, item.status, item.time)
-  ));
-  // setRows(order.map((item, index) =>
-  //       createData(item.id, index + 1, item.username, item.email, item.phoneNumber, item.status)
-  //     ))
+  // const [rows, setRows] = useState(props.sellerManagerOrder.listOrder.map((item, index) =>
+  //   createData(item.id, index + 1, item.code, item.user.username, item.status)
+  // ));
 
-  // useEffect(() => {
-  //   if (order) {
-  //     setRows(order.map((item, index) =>
-  //       createData(item.id, index + 1, item.username, item.email, item.phoneNumber, item.status)
-  //     ))
-  //   }
-  // }, [order])
+  const [rows, setRows] = useState([]);
+  useEffect(() => {
+    if (data) {
+      setRows(data.map((item, index) =>
+        createData(item.id, index + 1, item.code, item.user.username, item.status)
+      ))
+    }
+  }, [data])
+
+  useEffect(() => {
+    const data = {
+      id: store
+    }
+    dispatch(getOrderByStoreId(data));
+  }, []);
+
 
 
 
@@ -118,7 +124,7 @@ export function SellerManagerOrder() {
               </Grid>
               <Grid item xs={12} md={9} style={{ padding: "10px" }}>
                 <p className={classes.font} style={{ fontWeight: "700", fontSize: "15px" }}>Tổng số đơn hàng</p>
-                <p className={classes.font} style={{ fontWeight: "700", fontSize: "30px", color: "#0000EE" }}>12</p>
+                <p className={classes.font} style={{ fontWeight: "700", fontSize: "30px", color: "#0000EE" }}>{props.sellerManagerOrder.listOrder.length}</p>
               </Grid>
             </Grid>
           </div>
@@ -154,9 +160,7 @@ export function SellerManagerOrder() {
           </div>
         </Grid>
       </Grid>
-      {/* <CustomTable data={order} itemPerPage={5} totalItem={order.length} detailPage="my-store/manager-order" columns={columns} action={action} /> */}
-      {/* <FormattedMessage {...messages.header} /> */}
-      {order ? <CustomTableResponsive columns={columns1} data={order} detailPage="my-store/manager-order" rows={rows} /> : null}
+      {props.sellerManagerOrder.listOrder ? <CustomTableResponsive columns={columns1} data={props.sellerManagerOrder.listOrder} detailPage="my-store/manager-order" rows={rows} /> : null}
     </div>
   );
 }

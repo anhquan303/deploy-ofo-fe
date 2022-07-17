@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -24,6 +24,12 @@ import {
 } from '@mui/material';
 import { makeStyles, Button } from '@material-ui/core';
 import DeliveryDiningRoundedIcon from '@mui/icons-material/DeliveryDiningRounded';
+import { changeStatusToOrder, changeStatusToPaid, getOrderDetailById, reset } from './actions';
+import moment from 'moment';
+import CustomTableResponsive from '../../components/CustomTableResponsive';
+import DoneIcon from '@mui/icons-material/Done';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 const useStyles = makeStyles((theme) => ({
   font: {
@@ -62,17 +68,106 @@ const useStyles = makeStyles((theme) => ({
   },
   borderBot: {
     borderBottom: "1px solid #000"
-  }
+  },
+  information_one: {
+    background: "#fff",
+    padding: "20px",
+    borderRadius: "10px",
+    marginTop: "1rem",
+    boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
+    transition: "0.5s",
+    height: "fit-content",
+  },
 
 }));
 
 export function SellerOrderDetail(props) {
+  const { dispatch } = props;
   useInjectReducer({ key: 'sellerOrderDetail', reducer });
   useInjectSaga({ key: 'sellerOrderDetail', saga });
 
   const classes = useStyles();
+  const [data, setData] = useState(props.sellerOrderDetail.orderDetail.orderItem_foods);
+  const [check, setCheck] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [vertical, setVertical] = useState("top");
+  const [horizontal, setHorizontal] = useState("right");
 
-  console.log(props)
+  useEffect(() => {
+    const data = {
+      id: props.location.state.id
+    }
+    dispatch(getOrderDetailById(data));
+    if (props.sellerOrderDetail.orderDetail.status == "ORDER") {
+      setCheck(true);
+    }
+  }, []);
+
+
+  const columns1 = [
+    { id: 'stt', label: 'No.', minWidth: 10, align: 'center' },
+    { id: 'foodName', label: 'Food Name', minWidth: 100, align: 'center' },
+    { id: 'quantity', label: 'Quantity', minWidth: 100, align: 'center' },
+    { id: 'price', label: 'Price', minWidth: 100, align: 'center' },
+    // { id: 'time', label: 'Time', minWidth: 100, align: 'center' },
+  ];
+
+  function createData(id, stt, foodName, quantity, price) {
+    //const density = population / size;
+    return { id, stt, foodName, quantity, price };
+  }
+
+  const [rows, setRows] = useState([]);
+  useEffect(() => {
+    if (data) {
+      setRows(data.map((item, index) =>
+        createData(item.id, index + 1, item.food.name, item.quantity, item.price)
+      ))
+    }
+  }, [data])
+
+  useEffect(() => {
+    setData(props.sellerOrderDetail.orderDetail.orderItem_foods);
+  }, [props.sellerOrderDetail.orderDetail.orderItem_foods])
+
+  const changeStatus = () => {
+    const data = {
+      id: props.location.state.id
+    }
+    dispatch(changeStatusToOrder(data));
+  }
+
+  const changeStatusPaid = () => {
+    const data = {
+      id: props.location.state.id
+    }
+    dispatch(changeStatusToPaid(data));
+  }
+
+
+  useEffect(() => {
+    if (props.sellerOrderDetail.message != "") {
+      if (props.sellerOrderDetail.message == "SUCCESS") {
+        setCheck(true);
+      }
+      console.log(props.sellerOrderDetail.message);
+      setOpenAlert(true);
+      setTimeout(() => {
+        dispatch(reset())
+      }, 6000);
+    }
+  }, [props.sellerOrderDetail.message]);
+
+  const Alert = React.forwardRef(function Alert(
+    props,
+    ref,
+  ) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  const handleCloseAlert = (event) => {
+    setOpenAlert(false);
+  };
 
   return (
     <div style={{ padding: "10px" }}>
@@ -80,17 +175,17 @@ export function SellerOrderDetail(props) {
       <Grid container spacing={0} >
         <Grid item xs={12} md={7} style={{ padding: "10px" }}>
           <div>
-            table list order food
+            {props.sellerOrderDetail.orderDetail ? <CustomTableResponsive columns={columns1} data={data} detailPage="my-store/manager-order" rows={rows} /> : null}
           </div>
 
-          <div className={classes.content} style={{ marginTop: "10px" }}>
+          <div className={classes.information_one} style={{ marginTop: "10px" }}>
             <p className={classes.font} style={{ fontSize: "30px", fontWeight: "700" }}>Thông tin khách hàng và đơn hàng</p>
             <Grid container spacing={0} className={classes.borderBot}>
               <Grid item xs={12} md={6} style={{ padding: "10px" }}>
                 <p className={classes.text} style={{ fontSize: "20px", }}>Tên</p>
               </Grid>
               <Grid item xs={12} md={6} style={{ padding: "10px" }}>
-                <p className={classes.text} style={{ textAlign: "right", fontSize: "20px", }}>Anh Quan</p>
+                <p className={classes.text} style={{ textAlign: "right", fontSize: "20px", }}>{props.sellerOrderDetail.orderDetail.user ? props.sellerOrderDetail.orderDetail.user.firstname : null} {props.sellerOrderDetail.orderDetail.user ? props.sellerOrderDetail.orderDetail.user.lastname : null}</p>
               </Grid>
             </Grid>
             <Grid container spacing={0} className={classes.borderBot}>
@@ -98,7 +193,7 @@ export function SellerOrderDetail(props) {
                 <p className={classes.text} style={{ fontSize: "20px", }}>Số điện thoại</p>
               </Grid>
               <Grid item xs={12} md={6} style={{ padding: "10px" }}>
-                <p className={classes.text} style={{ textAlign: "right", fontSize: "20px", }}>0123465789</p>
+                <p className={classes.text} style={{ textAlign: "right", fontSize: "20px", }}>{props.sellerOrderDetail.orderDetail.user ? props.sellerOrderDetail.orderDetail.user.phoneNumber : null}</p>
               </Grid>
             </Grid>
             <Grid container spacing={0} className={classes.borderBot}>
@@ -121,26 +216,26 @@ export function SellerOrderDetail(props) {
 
         </Grid>
         <Grid item xs={12} md={5} style={{ padding: "10px" }}>
-          <div className={classes.content}>
+          <div className={classes.information_one}>
             <p className={classes.font} style={{ fontSize: "20px", fontWeight: "700" }}>Tóm tắt đơn hàng</p>
             <Grid container spacing={0} >
               <Grid item xs={12} md={6} style={{ padding: "10px" }}>
                 <p className={classes.text}>Đơn hàng được tạo</p>
               </Grid>
               <Grid item xs={12} md={6} style={{ padding: "10px" }}>
-                <p className={classes.text} style={{ textAlign: "right" }}>04/07/2022</p>
+                <p className={classes.text} style={{ textAlign: "right" }}>{moment(props.sellerOrderDetail.orderDetail ? props.sellerOrderDetail.orderDetail.createdAt : null).format('DD-MM-YYYY')}</p>
               </Grid>
               <Grid item xs={12} md={6} style={{ padding: "10px" }}>
                 <p className={classes.text}>Thời gian đặt hàng</p>
               </Grid>
               <Grid item xs={12} md={6} style={{ padding: "10px" }}>
-                <p className={classes.text} style={{ textAlign: "right" }}>08:26</p>
+                <p className={classes.text} style={{ textAlign: "right" }}>{moment(props.sellerOrderDetail.orderDetail ? props.sellerOrderDetail.orderDetail.createdAt : null).format('HH:mm:ss')}</p>
               </Grid>
               <Grid item xs={12} md={6} style={{ padding: "10px" }}>
                 <p className={classes.text}>Giá trị đơn hàng</p>
               </Grid>
               <Grid item xs={12} md={6} style={{ padding: "10px" }}>
-                <p className={classes.text} style={{ textAlign: "right" }}>215.000 VND</p>
+                <p className={classes.text} style={{ textAlign: "right" }}>{props.sellerOrderDetail.orderDetail ? props.sellerOrderDetail.orderDetail.total_price : null} VND</p>
               </Grid>
               <Grid item xs={12} md={6} style={{ padding: "10px" }}>
                 <p className={classes.text}>Phí vận chuyển</p>
@@ -157,18 +252,18 @@ export function SellerOrderDetail(props) {
             </Grid>
           </div>
 
-          <div className={classes.content} style={{ marginTop: "10px" }}>
+          <div className={classes.information_one} style={{ marginTop: "10px" }}>
             <Grid container spacing={0} >
               <Grid item xs={12} md={6} style={{ padding: "10px" }}>
                 <p className={classes.text}>Tổng thanh toán</p>
               </Grid>
               <Grid item xs={12} md={6} style={{ padding: "10px" }}>
-                <p className={classes.text} style={{ textAlign: "right" }}>215.000 VND</p>
+                <p className={classes.text} style={{ textAlign: "right" }}>{props.sellerOrderDetail.orderDetail ? props.sellerOrderDetail.orderDetail.total_price : null} VND</p>
               </Grid>
             </Grid>
           </div>
 
-          <div className={classes.content} style={{ marginTop: "10px" }}>
+          <div className={classes.information_one} style={{ marginTop: "10px" }}>
             <p className={classes.font} style={{ fontSize: "20px", fontWeight: "700" }}>Địa chỉ giao hàng</p>
             <Grid container spacing={0} >
               <Grid item xs={12} md={6} style={{ padding: "10px" }}>
@@ -186,12 +281,22 @@ export function SellerOrderDetail(props) {
             </Grid>
           </div>
           <div style={{ textAlign: "center" }}>
-            <Button className={classes.btn} variant="outlined" startIcon={<DeliveryDiningRoundedIcon />}>
+            <Button className={classes.btn} variant="outlined" startIcon={<DoneIcon />} onClick={changeStatus}>
+              Xác nhận
+            </Button>
+            <Button disabled={check == false} className={classes.btn} variant="outlined" startIcon={<DeliveryDiningRoundedIcon />} onClick={changeStatusPaid}>
               Giao hàng
             </Button>
           </div>
         </Grid>
       </Grid>
+      <Snackbar open={openAlert} autoHideDuration={6000} anchorOrigin={{ vertical, horizontal }} onClose={handleCloseAlert}>
+        {/* {props.userAddress.message.includes("FAILED") == false || props.userAddress.message.includes("Failed") == false || props.userAddress.message != "Network Error" ? */}
+        <Alert severity="success" onClose={handleCloseAlert} sx={{ width: '100%' }}>
+          {props.sellerOrderDetail.message}
+        </Alert>
+
+      </Snackbar>
     </div >
   );
 }

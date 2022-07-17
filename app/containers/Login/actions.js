@@ -34,3 +34,9 @@ export function loginFailed(payload) {
   };
 }
 
+export function reset(payload) {
+  return {
+    type: types.RESET,
+    payload
+  };
+}

@@ -137,22 +137,22 @@ function SellerSideBar(props) {
       <NavLink to="/my-store/manager-order" className={classes.link} onClick={handleDrawerToggle}>
         <div className={classes.item}>
           <DashboardRoundedIcon className={classes.icon} />
-          <Typography className={classes.text}>Manager Order</Typography>
+          <Typography className={classes.text}>Manage Order</Typography>
         </div>
       </NavLink>
       <NavLink to="/my-store/manager-product" className={classes.link} onClick={handleDrawerToggle}>
         <div className={classes.item}>
           <PersonIcon className={classes.icon} />
-          <Typography className={classes.text}>Manager Product</Typography>
+          <Typography className={classes.text}>Manage Product</Typography>
         </div>
       </NavLink>
-      <NavLink to="/turnover" className={classes.link} onClick={handleDrawerToggle}>
+      <NavLink to="/my-store/turnover" className={classes.link} onClick={handleDrawerToggle}>
         <div className={classes.item}>
           <AccountBoxIcon className={classes.icon} />
           <Typography className={classes.text}>Turnover</Typography>
         </div>
       </NavLink>
-      <NavLink to="/storeSetting" className={classes.link} onClick={handleDrawerToggle}>
+      <NavLink to="/my-store/setting" className={classes.link} onClick={handleDrawerToggle}>
         <div className={classes.item}>
           <StoreIcon className={classes.icon} />
           <Typography className={classes.text}>Store Setting</Typography>

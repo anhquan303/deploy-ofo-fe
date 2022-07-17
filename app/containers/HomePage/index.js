@@ -4,11 +4,19 @@
  * This is the first thing users see of our App, at the '/' route
  */
 
+<<<<<<< HEAD
+import React, { useEffect, memo } from 'react';
+import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet';
+import { FormattedMessage } from 'react-intl';
+import { connect } from 'react-redux';
+=======
 import React, { useEffect, memo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
 import { connect, useDispatch } from 'react-redux';
+>>>>>>> 9100c548fd50412b1f823084f920fd720a567507
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
@@ -28,6 +36,78 @@ import Input from './Input';
 import Section from './Section';
 import messages from './messages';
 import { loadRepos } from '../App/actions';
+<<<<<<< HEAD
+import { changeUsername } from './actions';
+import { makeSelectUsername } from './selectors';
+import reducer from './reducer';
+import saga from './saga';
+
+const key = 'home';
+
+export function HomePage({
+  username,
+  loading,
+  error,
+  repos,
+  onSubmitForm,
+  onChangeUsername,
+}) {
+  useInjectReducer({ key, reducer });
+  useInjectSaga({ key, saga });
+
+  useEffect(() => {
+    // When initial state username is not null, submit the form to load repos
+    if (username && username.trim().length > 0) onSubmitForm();
+  }, []);
+
+  const reposListProps = {
+    loading,
+    error,
+    repos,
+  };
+
+  return (
+    <article>
+      <Helmet>
+        <title>Home Page</title>
+        <meta
+          name="description"
+          content="A React.js Boilerplate application homepage"
+        />
+      </Helmet>
+      <div>
+        <CenteredSection>
+          <H2>
+            <FormattedMessage {...messages.startProjectHeader} />
+          </H2>
+          <p>
+            <FormattedMessage {...messages.startProjectMessage} />
+          </p>
+        </CenteredSection>
+        <Section>
+          <H2>
+            <FormattedMessage {...messages.trymeHeader} />
+          </H2>
+          <Form onSubmit={onSubmitForm}>
+            <label htmlFor="username">
+              <FormattedMessage {...messages.trymeMessage} />
+              <AtPrefix>
+                <FormattedMessage {...messages.trymeAtPrefix} />
+              </AtPrefix>
+              <Input
+                id="username"
+                type="text"
+                placeholder="mxstbr"
+                value={username}
+                onChange={onChangeUsername}
+              />
+            </label>
+          </Form>
+          <ReposList {...reposListProps} />
+        </Section>
+      </div>
+    </article>
+=======
 import { logOut } from './actions';
 import { makeSelectUsername } from './selectors';
 import reducer from './reducer';
@@ -83,6 +163,7 @@ export function HomePage(props) {
         </Toolbar>
       </AppBar>
     </div >
+>>>>>>> 9100c548fd50412b1f823084f920fd720a567507
   );
 }
 

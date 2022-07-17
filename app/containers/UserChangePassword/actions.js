@@ -35,3 +35,33 @@ export function changePasswordFailed(payload) {
   };
 }
 
+
+export function reset(payload) {
+  return {
+    type: types.RESET,
+    payload
+  };
+}
+
+export function logout(payload) {
+  return {
+    type: types.LOG_OUT,
+    payload
+  };
+}
+
+export function logoutSuccess(payload) {
+  return {
+    type: types.LOG_OUT_SUCCESS,
+    payload
+  };
+}
+
+export function logoutFailed(payload) {
+  return {
+    type: types.LOG_OUT_FAILED,
+    payload
+  };
+}
+
+

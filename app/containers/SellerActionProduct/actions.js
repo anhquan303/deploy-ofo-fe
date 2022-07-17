@@ -82,3 +82,45 @@ export function getProductByIdFailed(payload) {
     payload
   };
 }
+
+export function activeProduct(payload) {
+  return {
+    type: types.ACTIVE_PRODUCT,
+    payload
+  };
+}
+
+export function activeProductSuccess(payload) {
+  return {
+    type: types.ACTIVE_PRODUCT_SUCCESS,
+    payload
+  };
+}
+
+export function activeProductFailed(payload) {
+  return {
+    type: types.ACTIVE_PRODUCT_FAILED,
+    payload
+  };
+}
+
+export function deactiveProduct(payload) {
+  return {
+    type: types.DEACTIVE_PRODUCT,
+    payload
+  };
+}
+
+export function deactiveProductSuccess(payload) {
+  return {
+    type: types.DEACTIVE_PRODUCT_SUCCESS,
+    payload
+  };
+}
+
+export function deactiveProductFailed(payload) {
+  return {
+    type: types.DEACTIVE_PRODUCT_FAILED,
+    payload
+  };
+}

@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -21,7 +21,9 @@ import messages from './messages';
 import { Box, Grid, TextField, Container, Avatar } from '@mui/material';
 import { makeStyles, Button } from '@material-ui/core';
 import SearchBar from "material-ui-search-bar";
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
+import { getUser } from '../../utils/common';
+import { getOrderById } from './actions';
 
 const useStyles = makeStyles((theme) => ({
   btn: {
@@ -29,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     width: "fit-content",
     borderRadius: "10px",
     backgroundColor: "#ff9900",
-    margin: "10px 5px",
+    marginTop: "0px 5px",
     "&:hover": {
       backgroundColor: "#FFA500",
       fontWeight: "bold",
@@ -53,12 +55,15 @@ const useStyles = makeStyles((theme) => ({
 
 
 }));
-export function UserOrderHistory() {
+export function UserOrderHistory(props) {
+  const { dispatch } = props;
   useInjectReducer({ key: 'userOrderHistory', reducer });
   useInjectSaga({ key: 'userOrderHistory', saga });
 
   const classes = useStyles();
   const [searched, setSearched] = useState("");
+  const user = getUser();
+  const history = useHistory();
 
   const requestSearch = (searchedVal) => {
     // const filteredRows = props.dashboardStore.listStore.filter((row) => {
@@ -72,6 +77,34 @@ export function UserOrderHistory() {
     requestSearch(searched);
   };
 
+  useEffect(() => {
+    const data = {
+      id: user.id
+    }
+    dispatch(getOrderById(data));
+  }, []);
+
+  console.log(props.userOrderHistory.orderList)
+
+  const handleComment = (id) => {
+    const location = {
+      pathname: `/user/rating-comment/${id}`,
+      state: {
+        id: id
+      }
+    }
+    history.push(location);
+  }
+
+  const orderDetail = (id) => {
+    const location = {
+      pathname: `/user/order-history/${id}`,
+      state: {
+        id: id
+      }
+    }
+    history.push(location);
+  }
   return (
     <>
       <div>
@@ -89,7 +122,7 @@ export function UserOrderHistory() {
           />
         </Grid>
 
-        <div style={{ border: "1px solid #000", padding: "10px", margin: "10px 0" }}>
+        {/* <div style={{ border: "1px solid #000", padding: "10px", margin: "10px 0" }}>
           <Grid container spacing={0} style={{ padding: "10px" }}>
             <Grid item xs={12} md={6} sm={12}>
               <span style={{ marginRight: " 10px", fontWeight: "400", fontSize: "20px" }}>tên quán</span>
@@ -139,7 +172,11 @@ export function UserOrderHistory() {
 
           <Grid container spacing={0} style={{ padding: "10px" }}>
             <Grid item xs={12} md={6} sm={12}>
+<<<<<<< HEAD
+              <Button href="/user/rating-comment" className={classes.btn} variant="outlined">
+=======
               <Button className={classes.btn} variant="outlined">
+>>>>>>> 9100c548fd50412b1f823084f920fd720a567507
                 Đánh giá
               </Button>
             </Grid>
@@ -147,9 +184,15 @@ export function UserOrderHistory() {
               Tổng số tiền: 130.000 VND
             </Grid>
           </Grid>
+<<<<<<< HEAD
+        </div> */}
+
+        {/* <div style={{ border: "1px solid #000", padding: "10px", margin: "10px 0" }}>
+=======
         </div>
 
         <div style={{ border: "1px solid #000", padding: "10px", margin: "10px 0" }}>
+>>>>>>> 9100c548fd50412b1f823084f920fd720a567507
           <Grid container spacing={0} style={{ padding: "10px" }}>
             <Grid item xs={12} md={6} sm={12}>
               <span style={{ marginRight: " 10px", fontWeight: "400", fontSize: "20px" }}>tên quán</span>
@@ -209,7 +252,62 @@ export function UserOrderHistory() {
               Tổng số tiền: 130.000 VND
             </Grid>
           </Grid>
-        </div>
+        </div> */}
+
+
+        {props.userOrderHistory.orderList.map((item, index) =>
+          <div key={index} style={{ border: "1px solid #000", padding: "10px", margin: "10px 0" }} >
+            <Grid container spacing={0} style={{ padding: "10px" }}>
+              <Grid item xs={12} md={6} sm={12}>
+                <span style={{ marginRight: " 10px", fontWeight: "400", fontSize: "20px" }}>{item.store.name}</span>
+                <Button className={classes.btn} variant="outlined">
+                  Xem Store
+                </Button>
+              </Grid>
+              <Grid item xs={12} md={6} sm={12} className={classes.center} style={{ color: "#20D167", fontWeight: "400", fontSize: "20px" }}>
+                {item.status}
+              </Grid>
+            </Grid>
+            <hr />
+            {item.orderItem_foods.map((item1, index1) =>
+              <div key={index1} >
+                <Grid container spacing={0} style={{ padding: "10px" }}>
+                  <Grid item xs={12} md={6} sm={12}>
+                    <Grid container spacing={0} style={{ padding: "10px" }}>
+                      <Grid item xs={12} md={2} sm={12}>
+                        <Avatar variant="square" src="https://i.ytimg.com/vi/A_o2qfaTgKs/maxresdefault.jpg" />
+                      </Grid>
+                      <Grid item xs={12} md={10} sm={12} onClick={() => orderDetail(item.id)}>
+                        {item1.food.name} <br />
+                        x{item1.quantity}
+                      </Grid>
+                      <Grid item xs={12} md={12} sm={12}>
+                        <Button onClick={() => handleComment(item1.food.id)} className={classes.btn} variant="outlined">
+                          Đánh giá
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={12} md={6} sm={12} className={classes.center}>
+                    {item1.food.price} VND
+                  </Grid>
+                </Grid>
+                <hr />
+              </div>
+            )}
+            <Grid container spacing={0} style={{ padding: "10px" }}>
+              <Grid item xs={12} md={6} sm={12}>
+                {/* <Button onClick={() => handleComment()} className={classes.btn} variant="outlined">
+                  Đánh giá
+                </Button> */}
+              </Grid>
+              <Grid item xs={12} md={6} sm={12} className={classes.center}>
+                Tổng số tiền: {item.total_price} VND
+              </Grid>
+            </Grid>
+            <hr />
+          </div>
+        )}
 
       </div >
       {/* <FormattedMessage {...messages.header} /> */}
