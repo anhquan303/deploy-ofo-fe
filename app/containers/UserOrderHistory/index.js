@@ -173,6 +173,7 @@ export function UserOrderHistory(props) {
           <Grid container spacing={0} style={{ padding: "10px" }}>
             <Grid item xs={12} md={6} sm={12}>
 <<<<<<< HEAD
+<<<<<<< HEAD
               <Button className={classes.btn} variant="outlined">
 =======
               <Button href="/user/rating-comment" className={classes.btn} variant="outlined">
@@ -187,6 +188,16 @@ export function UserOrderHistory(props) {
 >>>>>>> 04040614131f1b13abcf7837b797b27b1973a199
 >>>>>>> d60df2167e17f1f49835fbe4bddf8b0af336a37e
 >>>>>>> 9061faf1d04b278c8dd0e0cd4fe879b56cdc1dea
+=======
+              <Button href="/user/rating-comment" className={classes.btn} variant="outlined">
+=======
+<<<<<<< HEAD
+              <Button href="/user/rating-comment" className={classes.btn} variant="outlined">
+=======
+              <Button className={classes.btn} variant="outlined">
+>>>>>>> 9100c548fd50412b1f823084f920fd720a567507
+>>>>>>> 04040614131f1b13abcf7837b797b27b1973a199
+>>>>>>> 2c35dc1ac485d1a34806109ca5f3049323e61cd9
                 Đánh giá
               </Button>
             </Grid>
@@ -195,6 +206,7 @@ export function UserOrderHistory(props) {
             </Grid>
           </Grid>
 <<<<<<< HEAD
+<<<<<<< HEAD
         </div>
 
         <div style={{ border: "1px solid #000", padding: "10px", margin: "10px 0" }}>
@@ -217,6 +229,22 @@ export function UserOrderHistory(props) {
 >>>>>>> 04040614131f1b13abcf7837b797b27b1973a199
 >>>>>>> d60df2167e17f1f49835fbe4bddf8b0af336a37e
 >>>>>>> 9061faf1d04b278c8dd0e0cd4fe879b56cdc1dea
+=======
+        </div> */}
+
+        {/* <div style={{ border: "1px solid #000", padding: "10px", margin: "10px 0" }}>
+=======
+<<<<<<< HEAD
+        </div> */}
+
+        {/* <div style={{ border: "1px solid #000", padding: "10px", margin: "10px 0" }}>
+=======
+        </div>
+
+        <div style={{ border: "1px solid #000", padding: "10px", margin: "10px 0" }}>
+>>>>>>> 9100c548fd50412b1f823084f920fd720a567507
+>>>>>>> 04040614131f1b13abcf7837b797b27b1973a199
+>>>>>>> 2c35dc1ac485d1a34806109ca5f3049323e61cd9
           <Grid container spacing={0} style={{ padding: "10px" }}>
             <Grid item xs={12} md={6} sm={12}>
               <span style={{ marginRight: " 10px", fontWeight: "400", fontSize: "20px" }}>tên quán</span>
@@ -277,8 +305,11 @@ export function UserOrderHistory(props) {
             </Grid>
           </Grid>
 <<<<<<< HEAD
+<<<<<<< HEAD
         </div>
 =======
+=======
+>>>>>>> 2c35dc1ac485d1a34806109ca5f3049323e61cd9
         </div> */}
 
 

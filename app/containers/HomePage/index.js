@@ -4,27 +4,12 @@
 //  * This is the first thing users see of our App, at the '/' route
 //  */
 
-// <<<<<<< HEAD
-// <<<<<<< HEAD
-// import React, { useEffect, memo } from 'react';
-// import PropTypes from 'prop-types';
-// import { Helmet } from 'react-helmet';
-// import { FormattedMessage } from 'react-intl';
-// import { connect } from 'react-redux';
-// =======
+
 // import React, { useEffect, memo, useState } from 'react';
 // import PropTypes from 'prop-types';
 // import { Helmet } from 'react-helmet';
 // import { FormattedMessage } from 'react-intl';
 // import { connect, useDispatch } from 'react-redux';
-// >>>>>>> 9100c548fd50412b1f823084f920fd720a567507
-// =======
-// import React, { useEffect, memo, useState } from 'react';
-// import PropTypes from 'prop-types';
-// import { Helmet } from 'react-helmet';
-// import { FormattedMessage } from 'react-intl';
-// import { connect, useDispatch } from 'react-redux';
-// >>>>>>> 610d15a05f0e97a6f0f72e192be9e9872b11444f
 // import { compose } from 'redux';
 // import { createStructuredSelector } from 'reselect';
 
@@ -44,50 +29,36 @@
 // import Section from './Section';
 // import messages from './messages';
 // import { loadRepos } from '../App/actions';
-// <<<<<<< HEAD
-// <<<<<<< HEAD
 // import { changeUsername } from './actions';
-// =======
-// import { logOut } from './actions';
-// >>>>>>> 610d15a05f0e97a6f0f72e192be9e9872b11444f
 // import { makeSelectUsername } from './selectors';
 // import reducer from './reducer';
 // import saga from './saga';
-// import { Box, AppBar, Toolbar, Select, MenuItem, FormControl } from '@mui/material';
-// import { makeStyles, Container, Typography, Grid, Button } from '@material-ui/core';
-// import { NavLink } from 'react-router-dom';
-// import FastfoodIcon from '@mui/icons-material/Fastfood';
-// import { getUser, removeUserSession } from '../../utils/common';
-
 
 // const key = 'home';
 
-// export function HomePage(props) {
+// export function HomePage({
+//   username,
+//   loading,
+//   error,
+//   repos,
+//   onSubmitForm,
+//   onChangeUsername,
+// }) {
 //   useInjectReducer({ key, reducer });
 //   useInjectSaga({ key, saga });
 
-//   const [language, setLanguage] = useState("English");
-//   console.log(props)
-//   //const dispatch = useDispatch();
+//   useEffect(() => {
+//     // When initial state username is not null, submit the form to load repos
+//     if (username && username.trim().length > 0) onSubmitForm();
+//   }, []);
 
-//   const user = getUser();
-//   const handleLogout = (e) => {
-//     e.preventDefault();
-//     //dispatch(logOut());
-//     removeUserSession();
-//     props.history.push("/")
-//   }
-
-//   const handleSellerRegister = () => {
-//     if (user) {
-//       props.history.push("/sellerRegister")
-//     } else {
-//       props.history.push("/login")
-//     }
-//   }
+//   const reposListProps = {
+//     loading,
+//     error,
+//     repos,
+//   };
 
 //   return (
-// <<<<<<< HEAD
 //     <article>
 //       <Helmet>
 //         <title>Home Page</title>
@@ -128,55 +99,40 @@
 //         </Section>
 //       </div>
 //     </article>
-// =======
 // import { logOut } from './actions';
 // import { makeSelectUsername } from './selectors';
 // import reducer from './reducer';
 // import saga from './saga';
-// import { Box, AppBar, Toolbar, Select, MenuItem, FormControl } from '@mui/material';
-// import { makeStyles, Container, Typography, Grid, Button } from '@material-ui/core';
-// import { NavLink } from 'react-router-dom';
-// import FastfoodIcon from '@mui/icons-material/Fastfood';
-// import { getUser, removeUserSession } from '../../utils/common';
-
 
 // const key = 'home';
 
-// export function HomePage(props) {
+// export function HomePage({
+//   username,
+//   loading,
+//   error,
+//   repos,
+//   onSubmitForm,
+//   onChangeUsername,
+// }) {
 //   useInjectReducer({ key, reducer });
 //   useInjectSaga({ key, saga });
 
-//   const [language, setLanguage] = useState("English");
-//   console.log(props)
-//   //const dispatch = useDispatch();
+//   useEffect(() => {
+//     // When initial state username is not null, submit the form to load repos
+//     if (username && username.trim().length > 0) onSubmitForm();
+//   }, []);
 
-//   const user = getUser();
-//   const handleLogout = (e) => {
-//     e.preventDefault();
-//     //dispatch(logOut());
-//     removeUserSession();
-//     props.history.push("/")
-//   }
-
-//   const handleSellerRegister = () => {
-//     if (user) {
-//       props.history.push("/sellerRegister")
-//     } else {
-//       props.history.push("/login")
-//     }
-//   }
+//   const reposListProps = {
+//     loading,
+//     error,
+//     repos,
+//   };
 
 //   return (
 //     <div>
 //       <AppBar sx={{ background: "#fff" }} position='static'>
 //         <Toolbar>
 
-// =======
-//     <div>
-//       <AppBar sx={{ background: "#fff" }} position='static'>
-//         <Toolbar>
-
-// >>>>>>> 610d15a05f0e97a6f0f72e192be9e9872b11444f
 //           <Button onClick={handleSellerRegister}>Become a seller in No Ne </Button>
 //           {user ? <Button href='/myStore'>My Store </Button> : null}
 //           <Box sx={{ marginLeft: 'auto' }} >
@@ -190,10 +146,6 @@
 //         </Toolbar>
 //       </AppBar>
 //     </div >
-// <<<<<<< HEAD
-// >>>>>>> 9100c548fd50412b1f823084f920fd720a567507
-// =======
-// >>>>>>> 610d15a05f0e97a6f0f72e192be9e9872b11444f
 //   );
 // }
 
