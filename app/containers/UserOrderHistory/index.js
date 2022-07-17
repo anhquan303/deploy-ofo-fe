@@ -172,11 +172,7 @@ export function UserOrderHistory(props) {
 
           <Grid container spacing={0} style={{ padding: "10px" }}>
             <Grid item xs={12} md={6} sm={12}>
-<<<<<<< HEAD
               <Button href="/user/rating-comment" className={classes.btn} variant="outlined">
-=======
-              <Button className={classes.btn} variant="outlined">
->>>>>>> 9100c548fd50412b1f823084f920fd720a567507
                 Đánh giá
               </Button>
             </Grid>
@@ -184,15 +180,9 @@ export function UserOrderHistory(props) {
               Tổng số tiền: 130.000 VND
             </Grid>
           </Grid>
-<<<<<<< HEAD
         </div> */}
 
         {/* <div style={{ border: "1px solid #000", padding: "10px", margin: "10px 0" }}>
-=======
-        </div>
-
-        <div style={{ border: "1px solid #000", padding: "10px", margin: "10px 0" }}>
->>>>>>> 9100c548fd50412b1f823084f920fd720a567507
           <Grid container spacing={0} style={{ padding: "10px" }}>
             <Grid item xs={12} md={6} sm={12}>
               <span style={{ marginRight: " 10px", fontWeight: "400", fontSize: "20px" }}>tên quán</span>
