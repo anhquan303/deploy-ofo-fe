@@ -26,12 +26,8 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { makeStyles, Container, Typography } from '@material-ui/core';
 
-
 import { getData } from './actions';
-import CustomTable from '../../components/CustomTable';
 import Avatar from '@mui/material/Avatar';
-import Avatar1 from '../../images/quan.jpg';
-import DashboardHeader from '../../components/DashboardHeader';
 import { getUser } from '../../utils/common';
 
 
@@ -186,7 +182,7 @@ export function Dashboard(props) {
           </Grid>
           <Grid item sm={12} xs={12}>
             <h3>Recent Action</h3>
-            <CustomTable data={actione} itemPerPage={5} totalItem={actione.length} detailPage="dashboard" columns={columns} action={action} />
+            {/* <CustomTable data={actione} itemPerPage={5} totalItem={actione.length} detailPage="dashboard" columns={columns} action={action} /> */}
           </Grid>
         </Grid>
 

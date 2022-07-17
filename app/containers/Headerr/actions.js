@@ -33,3 +33,25 @@ export function logOutFailed(payload) {
     payload,
   };
 }
+
+export function getCart(payload) {
+  return {
+    type: types.GET_CART,
+    payload,
+  };
+}
+
+export function getCartSuccess(payload) {
+  return {
+    type: types.GET_CART_SUCCESS,
+    payload,
+  };
+}
+
+export function getCartFailed(payload) {
+  return {
+    type: types.GET_CART_FAILED,
+    payload,
+  };
+}
+

@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -18,7 +18,7 @@ import makeSelectFoodDetail from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
-import { Box, Grid, IconButton, Container, Avatar, List, ListItemButton, ListItemText, TextField } from '@mui/material';
+import { Box, Grid, IconButton, Container, Avatar, List, ListItemButton, ListItemText, TextField, Rating } from '@mui/material';
 import Headerr from './../Headerr';
 import { makeStyles, Button } from '@material-ui/core';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
@@ -33,7 +33,9 @@ import SearchBar from "material-ui-search-bar";
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { getUser } from '../../utils/common';
 import SendIcon from '@mui/icons-material/Send';
-
+import { addToCart, getFoodById, getListCommentFoodById, getRatingFoodById, reset } from './actions';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 const useStyles = makeStyles((theme) => ({
   btn: {
@@ -91,6 +93,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function FoodDetail(props) {
+  const { dispatch } = props;
   useInjectReducer({ key: 'foodDetail', reducer });
   useInjectSaga({ key: 'foodDetail', saga });
 
@@ -98,7 +101,11 @@ export function FoodDetail(props) {
   const [quantity, setQuantity] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState(1);
   const [searched, setSearched] = useState("");
+  const [star, setStar] = useState(0);
   const user = getUser();
+  const [openAlert, setOpenAlert] = useState(false);
+  const [vertical, setVertical] = useState("top");
+  const [horizontal, setHorizontal] = useState("right");
 
   const incrementQuantity = () => {
     setQuantity(quantity + 1);
@@ -127,7 +134,47 @@ export function FoodDetail(props) {
   };
 
 
-  // console.log(props.location.state.item)
+  useEffect(() => {
+    const data = {
+      id: props.location.state.item.id
+    }
+    dispatch(getFoodById(data));
+    dispatch(getRatingFoodById(data));
+    dispatch(getListCommentFoodById(data))
+  }, []);
+
+  useEffect(() => {
+    if (props.foodDetail.rating) {
+      setStar(props.foodDetail.rating);
+    }
+  }, [props.foodDetail.rating])
+
+  const handleAddToCart = () => {
+    const data = {
+      uid: user.id,
+      fid: props.location.state.item.id
+    }
+    dispatch(addToCart(data));
+  }
+
+  const Alert = React.forwardRef(function Alert(
+    props,
+    ref,
+  ) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  const handleCloseAlert = (event) => {
+    setOpenAlert(false);
+  };
+
+  useEffect(() => {
+    if (props.foodDetail.message != "") {
+      setOpenAlert(true);
+      setTimeout(() => dispatch(reset()), 6000);
+    }
+
+  }, [props.foodDetail.message]);
 
   return (
     <div>
@@ -141,22 +188,23 @@ export function FoodDetail(props) {
             <Button className={classes.btn} variant="outlined" startIcon={<ThumbUpIcon />}>
               Yêu thích
             </Button>
-            <p className={classes.font}>{props.location.state.item.foodName} - {props.location.state.item.storeName}</p>
-            <p className={classes.font}>{props.location.state.item.address} - Hòa Lạc</p>
+            <p className={classes.font}>{props.foodDetail.food ? props.foodDetail.food.name : null} - {props.foodDetail.food ? props.foodDetail.food.foodStore.name : null}</p>
+            <p className={classes.font}>{props.location.state.item.address ? props.location.state.item.address : null} - Hòa Lạc</p>
             <div>
-              <StarIcon className={classes.star} />
-              <StarIcon className={classes.star} />
-              <StarIcon className={classes.star} />
-              <StarHalfIcon className={classes.star} />
-              <StarBorderIcon className={classes.star} />
-              <span>|</span><span style={{ margin: "0 5px" }}>999+ đánh giá</span>
-              <span>|</span><span style={{ margin: "0 5px" }}>999+ đã bán</span>
+              {/* <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly />
+              <span>|</span><span style={{ margin: "5px 5px" }}>999+ đánh giá</span>
+              <span>|</span><span style={{ margin: "0 5px" }}>999+ đã bán</span> */}
+              <Grid container spacing={0} >
+                <Grid item xs={12} md={3}><Rating name="half-rating-read" value={star} precision={0.5} readOnly /></Grid>
+                <Grid item xs={12} md={3}><span>|</span><span style={{ margin: "5px 5px" }}>{props.foodDetail.listComment.length} đánh giá</span></Grid>
+                <Grid item xs={12} md={3}><span>|</span><span style={{ margin: "0 5px" }}>999+ đã bán</span></Grid>
+              </Grid>
             </div>
             <div style={{ margin: "10px 0" }} >
               <CircleIcon style={{ color: "#128B02", width: "10px", height: "10px" }} />
-              <span style={{ margin: "0 5px" }}>Mở cửa 08:00 - 23:00</span>
+              <span style={{ margin: "0 5px" }}>Mở cửa {props.foodDetail.food ? props.foodDetail.food.foodStore.openTime : null} - {props.foodDetail.food ? props.foodDetail.food.foodStore.closeTime : null}</span>
             </div>
-            <p style={{ fontFamily: "sans-serif", margin: "5px 0" }}>Giá bán {props.location.state.item.price}</p>
+            <p style={{ fontFamily: "sans-serif", margin: "5px 0" }}>Giá bán {props.foodDetail.food ? props.foodDetail.food.price : null}</p>
             <div>
               <Grid container spacing={2} >
                 <Grid item xs={12} md={6} className={classes.center}>
@@ -170,7 +218,7 @@ export function FoodDetail(props) {
                   </IconButton>
                 </Grid>
                 <Grid item xs={12} md={6} >
-                  <Button className={classes.btn} variant="outlined" >
+                  <Button className={classes.btn} variant="outlined" onClick={handleAddToCart}>
                     Thêm vào giỏ hàng
                   </Button>
                 </Grid>
@@ -188,7 +236,7 @@ export function FoodDetail(props) {
                   <Avatar alt="avatar store" src={Avatar1} sx={{ width: 56, height: 56 }} />
                 </Grid>
                 <Grid item xs={12} md={10}>
-                  <p style={{ margin: "0" }}>Quán Hambuger thượng hạng</p>
+                  <p style={{ margin: "0" }}>{props.foodDetail.food ? props.foodDetail.food.foodStore.name : null}</p>
                   <Button className={classes.btn} variant="outlined" startIcon={<ThumbUpIcon />}>
                     Yêu thích
                   </Button>
@@ -266,10 +314,10 @@ export function FoodDetail(props) {
                 />
                 <p className={classes.font} style={{ fontWeight: "bold", fontSize: "20px" }}>Món mới</p>
                 <Grid container spacing={0}>
-                  <Grid item xs={12} md={1} className={classes.center}>
+                  <Grid item xs={12} md={2} className={classes.center}>
                     <Avatar variant="rounded" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTN7rHMcnK0E9YocmOktrVKzdzeCgWg3oP04bIfqScZykQbYDs8m1e_qcnzzWNMLIG1ZZY&usqp=CAU" />
                   </Grid>
-                  <Grid item xs={12} md={8} >
+                  <Grid item xs={12} md={7} >
                     <p style={{ margin: "0", fontFamily: "sans-serif" }}>Hambuger hơi ngon</p>
                     <p style={{ margin: "0", fontFamily: "sans-serif" }}>Đã bán: 999+ lần | <span><ThumbUpIcon /></span> 100+</p>
                   </Grid>
@@ -287,67 +335,34 @@ export function FoodDetail(props) {
                 <p className={classes.font} style={{ fontWeight: "bold", fontSize: "20px", marginTop: "0", textAlign: "center" }}>
                   Đánh giá và bình luận
                 </p>
-                {/* <div style={{ textAlign: "center" }}>
-                  <StarBorderIcon className={classes.star} />
-                  <StarBorderIcon className={classes.star} />
-                  <StarBorderIcon className={classes.star} />
-                  <StarBorderIcon className={classes.star} />
-                  <StarBorderIcon className={classes.star} />
-                </div> */}
-                <Grid container spacing={0}>
-                  {/* <Grid item xs={12} md={10}>
-                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                      {user ? <Avatar alt="avatar store" src={Avatar1} sx={{ width: 26, height: 26, marginRight: "3px" }} />
-                        : <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />}
-                      <TextField id="input-with-sx" label="Viết bình luận ..." variant="standard" />
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} md={2} className={classes.center}>
-                    <IconButton style={{ color: "#FF9900" }}>
-                      <SendIcon />
-                    </IconButton>
-                  </Grid> */}
 
-                  <Grid item xs={2} md={2} className={classes.center} style={{ height: "fit-content" }}>
-                    <Avatar alt="avatar store" src={Avatar1} sx={{ width: 26, height: 26, marginRight: "3px" }} />
+                {props.foodDetail.listComment.map((item, index) =>
+                  <Grid container spacing={0} key={index}>
+                    <Grid item xs={2} md={2} className={classes.center} style={{ height: "fit-content" }}>
+                      <Avatar alt="avatar store" src={Avatar1} sx={{ width: 26, height: 26, marginRight: "3px" }} />
+                    </Grid>
+                    <Grid item xs={10} md={10}>
+                      <p style={{ margin: "0" }}>{item.user.username}</p>
+                      <div >
+                        <Rating name="half-rating-read" value={5} precision={0.5} readOnly />
+                      </div>
+                      <p className={classes.font} style={{ margin: "0" }}>{item.description}</p>
+                      {/* <img src="https://phunuketnoi.com/wp-content/uploads/2021/03/mon-ngon-moi-ngay.jpg" style={{ width: "100%" }} /> */}
+                      <p className={classes.font} style={{ margin: "0", color: "#AFAFAF", fontSize: "13px" }}>{item.create_at}</p>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={10} md={10}>
-                    <p style={{ margin: "0" }}>Quan Anh</p>
-                    <div >
-                      <StarIcon className={classes.star} sx={{ width: 16, height: 16 }} />
-                      <StarIcon className={classes.star} sx={{ width: 16, height: 16 }} />
-                      <StarIcon className={classes.star} sx={{ width: 16, height: 16 }} />
-                      <StarIcon className={classes.star} sx={{ width: 16, height: 16 }} />
-                      <StarIcon className={classes.star} sx={{ width: 16, height: 16 }} />
-                    </div>
-                    <p className={classes.font} style={{ margin: "0" }}>Món ăn rất ngon, sẽ tiếp tục ủng hộ</p>
-                    <img src="https://phunuketnoi.com/wp-content/uploads/2021/03/mon-ngon-moi-ngay.jpg" style={{ width: "100%" }} />
-                    <p className={classes.font} style={{ margin: "0", color: "#AFAFAF", fontSize: "13px" }}>02-07-2022 11:17</p>
-                  </Grid>
-                </Grid>
-
-                <Grid container spacing={0}>
-                  <Grid item xs={2} md={2} className={classes.center} style={{ height: "fit-content" }}>
-                    <Avatar alt="avatar store" src={Avatar1} sx={{ width: 26, height: 26, marginRight: "3px" }} />
-                  </Grid>
-                  <Grid item xs={10} md={10}>
-                    <p style={{ margin: "0" }}>Long Le</p>
-                    <div >
-                      <StarIcon className={classes.star} sx={{ width: 16, height: 16 }} />
-                      <StarIcon className={classes.star} sx={{ width: 16, height: 16 }} />
-                      <StarIcon className={classes.star} sx={{ width: 16, height: 16 }} />
-                      <StarIcon className={classes.star} sx={{ width: 16, height: 16 }} />
-                      <StarHalfIcon className={classes.star} sx={{ width: 16, height: 16 }} />
-                    </div>
-                    <p className={classes.font} style={{ margin: "0" }}>Món ăn tạm được</p>
-                    <img src="https://phunuketnoi.com/wp-content/uploads/2021/03/mon-ngon-moi-ngay.jpg" style={{ width: "100%" }} />
-                    <p className={classes.font} style={{ margin: "0", color: "#AFAFAF", fontSize: "13px" }}>01-07-2022 07:57</p>
-                  </Grid>
-                </Grid>
+                )}
               </div>
             </Grid>
           </Grid>
         </div>
+        <Snackbar open={openAlert} autoHideDuration={6000} anchorOrigin={{ vertical, horizontal }} onClose={handleCloseAlert}>
+          {/* {props.userAddress.message.includes("FAILED") == false || props.userAddress.message.includes("Failed") == false || props.userAddress.message != "Network Error" ? */}
+          <Alert severity="success" onClose={handleCloseAlert} sx={{ width: '100%' }}>
+            {props.foodDetail.message}
+          </Alert>
+
+        </Snackbar>
       </Container >
     </div >
   );

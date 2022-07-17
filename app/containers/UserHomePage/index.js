@@ -29,8 +29,8 @@ import Avatar1 from '../../images/quan.jpg';
 import { useTheme } from '@mui/material/styles';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import SwipeableViews from 'react-swipeable-views';
-import { autoPlay } from 'react-swipeable-views-utils';
+// import SwipeableViews from 'react-swipeable-views';
+// import { autoPlay } from 'react-swipeable-views-utils';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import RiceBowlIcon from '@mui/icons-material/RiceBowl';
 import RamenDiningIcon from '@mui/icons-material/RamenDining';
@@ -90,7 +90,7 @@ export function UserHomePage(props) {
   const [searched, setSearched] = useState("");
   const [activeStep, setActiveStep] = useState(0);
   const theme = useTheme();
-  const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
+  //const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
   const store = getStore();
 
   const user = getUser();
@@ -139,30 +139,6 @@ export function UserHomePage(props) {
     },
   ];
 
-  const foods = [
-    {
-      id: 1, foodName: "Cơm suất", storeName: "Quán ngon", address: "Thôn 1, Thạch Hòa, Thạch Thất", img: "", price: "10.000VND"
-    },
-    {
-      id: 2, foodName: "Bún bò", storeName: "Quán Bún Bò Huế", address: "Thôn 2, Thạch Hòa, Thạch Thất", img: "", price: "20.000VND"
-    },
-    {
-      id: 3, foodName: "Bún đậu", storeName: "Quán cây sung", address: "Thôn 3, Thạch Hòa, Thạch Thất", img: "", price: "30.000VND"
-    },
-    {
-      id: 4, foodName: "Phở bò tái chín", storeName: "Phở 1988", address: "Thôn 4, Thạch Hòa, Thạch Thất", img: "", price: "40.000VND"
-    },
-    {
-      id: 5, foodName: "Cơm rang", storeName: "Quán ngon", address: "Thôn 1, Thạch Hòa, Thạch Thất", img: "", price: "50.000VND"
-    },
-    {
-      id: 6, foodName: "Nem Nướng", storeName: "Quán Nem Nướng", address: "Thôn 6, Thạch Hòa, Thạch Thất", img: "", price: "60.000VND"
-    },
-    {
-      id: 7, foodName: "Bánh Cuốn", storeName: "Bánh Cuốn Ngon", address: "Thôn 2, Thạch Hòa, Thạch Thất", img: "", price: "70.000VND"
-    }
-  ]
-
   const maxSteps = images.length;
 
   const handleNext = () => {
@@ -184,8 +160,6 @@ export function UserHomePage(props) {
     }
     dispatch(fetchListFood(data));
   }, []);
-
-  console.log(props.userHomePage.foodList)
 
   return (
     // <div>
@@ -280,7 +254,7 @@ export function UserHomePage(props) {
             >
               <Typography>{images[activeStep].label}</Typography>
             </Paper> */}
-          <AutoPlaySwipeableViews
+          {/* <AutoPlaySwipeableViews
             axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
             index={activeStep}
             onChangeIndex={handleStepChange}
@@ -333,7 +307,7 @@ export function UserHomePage(props) {
                 Back
               </Button>
             }
-          />
+          /> */}
         </Box>
 
         <div style={{ textAlign: "center" }}>

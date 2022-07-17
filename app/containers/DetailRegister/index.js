@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "20px",
     borderRadius: "50px",
     marginTop: "1rem",
-    boxShadow: "0 2rem 3rem rgba(132, 139, 200, 0.18)",
+    boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px",
     transition: "0.5s",
     height: "100%",
   },

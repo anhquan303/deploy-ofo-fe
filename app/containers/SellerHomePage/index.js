@@ -81,8 +81,6 @@ export function SellerHomePage() {
   const [open, setOpen] = useState(true);
   const user = getUser();
 
-  console.log(user)
-
   const handleClick = () => {
     setOpen(!open);
   };
